@@ -1,0 +1,78 @@
+import 'package:flutter/material.dart';
+import 'package:speed_externo/commom/styles/colors_app.dart';
+
+ThemeData lightTheme = ThemeData(
+  primaryColor: AppColors.primaryColor,
+  primaryColorLight: AppColors.primaryVariant,
+  secondaryHeaderColor: AppColors.secondaryColor,
+  colorScheme: const ColorScheme.light(
+    primary: AppColors.primaryColor,
+    primaryContainer: AppColors.primaryVariant,
+    secondary: AppColors.secondaryColor,
+    secondaryContainer: AppColors.secondaryVariant,
+    surface: AppColors.surfaceColorLight,
+    background: AppColors.backgroundColorLight,
+    error: AppColors.errorColor,
+    onPrimary: Colors.white,
+    onSecondary: Colors.white,
+    onSurface: AppColors.textColorLight,
+    onBackground: AppColors.textColorLight,
+    onError: Colors.white,
+  ),
+  scaffoldBackgroundColor: AppColors.backgroundColorLight,
+  hintColor: AppColors.hintTextColorLight,
+  textTheme: TextTheme(
+    displayLarge: TextStyle(fontSize: 96.0, fontWeight: FontWeight.w300, color: AppColors.textColorLight),
+    displayMedium: TextStyle(fontSize: 60.0, fontWeight: FontWeight.w300, color: AppColors.textColorLight),
+    displaySmall: TextStyle(fontSize: 48.0, fontWeight: FontWeight.w400, color: AppColors.textColorLight),
+    headlineMedium: TextStyle(fontSize: 34.0, fontWeight: FontWeight.w400, color: AppColors.textColorLight),
+    headlineSmall: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w400, color: AppColors.textColorLight),
+    titleLarge: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500, color: AppColors.textColorLight),
+    titleMedium: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400, color: AppColors.textColorLight),
+    titleSmall: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500, color: AppColors.textColorLight),
+    bodyLarge: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400, color: AppColors.textColorLight),
+    bodyMedium: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: AppColors.textColorLight),
+    labelLarge: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500, color: AppColors.textColorLight),
+    bodySmall: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: AppColors.textColorLight),
+    labelSmall: TextStyle(fontSize: 10.0, fontWeight: FontWeight.w400, color: AppColors.textColorLight),
+  ),
+  // Outras personalizações (botões, app bars, etc.)
+);
+
+ThemeData darkTheme = ThemeData(
+  primaryColor: AppColors.primaryColor,
+  primaryColorDark: AppColors.primaryVariant,
+  secondaryHeaderColor: AppColors.secondaryColor,
+  colorScheme: const ColorScheme.dark(
+    primary: AppColors.primaryColor,
+    primaryContainer: AppColors.primaryVariant,
+    secondary: AppColors.secondaryColor,
+    secondaryContainer: AppColors.secondaryVariant,
+    surface: AppColors.surfaceColorDark,
+    background: AppColors.backgroundColorDark,
+    error: AppColors.errorColor,
+    onPrimary: Colors.white,
+    onSecondary: Colors.white,
+    onSurface: AppColors.textColorDark,
+    onBackground: AppColors.textColorDark,
+    onError: Colors.white,
+  ),
+  scaffoldBackgroundColor: AppColors.backgroundColorDark,
+  hintColor: AppColors.hintTextColorDark,
+  textTheme: TextTheme(
+    displayLarge: TextStyle(fontSize: 96.0, fontWeight: FontWeight.w300, color: AppColors.textColorDark),
+    displayMedium: TextStyle(fontSize: 60.0, fontWeight: FontWeight.w300, color: AppColors.textColorDark),
+    displaySmall: TextStyle(fontSize: 48.0, fontWeight: FontWeight.w400, color: AppColors.textColorDark),
+    headlineMedium: TextStyle(fontSize: 34.0, fontWeight: FontWeight.w400, color: AppColors.textColorDark),
+    headlineSmall: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w400, color: AppColors.textColorDark),
+    titleLarge: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500, color: AppColors.textColorDark),
+    titleMedium: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400, color: AppColors.textColorDark),
+    titleSmall: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500, color: AppColors.textColorDark),
+    bodyLarge: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400, color: AppColors.textColorDark),
+    bodyMedium: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: AppColors.textColorDark),
+    labelLarge: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500, color: AppColors.textColorDark),
+    bodySmall: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: AppColors.textColorDark),
+    labelSmall: TextStyle(fontSize: 10.0, fontWeight: FontWeight.w400, color: AppColors.textColorDark),
+  ),
+  // Outras personalizações (botões, app bars, etc.)
+);
