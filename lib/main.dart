@@ -4,10 +4,13 @@ import 'package:get/get.dart';
 import 'package:speed_externo/commom/styles/thema_app.dart';
 import 'package:speed_externo/routes.dart';
 import 'package:speed_externo/stores/config_store.dart';
+import 'package:speed_externo/stores/form_store.dart';
+
 
 void main (){
-   Get.put(ConfigStore());
-    runApp(Myapp());
+  Get.put(FormStore());
+  Get.put(ConfigStore());
+  runApp(Myapp());
 }
 
 class Myapp extends StatelessWidget {
