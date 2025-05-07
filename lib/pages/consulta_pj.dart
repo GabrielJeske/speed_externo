@@ -2,17 +2,18 @@
 import 'package:flutter/material.dart';
 
 import 'package:speed_externo/commom/forms/cliente_pf_form.dart';
+import 'package:speed_externo/commom/forms/cliente_pj_form.dart';
 
-class CadastroPF extends StatelessWidget {
+class ConsultaPj extends StatelessWidget {
 
-  const CadastroPF({
+  const ConsultaPj({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ClientePfForm(),
+      body: ClientePjForm(isConsulta: true,),
     );
   }
 }

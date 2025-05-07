@@ -25,7 +25,7 @@ class CustomDrawer extends StatelessWidget {
                       leading: Icon(Icons.add) ,
                       title: Text('Cadastro'), 
                       onTap: () {
-                        Get.toNamed('');
+                        Get.toNamed('/cliente/cadastro');
                       },
                     ),
                     ListTile(

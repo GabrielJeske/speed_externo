@@ -17,21 +17,6 @@ mixin _$FormStore on _FormStoreBase, Store {
               name: '_FormStoreBase.isFormValid'))
           .value;
 
-  late final _$tipoAtom = Atom(name: '_FormStoreBase.tipo', context: context);
-
-  @override
-  String get tipo {
-    _$tipoAtom.reportRead();
-    return super.tipo;
-  }
-
-  @override
-  set tipo(String value) {
-    _$tipoAtom.reportWrite(value, super.tipo, () {
-      super.tipo = value;
-    });
-  }
-
   late final _$formValuesAtom =
       Atom(name: '_FormStoreBase.formValues', context: context);
 
@@ -68,17 +53,6 @@ mixin _$FormStore on _FormStoreBase, Store {
       ActionController(name: '_FormStoreBase', context: context);
 
   @override
-  void setTipo(String tipo) {
-    final _$actionInfo = _$_FormStoreBaseActionController.startAction(
-        name: '_FormStoreBase.setTipo');
-    try {
-      return super.setTipo(tipo);
-    } finally {
-      _$_FormStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   void setField(String chave, String value) {
     final _$actionInfo = _$_FormStoreBaseActionController.startAction(
         name: '_FormStoreBase.setField');
@@ -112,11 +86,11 @@ mixin _$FormStore on _FormStoreBase, Store {
   }
 
   @override
-  void validateAllFields() {
+  void validateAllFields(String tipo) {
     final _$actionInfo = _$_FormStoreBaseActionController.startAction(
         name: '_FormStoreBase.validateAllFields');
     try {
-      return super.validateAllFields();
+      return super.validateAllFields(tipo);
     } finally {
       _$_FormStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -136,7 +110,6 @@ mixin _$FormStore on _FormStoreBase, Store {
   @override
   String toString() {
     return '''
-tipo: ${tipo},
 formValues: ${formValues},
 formErrors: ${formErrors},
 isFormValid: ${isFormValid}

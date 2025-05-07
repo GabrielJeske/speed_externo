@@ -3,8 +3,8 @@ import 'package:speed_externo/pages/cadastro_pf.dart';
 import 'package:speed_externo/pages/cadastro_pj.dart';
 
 
-class ClientePage extends StatelessWidget {
-  const ClientePage({Key? key}) : super(key: key);
+class clienteCadastro extends StatelessWidget {
+  const clienteCadastro({Key? key}) : super(key: key);
  
 
   @override

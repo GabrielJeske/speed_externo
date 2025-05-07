@@ -10,7 +10,9 @@ class CustomFormField extends StatelessWidget {
   final String? Function(String?)? validator;
   final bool readOnly;
   final void Function(String)? onChanged;
-  final void Function()? onTap;
+  final bool isConsulta;
+  final void Function(String)? onFieldSubmitted;
+  final void Function()? onEditingComplete;
 
   const CustomFormField({
     Key? key,
@@ -21,30 +23,31 @@ class CustomFormField extends StatelessWidget {
     this.validator,
     this.readOnly = false,
     this.onChanged,
-    this.onTap,
+    this.isConsulta = false,
     this.mask,
+    this.onFieldSubmitted,
+    this.onEditingComplete,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child:  Observer(builder: (_) =>
-        TextFormField(
-          controller: controller,
-          inputFormatters: mask,
-          decoration: InputDecoration(
-            labelText: labelText,
-            errorText: errorText,
-            border: const OutlineInputBorder(),
-          ),
-          keyboardType: keyboardType,
-          validator: validator,
-          readOnly: readOnly,
-          onChanged: onChanged,
-          onTap: onTap,
+      child: TextFormField(
+        controller: controller,
+        inputFormatters: mask,
+        decoration: InputDecoration(
+          labelText: labelText,
+          errorText: errorText,
+          border: const OutlineInputBorder(),
         ),
-      )
+        keyboardType: keyboardType,
+        validator: validator,
+        readOnly: readOnly, // Aplica readOnly diretamente
+        onChanged: onChanged, // Mantém onChanged sempre
+        onFieldSubmitted: onFieldSubmitted,
+        onEditingComplete: onEditingComplete,
+      ),
     );
   }
 }
