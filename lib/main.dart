@@ -10,10 +10,14 @@ import 'package:speed_externo/stores/validate_store.dart';
 
 
 void main (){
-  Get.lazyPut(() => ValidateStore());
-  Get.lazyPut(() => FormStore());
-  Get.lazyPut(() => ConfigStore());
-  Get.lazyPut(() => DadosStore());
+  //Get.lazyPut(() => ValidateStore());
+  //Get.lazyPut(() => FormStore());
+  Get.put(ValidateStore());
+  Get.put(FormStore());
+  Get.put(DadosStore());
+  Get.put(ConfigStore());
+  //Get.lazyPut(() => ConfigStore());
+  //Get.lazyPut(() => DadosStore());
   runApp(Myapp());
 }
 

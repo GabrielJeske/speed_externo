@@ -62,6 +62,7 @@ class _ClientePfFormState extends State<ClientePfForm> {
     for (var campo in controllers.keys) {
       controllers[campo]!.text = '';
     }
+    dispose();
   }
 
   @override
@@ -304,8 +305,8 @@ class _ClientePfFormState extends State<ClientePfForm> {
                         formStore.validateAllFields('pf');
                         if (formStore.isFormValid) {
                           log("validou");
-                          dadosStore.salvaCliente();
-                          resetForm;
+                          await dadosStore.salvaCliente();
+                           resetForm;
                         } else {
                           log("nao salvou nem validou");
                         }

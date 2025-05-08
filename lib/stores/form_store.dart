@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:mobx/mobx.dart';
@@ -31,7 +33,8 @@ abstract class _FormStoreBase with Store{
 
     @action
   void validateAllFields(String tipo) { // tipo pode ser 'pf' ou 'pj'
-     Get.find<ValidateStore>().validateAllFields(tipo);
+    log('Chamou ValidadeAll');
+    Get.find<ValidateStore>().validateAllFields(tipo);
   }
 
   @action

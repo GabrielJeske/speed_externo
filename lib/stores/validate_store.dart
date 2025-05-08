@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:mobx/mobx.dart';
@@ -18,9 +20,9 @@ abstract class _ValidateStoreBase with Store{
 
     formStore.formValues[chave] = value;
 
-    if (chave == 'email'){
+    if (chave == 'email' || chave == 'email' ){
       formStore.formErrors[chave] = _validateEmail(value);
-    }else if (chave == 'cpf'){
+    }else if (chave == 'cpf' ){
       formStore.formErrors[chave] = _validateCpf(value);
     }else if (chave == 'cnpj'){
       formStore.formErrors[chave] = _validateCnpj(value);    
@@ -56,36 +58,41 @@ abstract class _ValidateStoreBase with Store{
 
     final formStore = Get.find<FormStore>();
 
-    final Map<String, String> fieldsToValidate = Map.from(formStore.formValues); // Cópia para evitar modificação durante a iteração
+
+    final Map<String, String> fieldsToValidate = (formStore.formValues);
+  
+    log('Chgou no  ValidadeAll e obetve os dados $fieldsToValidate');
 
       if (tipo == 'pf'){
         validateField('nome', fieldsToValidate['nome'] ?? '');
         validateField('cpf', fieldsToValidate['cpf'] ?? '');
+        validateField('email', fieldsToValidate['email'] ?? '');
+        validateField('endereco', fieldsToValidate['endereco'] ?? '');
+        validateField('bairro', fieldsToValidate['bairro'] ?? '');
+        validateField('cep', fieldsToValidate['cep'] ?? '');
+        validateField('n', fieldsToValidate['n'] ?? '');
+        validateField('logadouro', fieldsToValidate['logadouro'] ?? '');
+        validateField('contato', fieldsToValidate['contato'] ?? '');
+        validateField('numero', fieldsToValidate['numero'] ?? '');
+        validateField('contribuinte', fieldsToValidate['contribuinte'] ?? '');
+        validateField('ie', fieldsToValidate['ie'] ?? '');     
       }else if (tipo == 'pj'){
         validateField('razaosocial', fieldsToValidate['razaosocial'] ?? '');
         validateField('cnpj', fieldsToValidate['cnpj'] ?? '');
-        validateField('fantasia', fieldsToValidate['fantasia'] ?? '');      
+        validateField('fantasia', fieldsToValidate['fantasia'] ?? '');     
+        validateField('email', fieldsToValidate['email'] ?? '');
+        validateField('endereco', fieldsToValidate['endereco'] ?? '');
+        validateField('bairro', fieldsToValidate['bairro'] ?? '');
+        validateField('cep', fieldsToValidate['cep'] ?? '');
+        validateField('n', fieldsToValidate['n'] ?? '');
+        validateField('logadouro', fieldsToValidate['logadouro'] ?? '');
+        validateField('contato', fieldsToValidate['contato'] ?? '');
+        validateField('numero', fieldsToValidate['numero'] ?? '');
+        validateField('contribuinte', fieldsToValidate['contribuinte'] ?? '');
+        validateField('i', fieldsToValidate['ie'] ?? '');         
       }
-      validateField('email', fieldsToValidate['email'] ?? '');
-      validateField('endereco', fieldsToValidate['endereco'] ?? '');
-      validateField('bairro', fieldsToValidate['bairro'] ?? '');
-      validateField('cep', fieldsToValidate['cep'] ?? '');
-      validateField('n', fieldsToValidate['n'] ?? '');
-      validateField('logadouro', fieldsToValidate['logadouro'] ?? '');
-      validateField('contato', fieldsToValidate['contato'] ?? '');
-      validateField('numero', fieldsToValidate['numero'] ?? '');
-      validateField('contribuinte', fieldsToValidate['contribuinte'] ?? '');
-      validateField('ie', fieldsToValidate['ie'] ?? '');     
-      validateField('email_pj', fieldsToValidate['email_pj'] ?? '');
-      validateField('endereco_pj', fieldsToValidate['endereco_pj'] ?? '');
-      validateField('bairro_pj', fieldsToValidate['bairro_pj'] ?? '');
-      validateField('cep_pj', fieldsToValidate['cep_pj'] ?? '');
-      validateField('n_pj', fieldsToValidate['n_pj'] ?? '');
-      validateField('logadouro_pj', fieldsToValidate['logadouro_pj'] ?? '');
-      validateField('contato_pj', fieldsToValidate['contato_pj'] ?? '');
-      validateField('numero_pj', fieldsToValidate['numero_pj'] ?? '');
-      validateField('contribuinte_pj', fieldsToValidate['contribuinte_pj'] ?? '');
-      validateField('ie_pj', fieldsToValidate['ie_pj'] ?? '');            
+      
+          
   }
 
 }
