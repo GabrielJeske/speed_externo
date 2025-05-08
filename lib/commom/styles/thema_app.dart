@@ -36,7 +36,6 @@ ThemeData lightTheme = ThemeData(
     bodySmall: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: AppColors.textColorLight),
     labelSmall: TextStyle(fontSize: 10.0, fontWeight: FontWeight.w400, color: AppColors.textColorLight),
   ),
-  // Outras personalizações (botões, app bars, etc.)
 );
 
 ThemeData darkTheme = ThemeData(
@@ -74,5 +73,4 @@ ThemeData darkTheme = ThemeData(
     bodySmall: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400, color: AppColors.textColorDark),
     labelSmall: TextStyle(fontSize: 10.0, fontWeight: FontWeight.w400, color: AppColors.textColorDark),
   ),
-  // Outras personalizações (botões, app bars, etc.)
 );

@@ -4,12 +4,16 @@ import 'package:get/get.dart';
 import 'package:speed_externo/commom/styles/thema_app.dart';
 import 'package:speed_externo/routes.dart';
 import 'package:speed_externo/stores/config_store.dart';
+import 'package:speed_externo/stores/dados_store.dart';
 import 'package:speed_externo/stores/form_store.dart';
+import 'package:speed_externo/stores/validate_store.dart';
 
 
 void main (){
-  Get.put(FormStore());
-  Get.put(ConfigStore());
+  Get.lazyPut(() => ValidateStore());
+  Get.lazyPut(() => FormStore());
+  Get.lazyPut(() => ConfigStore());
+  Get.lazyPut(() => DadosStore());
   runApp(Myapp());
 }
 

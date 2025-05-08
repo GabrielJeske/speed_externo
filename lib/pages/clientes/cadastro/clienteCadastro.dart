@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:speed_externo/pages/consulta_pf.dart';
-import 'package:speed_externo/pages/consulta_pj.dart';
+import 'package:speed_externo/pages/clientes/cadastro/cadastro_pf.dart';
+import 'package:speed_externo/pages/clientes/cadastro/cadastro_pj.dart';
 
 
-class ClienteConsulta extends StatelessWidget {
-  const ClienteConsulta({Key? key}) : super(key: key);
+class clienteCadastro extends StatelessWidget {
+  const clienteCadastro({Key? key}) : super(key: key);
  
 
   @override
@@ -13,7 +13,7 @@ class ClienteConsulta extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Consulta de Clientes'),
+          title: Text('Cadastro de Clientes'),
           bottom: TabBar(
             tabs: [
               Tab(text: 'Pessoa Física'),
@@ -23,8 +23,8 @@ class ClienteConsulta extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            ConsultaPf(),
-            ConsultaPj(),
+            CadastroPF(),
+            CadastroPJ(),
           ],
         ),
       ),

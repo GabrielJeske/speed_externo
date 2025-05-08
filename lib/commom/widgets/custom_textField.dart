@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 
 class CustomFormField extends StatelessWidget {
   final String labelText;
@@ -43,8 +42,8 @@ class CustomFormField extends StatelessWidget {
         ),
         keyboardType: keyboardType,
         validator: validator,
-        readOnly: readOnly, // Aplica readOnly diretamente
-        onChanged: onChanged, // Mantém onChanged sempre
+        readOnly: readOnly,
+        onChanged: onChanged, 
         onFieldSubmitted: onFieldSubmitted,
         onEditingComplete: onEditingComplete,
       ),

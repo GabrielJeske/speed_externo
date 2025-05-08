@@ -1,7 +1,7 @@
 
 import 'package:get/get.dart';
-import 'package:speed_externo/pages/clienteCadastro.dart';
-import 'package:speed_externo/pages/clienteConsulta.dart';
+import 'package:speed_externo/pages/clientes/cadastro/clienteCadastro.dart';
+import 'package:speed_externo/pages/clientes/consulta/clienteConsulta.dart';
 import 'package:speed_externo/pages/cofig_page.dart';
 import 'package:speed_externo/pages/home_page.dart';
 

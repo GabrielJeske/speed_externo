@@ -75,39 +75,6 @@ mixin _$FormStore on _FormStoreBase, Store {
   }
 
   @override
-  void validateField(String chave, String value) {
-    final _$actionInfo = _$_FormStoreBaseActionController.startAction(
-        name: '_FormStoreBase.validateField');
-    try {
-      return super.validateField(chave, value);
-    } finally {
-      _$_FormStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void validateAllFields(String tipo) {
-    final _$actionInfo = _$_FormStoreBaseActionController.startAction(
-        name: '_FormStoreBase.validateAllFields');
-    try {
-      return super.validateAllFields(tipo);
-    } finally {
-      _$_FormStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void validateAll() {
-    final _$actionInfo = _$_FormStoreBaseActionController.startAction(
-        name: '_FormStoreBase.validateAll');
-    try {
-      return super.validateAll();
-    } finally {
-      _$_FormStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   String toString() {
     return '''
 formValues: ${formValues},
