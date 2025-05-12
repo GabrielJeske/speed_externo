@@ -21,8 +21,10 @@ abstract class _FormStoreBase with Store{
    ObservableMap<String, String?> formErrors = ObservableMap.of({
    });
 
+
    @computed
    bool get isFormValid => formErrors.values.every((error) => error == null);
+
 
 
    @action

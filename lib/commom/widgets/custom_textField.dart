@@ -12,8 +12,9 @@ class CustomFormField extends StatelessWidget {
   final bool isConsulta;
   final void Function(String)? onFieldSubmitted;
   final void Function()? onEditingComplete;
+  FocusNode? foco;
 
-  const CustomFormField({
+  CustomFormField({
     Key? key,
     required this.labelText,
     this.controller,
@@ -26,6 +27,7 @@ class CustomFormField extends StatelessWidget {
     this.mask,
     this.onFieldSubmitted,
     this.onEditingComplete,
+    this.foco
   }) : super(key: key);
 
   @override
@@ -46,6 +48,7 @@ class CustomFormField extends StatelessWidget {
         onChanged: onChanged, 
         onFieldSubmitted: onFieldSubmitted,
         onEditingComplete: onEditingComplete,
+        focusNode: foco,
       ),
     );
   }

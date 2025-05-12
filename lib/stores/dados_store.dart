@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:mobx/mobx.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:speed_externo/stores/form_store.dart';
@@ -15,131 +13,134 @@ class DadosStore =_DadosStoreBase with _$DadosStore;
 
 abstract class _DadosStoreBase with Store{
 
+  @observable
+  ObservableList<Map<String, dynamic>> listaClientes = ObservableList<Map<String, dynamic>> ();
 
-  Future<File> obtemFileClie() async {
-    try {
-      final dir = await getApplicationDocumentsDirectory();
-      final path = dir.path;
-      final f = File('$path/clientes.json');
-      bool fExiste = await f.exists();
-      if (fExiste) {
-        return f;
-      } else {
-        List<Map<String, dynamic>> mClientes = [];
-        final jClientes = jsonEncode(mClientes);
-        await f.writeAsString(jClientes);
-        return f;
-      }
-    } catch (e) {
-      log('Erro em obtemFileClie: $e');
-      rethrow; // Ou retorne null, ou trate conforme apropriado para seu aplicativo
+  @observable
+  String filtro = '';
+
+  @observable
+  Map<String, dynamic> clienSele = {}; 
+
+  @action
+  void obtemClientes () async{
+    try{
+      final fCliente = await obtemFileClie();
+      String contJson = await fCliente.readAsString();
+      List<Map<String, dynamic>> clientes = jsonDecode(contJson).cast<Map<String, dynamic>>();
+      listaClientes = ObservableList<Map<String, dynamic>>.of(clientes);
+    }catch (e){
+      rethrow;
     }
   }
 
-  Future<int> obtemId() async {
+   @action
+  void setFiltro(String filter){
+    filtro = filter;
+  }
+
+  @action
+  void setCliente(Map<String, dynamic> cliente){
+    clienSele = cliente;
+  }
+
+  @computed
+  List<Map<String, dynamic>> get listaFiltrada {
+    if (filtro.isEmpty){
+      return listaClientes;
+    }else {
+      return listaClientes.where((cliente) => cliente['nome']?.contains(filtro)).toList();
+    }
+  }
+
+
+
+  Future<File> obtemFileClie() async{
     try {
-      final json = await obtemFileClie();
-      final contJson = await json.readAsString();
-      final dynamic decodedJson = jsonDecode(contJson);
-
-      List<Map<String, dynamic>> listaDeClientes = [];
-
-      if (decodedJson is List) {
-        listaDeClientes = decodedJson.cast<Map<String, dynamic>>().toList();
-      } else if (decodedJson is Map) {
-        listaDeClientes.add(decodedJson.cast<String, dynamic>());
-      } else {
-        log('Estrutura JSON inesperada em obtemId');
-        return 1; // Ou lance uma exceção, ou trate de forma diferente
-      }
-
-      if (listaDeClientes.isNotEmpty) {
-        final ultimoCliente = listaDeClientes.last;
-        if (ultimoCliente.containsKey('id') && ultimoCliente['id'] is String) {
-          try {
-            int ultimoID = int.parse(ultimoCliente['id']);
-            return ultimoID + 1;
-          } catch (e) {
-            log('Erro ao analisar o id em obtemId: $e');
-            return 1; // Ou lance uma exceção, ou trate de forma diferente
-          }
-        } else {
-          log('Último cliente não tem um id válido em obtemId');
-          return 1; // Ou lance uma exceção
+      Directory dir = await getApplicationDocumentsDirectory();      
+        log('Obtem DIR $dir');
+        String path =  dir.path;
+        log('Obtem path $path');
+        File f = File('$path/cliente05.json');
+        log('DEfini file $f');
+        bool fExiste = await f.exists();
+        log('verifica se existe file $fExiste');
+        if (fExiste){
+          log('Encontrou o arquivo e vai retornar $f');
+          return f;
+        }else {
+          log('Arquivo não encontrado, vai criar');
+          List<Map<String, dynamic>> mapClientes = [];
+          final jClientes = jsonEncode(mapClientes);
+          await f.writeAsString(jClientes);
+          log('Criou o arquivo e vai retornar $f');
+          return f;
         }
-      } else {
+    } catch (f) {
+      log('erro ao obter Arquivo de clientes $f');
+      rethrow;
+    }      
+  }
+
+  Future<int> obtemId() async{
+    try {
+      log('Vai obter o ID');
+      File json = await obtemFileClie();
+      log('Objet o json $json');
+      String contJson = await json.readAsString();
+      log('Passou o Json para a String $contJson');
+      if (contJson != '[]' ){
+        List<Map<String, dynamic>> listaDeClientes = jsonDecode(contJson).cast<Map<String, dynamic>>();
+        log('ultimo cliente');
+        Map<String, dynamic> ultimoCliente = listaDeClientes.last;
+        log('ultimo cliente final ');
+        int ultimoID = ultimoCliente['id'];
+        ultimoID++;
+        return ultimoID;
+      }else {
         return 1;
       }
-    } catch (e) {
-      log('Erro em obtemId: $e');
-      return 1; // Ou lance uma exceção
+    }catch (e) {
+      log('Erro ao obter o id');
+      rethrow;
     }
+        
   }
 
-  Future<void> salvaCliente() async {
-    
+  salvaCliente() async{
     final formStore = Get.find<FormStore>();
-    
-    try {
-      final int id = await obtemId();
+    try{
+      int id = await obtemId();
       final fCliente = await obtemFileClie();
-      final String contJson = await fCliente.readAsString();
-      final dynamic decodedJson = jsonDecode(contJson);
-
-      List<Map<String, dynamic>> clientes = [];
-      if (decodedJson is List) {
-        clientes = decodedJson.cast<Map<String, dynamic>>().toList();
-      } else if (decodedJson is Map) {
-        clientes.add(decodedJson.cast<String, dynamic>());
+      String contJson = await fCliente.readAsString();
+      if (contJson != '[]' ){
+        List<Map<String, dynamic>> clientes = jsonDecode(contJson).cast<Map<String, dynamic>>();
+        final cliente = <String, dynamic>{};
+        formStore.formValues.forEach((key, value) {
+          cliente[key] = value;
+        });
+        cliente["id"]=id;
+        clientes.add(cliente);
+        final jClientes = jsonEncode(clientes);
+        await fCliente.writeAsString(jClientes);  
+        log('Salvou porraa $clientes');
+      }else {
+        final cliente = <String, dynamic>{};
+        formStore.formValues.forEach((key, value) {
+          cliente[key] = value;
+        });
+        cliente["id"]=id;
+        List<Map<String, dynamic>> clientes = [];      
+        clientes.add(cliente);
+        log('Salvou porraa $clientes');
+        final jClientes = jsonEncode(clientes);
+        await fCliente.writeAsString(jClientes);
       }
-
-      if (formStore.formValues.isNotEmpty) {
-        final Map<String, String> cliente = Map<String, String>.from(formStore.formValues); // Use Map.from
-        cliente['id'] = '$id'; // Linha corrigida
-        clientes.add(Map<String, dynamic>.from(cliente)); // Adiciona como mapa dinâmico
-        await fCliente.writeAsString(jsonEncode(clientes)); // Escreve de volta no arquivo
-        log('Cliente salvo: $clientes');
-      } else {
-        log('Valores vazios em salvaCliente');
-      }
-    } catch (e) {
-      log('Erro em salvaCliente: $e');
-      rethrow; // Ou trate o erro como apropriado
+    }catch (e){
+      rethrow;
     }
   }
 
-
-  Future<void> consultaCliente() async {
-    
-    final formStore = Get.find<FormStore>();
-    
-    try {
-      final int id = await obtemId();
-      final fCliente = await obtemFileClie();
-      final String contJson = await fCliente.readAsString();
-      final dynamic decodedJson = jsonDecode(contJson);
-
-      List<Map<String, dynamic>> clientes = [];
-      if (decodedJson is List) {
-        clientes = decodedJson.cast<Map<String, dynamic>>().toList();
-      } else if (decodedJson is Map) {
-        clientes.add(decodedJson.cast<String, dynamic>());
-      }
-
-      if (formStore.formValues.isNotEmpty) {
-        final Map<String, String> cliente = Map<String, String>.from(formStore.formValues); // Use Map.from
-        cliente['id'] = '$id'; // Linha corrigida
-        clientes.add(Map<String, dynamic>.from(cliente)); // Adiciona como mapa dinâmico
-        await fCliente.writeAsString(jsonEncode(clientes)); // Escreve de volta no arquivo
-        log('Cliente salvo: $clientes');
-      } else {
-        log('Valores vazios em salvaCliente');
-      }
-    } catch (e) {
-      log('Erro em salvaCliente: $e');
-      rethrow; // Ou trate o erro como apropriado
-    }
-  }
 
 }
 

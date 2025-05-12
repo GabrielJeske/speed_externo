@@ -22,13 +22,18 @@ class ClientePjForm extends StatefulWidget {
 
 class _ClientePjFormState extends State<ClientePjForm> {
   final formStore = Get.find<FormStore>();
-   final dadosStore = Get.find<DadosStore>();
+  final dadosStore = Get.find<DadosStore>();
   
-
   final Map<String, TextEditingController> controllers = {};
-
   final List<String> campos = [
-    'razaosocial', 'fantasia', 'cnpj', 'email', 'endereco', 'bairro', 'cep', 'n', 'contato', 'numero', 'contribuinte', 'ie'
+    'razaosocial',
+    'fantasia',
+    'cnpj',
+    'email',
+    'endereco',
+    'bairro',
+    'cep',
+    'n', 'contato', 'numero', 'contribuinte', 'ie'
   ];
   
   
@@ -54,7 +59,6 @@ class _ClientePjFormState extends State<ClientePjForm> {
   }
 
   void resetForm() {
-    formStore.resetForm();
     for (var campo in controllers.keys) {
       controllers[campo]!.text = '';
     }
@@ -320,7 +324,9 @@ class _ClientePjFormState extends State<ClientePjForm> {
                           log("validou");
                           dadosStore.salvaCliente();
                           resetForm;
+                          Get.snackbar("Sucesso", "Cliente salvo com sucesso!");
                         } else {
+                          Get.snackbar("Erro", "Por favor, corrija os erros no formulário.");
                           log("nao salvou nem validou");
                         }
                       },

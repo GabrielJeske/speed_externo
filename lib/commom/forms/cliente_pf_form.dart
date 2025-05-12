@@ -41,28 +41,29 @@ class _ClientePfFormState extends State<ClientePfForm> {
   var maskCep = MaskTextInputFormatter(mask: '#####-###', filter: {"#": RegExp(r'[0-9]')});
   var maskNumero = MaskTextInputFormatter(mask: '(##) #####-####', filter: {"#": RegExp(r'[0-9]')});
 
+  final FocusNode _searchFocusNode = FocusNode();
+  bool _showSuggestions = false;
+
   @override
   void initState() {
     super.initState();
     for (var campo in campos) {
       controllers[campo] = TextEditingController();
     }
+    if (widget.isConsulta){
+      dadosStore.obtemClientes();
+      _showSuggestions = _searchFocusNode.hasFocus;
+    }
   }
 
-  @override
-  void dispose() {
-    for (var controller in controllers.values) {
-      controller.dispose();
-    }
-    super.dispose();
-  }
 
   void resetForm() {
     formStore.resetForm();
+    _searchFocusNode.dispose();
+
     for (var campo in controllers.keys) {
       controllers[campo]!.text = '';
     }
-    dispose();
   }
 
   @override
@@ -74,14 +75,51 @@ class _ClientePfFormState extends State<ClientePfForm> {
           builder: (_) => Column(
             children: [
               SizedBox(height: 20),
+              if (widget.isConsulta)
+              CustomFormField(
+                controller:  controllers['nome'],
+                labelText: 'Nome',
+                foco: _searchFocusNode,
+                onChanged: (value) {
+                  dadosStore.setFiltro(value);
+                  setState(() { _showSuggestions = value.isNotEmpty; });
+                },
+              ),
+              Observer( 
+                builder: (__) {
+                  if (_showSuggestions && dadosStore.listaFiltrada.isNotEmpty) {
+                    return Container(
+                      constraints: BoxConstraints(maxHeight: 200),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: dadosStore.listaFiltrada.length,
+                        itemBuilder: (contextList, index) { 
+                          final cliente = dadosStore.listaFiltrada[index];
+                          return ListTile(
+                            title: Text(cliente['nome'] ?? ''),
+                            onTap: () {
+                              dadosStore.setCliente(cliente); 
+                               controllers['nome'] = cliente['nome'] ?? '';
+                              setState(() { _showSuggestions = false; }); 
+                              _searchFocusNode.unfocus(); 
+                            },
+                          );
+                        },
+                      ),
+                    );
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                },
+              ), 
+              if (!widget.isConsulta)
               Row(
-                children: [
+                children: [                
                   Flexible(
                     child: CustomFormField(
                       controller: controllers['nome'],
                       errorText: formStore.formErrors['nome'],
-                      labelText: 'Nome',
-                      readOnly: widget.isConsulta,
+                      labelText: 'Nome',                                       
                       onChanged: (value) => formStore.setField('nome', value),
                       //onFieldSubmitted: (_) => validateStore.validateField('nome', controllers['nome']!.text),
                       //onEditingComplete: () => validateStore.validateField('nome', controllers['nome']!.text),
@@ -306,9 +344,11 @@ class _ClientePfFormState extends State<ClientePfForm> {
                         if (formStore.isFormValid) {
                           log("validou");
                           await dadosStore.salvaCliente();
-                           resetForm;
-                        } else {
+                          Get.snackbar("Sucesso", "Cliente salvo com sucesso!");
+                          resetForm;                    
+                        } else {                                                  
                           log("nao salvou nem validou");
+                          Get.snackbar("Erro", "Por favor, corrija os erros no formulário.");
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -327,4 +367,4 @@ class _ClientePfFormState extends State<ClientePfForm> {
       ),
     );
   }
-}
+} 

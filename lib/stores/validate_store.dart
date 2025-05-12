@@ -89,7 +89,7 @@ abstract class _ValidateStoreBase with Store{
         validateField('contato', fieldsToValidate['contato'] ?? '');
         validateField('numero', fieldsToValidate['numero'] ?? '');
         validateField('contribuinte', fieldsToValidate['contribuinte'] ?? '');
-        validateField('i', fieldsToValidate['ie'] ?? '');         
+        validateField('ie', fieldsToValidate['ie'] ?? '');         
       }
       
           

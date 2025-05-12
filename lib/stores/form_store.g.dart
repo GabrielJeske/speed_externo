@@ -64,6 +64,17 @@ mixin _$FormStore on _FormStoreBase, Store {
   }
 
   @override
+  void validateAllFields(String tipo) {
+    final _$actionInfo = _$_FormStoreBaseActionController.startAction(
+        name: '_FormStoreBase.validateAllFields');
+    try {
+      return super.validateAllFields(tipo);
+    } finally {
+      _$_FormStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void resetForm() {
     final _$actionInfo = _$_FormStoreBaseActionController.startAction(
         name: '_FormStoreBase.resetForm');
