@@ -24,45 +24,17 @@ class _ClientePjFormState extends State<ClientePjForm> {
   final formStore = Get.find<FormStore>();
   final dadosStore = Get.find<DadosStore>();
   
-  final Map<String, TextEditingController> controllers = {};
-  final List<String> campos = [
-    'razaosocial',
-    'fantasia',
-    'cnpj',
-    'email',
-    'endereco',
-    'bairro',
-    'cep',
-    'n', 'contato', 'numero', 'contribuinte', 'ie'
-  ];
-  
-  
-  
   @override
   void initState() {
-    super.initState();
-    for (var campo in campos) {
-      controllers[campo] = TextEditingController();
-
-      controllers[campo]!.addListener(() {
-        formStore.setField(campo, controllers[campo]!.text);
-      });
-    }
+    super.initState();    
   }
+  
 
   @override
   void dispose() {
-    for (var controller in controllers.values) {
-      controller.dispose();
-    }
     super.dispose();
   }
 
-  void resetForm() {
-    for (var campo in controllers.keys) {
-      controllers[campo]!.text = '';
-    }
-  }
 
   var maskCnpj = MaskTextInputFormatter(mask: '##.###.###/####-##', filter: { "#": RegExp(r'[0-9]') });
   var maskcep = MaskTextInputFormatter(mask: '#####-###', filter: { "#": RegExp(r'[0-9]') });
@@ -82,7 +54,7 @@ class _ClientePjFormState extends State<ClientePjForm> {
                   children: [
                     Flexible(
                       child: CustomFormField(
-                        controller: controllers['razaosocial'],
+                        controller: formStore.controllerRazao,
                         errorText: formStore.formErrors['razaosocial'],
                         labelText: 'Razao Social',
                         readOnly: widget.isConsulta,
@@ -98,7 +70,7 @@ class _ClientePjFormState extends State<ClientePjForm> {
                   children: [
                     Flexible(
                       child: CustomFormField(
-                        controller: controllers['fantasia'],
+                        controller: formStore.controllerFantasia,
                         errorText: formStore.formErrors['fantasia'],
                         readOnly: widget.isConsulta,
                         labelText: 'Nome Fantasia',
@@ -114,7 +86,7 @@ class _ClientePjFormState extends State<ClientePjForm> {
                   children: [
                     Flexible(
                       child: CustomFormField(
-                        controller: controllers['cnpj'],
+                        controller: formStore.controllerCnpj,
                         mask: [maskCnpj],
                         readOnly: widget.isConsulta,
                         keyboardType: TextInputType.numberWithOptions(),                      
@@ -130,7 +102,7 @@ class _ClientePjFormState extends State<ClientePjForm> {
                     ),
                     Flexible(
                       child: DropdownButtonFormField<String>(
-                        decoration: InputDecoration(
+                        decoration: InputDecoration(                        
                           labelText: 'Logadouro', 
                           border: OutlineInputBorder(),
                           errorText: formStore.formErrors['logadouro'],
@@ -154,32 +126,32 @@ class _ClientePjFormState extends State<ClientePjForm> {
                 SizedBox(height: 10),
                 Row(
                   children: [
-                    Flexible(
-                      child: DropdownButtonFormField<String>(
-                        decoration: InputDecoration(
-                          labelText: 'contribuinte', 
-                          border: OutlineInputBorder(),
-                          errorText: formStore.formErrors['contribuinte'],
-                        ),
-                        value: formStore.formValues['contribuinte'] == '' ?  null: formStore.formValues['contribuinte'],
-                        items: ['contribuinte', 'Não contribuinte', 'Isento'].map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          if (newValue != null){
-                            formStore.setField('contribuinte', newValue ?? '');
-                          }                   
-                        },
-                      )
+                     Flexible(
+                    child: DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        labelText: 'Contribuinte',
+                        border: OutlineInputBorder(),
+                        errorText: formStore.formErrors['contribuinte'],
+                      ),
+                      value: formStore.formValues['Contribuinte'] == '' ? null : formStore.formValues['Contribuinte'],
+                      items: ['Contribuinte', 'Não Contribuinte', 'Isento'].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        if (newValue != null) {
+                          formStore.setField('contribuinte', newValue ?? '');
+                        }
+                      },
                     ),
+                  ),
                   SizedBox(width: 10),
                   SizedBox(
                       width: 150,
                       child: CustomFormField(
-                        controller: controllers['ie'],
+                        controller: formStore.controllerIe,
                         keyboardType: TextInputType.number,                
                         labelText: 'IE', 
                         readOnly: widget.isConsulta,
@@ -188,8 +160,7 @@ class _ClientePjFormState extends State<ClientePjForm> {
                         //onFieldSubmitted: (_) => validateStore.validateField('ie', controllers['ie']!.text),
                         //onEditingComplete: () => validateStore.validateField('ie', controllers['ie']!.text),
                       )
-                    )  
-                    
+                    )                      
                   ]            
                 ),
                 SizedBox(height: 10),
@@ -197,7 +168,7 @@ class _ClientePjFormState extends State<ClientePjForm> {
                   children: [
                     Flexible(
                       child: CustomFormField(
-                        controller: controllers['endereco'],                        
+                        controller: formStore.controllerEndereco,                        
                         labelText: 'endereco',
                         readOnly: widget.isConsulta,
                         errorText: formStore.formErrors['endereco'],                        
@@ -210,7 +181,7 @@ class _ClientePjFormState extends State<ClientePjForm> {
                     SizedBox(
                       width: 80,
                       child: CustomFormField(
-                        controller: controllers['n'],
+                        controller: formStore.controllerNumero,
                         keyboardType: TextInputType.number,
                         labelText: 'Nº', 
                         readOnly: widget.isConsulta,
@@ -227,7 +198,7 @@ class _ClientePjFormState extends State<ClientePjForm> {
                   children: [
                     Flexible(
                       child: CustomFormField(
-                        controller: controllers['bairro'],                       
+                        controller: formStore.controllerBairro,                       
                         labelText: 'bairro', 
                         readOnly: widget.isConsulta,
                         errorText: formStore.formErrors['bairro'],                        
@@ -240,7 +211,7 @@ class _ClientePjFormState extends State<ClientePjForm> {
                     SizedBox(
                       width: 120,
                       child: CustomFormField(
-                        controller: controllers['cep'],
+                        controller: formStore.controllerCep,
                         mask: [maskcep],
                         keyboardType: TextInputType.numberWithOptions(),
                         labelText: 'cep', 
@@ -258,7 +229,7 @@ class _ClientePjFormState extends State<ClientePjForm> {
                   children: [
                     Flexible(
                       child: CustomFormField(
-                        controller: controllers['email'],                      
+                        controller: formStore.controllerEmail,                      
                         labelText: 'E-mail', 
                         readOnly: widget.isConsulta,
                         errorText: formStore.formErrors['email'],                        
@@ -277,7 +248,7 @@ class _ClientePjFormState extends State<ClientePjForm> {
                     SizedBox(
                       width: 150,
                       child: CustomFormField(                  
-                        controller: controllers['contato'],                        
+                        controller: formStore.controllerContato,                        
                           labelText: 'contato',
                           readOnly: widget.isConsulta,
                           errorText: formStore.formErrors['contato'],
@@ -287,7 +258,7 @@ class _ClientePjFormState extends State<ClientePjForm> {
                     SizedBox(width: 10),
                     Flexible(
                       child: CustomFormField(
-                        controller: controllers['numero'],
+                        controller: formStore.controllerNumeroContato,
                         mask: [masknumero],
                         keyboardType: TextInputType.numberWithOptions(),                        
                           labelText: 'numero',
@@ -304,7 +275,7 @@ class _ClientePjFormState extends State<ClientePjForm> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      onPressed: resetForm,
+                      onPressed: formStore.resetForm,
                       style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
@@ -322,9 +293,9 @@ class _ClientePjFormState extends State<ClientePjForm> {
                         formStore.validateAllFields('pj');
                         if (formStore.isFormValid) {
                           log("validou");
-                          dadosStore.salvaCliente();
-                          resetForm;
+                          dadosStore.salvaCliente();                          
                           Get.snackbar("Sucesso", "Cliente salvo com sucesso!");
+                          formStore.resetForm();
                         } else {
                           Get.snackbar("Erro", "Por favor, corrija os erros no formulário.");
                           log("nao salvou nem validou");

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:mobx/mobx.dart';
@@ -12,6 +13,20 @@ class FormStore =_FormStoreBase with _$FormStore;
 
 abstract class _FormStoreBase with Store{
 
+
+  TextEditingController controllerRazao = TextEditingController();
+  TextEditingController controllerFantasia = TextEditingController();
+  TextEditingController controllerCnpj = TextEditingController();
+  TextEditingController controllerNome = TextEditingController();
+  TextEditingController controllerCpf = TextEditingController();
+  TextEditingController controllerIe = TextEditingController();
+  TextEditingController controllerEndereco = TextEditingController();
+  TextEditingController controllerNumero = TextEditingController();
+  TextEditingController controllerBairro = TextEditingController();
+  TextEditingController controllerCep = TextEditingController();
+  TextEditingController controllerEmail = TextEditingController();
+  TextEditingController controllerContato = TextEditingController();
+  TextEditingController controllerNumeroContato = TextEditingController();
      
    @observable
    ObservableMap<String, String> formValues = ObservableMap.of({});
@@ -41,6 +56,19 @@ abstract class _FormStoreBase with Store{
 
   @action
   void resetForm() {
+    controllerRazao.text = '';
+    controllerFantasia.text = '';
+    controllerCnpj.text = '';
+    controllerNome.text = '';
+    controllerCpf.text = '';
+    controllerIe.text = '';
+    controllerEndereco.text = '';
+    controllerNumero.text = '';
+    controllerBairro.text = '';
+    controllerCep.text = '';
+    controllerEmail.text = '';
+    controllerContato.text = '';
+    controllerNumeroContato.text = ''; 
     formValues.clear();
     formErrors.clear();
   }
