@@ -34,6 +34,7 @@ abstract class _DadosStoreBase with Store{
       String contJson = await fCliente.readAsString();
       List<Map<String, dynamic>> clientes = clienteJson.deserializaJson(contJson);
       listaClientes = ObservableList<Map<String, dynamic>>.of(clientes);
+      log('Obteve os clientes $listaClientes');
     }catch (e){
       log('Erro ao obter os clientes');
       rethrow;
@@ -51,28 +52,44 @@ abstract class _DadosStoreBase with Store{
   }
 
   @computed
-  List<Map<String, dynamic>> get listaFiltrada {
-    if (filtro.isEmpty){
-      return listaClientes;
-    }else {
-      return listaClientes.where((cliente) {
-        final nomeCliente = cliente['nome']?.toString().toLowerCase() ?? '';
-        final filtroLower = filtro.toLowerCase();
-        return nomeCliente.contains(filtroLower);
-      }).toList();
-    }
+List<Map<String, dynamic>> get listaFiltrada {
+  if (filtro.isEmpty) {
+    // Se não há filtro, retorna todos os clientes.
+    // Retornar listaClientes.toList() cria uma nova lista, o que é seguro.
+    return listaClientes.toList();
+  } else {
+
+    return listaClientes.where((cliente) {
+      // Obtém e normaliza o nome do cliente (para PF e PJ)
+      final String nomeCliente = cliente['nome']?.toString().toLowerCase() ?? '';
+
+      // Obtém e normaliza a razão social (para PJ)
+      // Se a chave não existir ou for nula, resultará em string vazia.
+      final String razaoSocialCliente = cliente['razaosocial']?.toString().toLowerCase() ?? '';
+
+      // Obtém e normaliza o nome fantasia (para PJ)
+      final String fantasiaCliente = cliente['fantasia']?.toString().toLowerCase() ?? '';
+
+      // Verifica se o filtroLower está contido em qualquer um dos campos
+      bool filtrado = nomeCliente.contains(filtro.toLowerCase()) ||
+                        razaoSocialCliente.contains(filtro.toLowerCase()) ||
+                        fantasiaCliente.contains(filtro.toLowerCase());
+
+      return filtrado;
+    }).toList();
   }
+}
 
   @observable
-bool showSuggestions = false;
+bool exibeListaCliente = false;
 
 @action
-void setShowSuggestions(bool value) {
-  showSuggestions = value;
+void setListaCliente(bool value) {
+  exibeListaCliente = value;
 }
 
 @action
-void selecionarCliente(Map<String, dynamic> clienteSelecionado) {
+void selecionarCliente(Map<String, dynamic> clienteSelecionado, String tipo) {
   
   final formStore = Get.find<FormStore>();
 
@@ -82,11 +99,17 @@ void selecionarCliente(Map<String, dynamic> clienteSelecionado) {
   formStore.resetForm();
 
   clienteSelecionado.forEach((key, value) {
-  formStore.controllerNome.text = clienteSelecionado['nome']?.toString() ?? '';
-  formStore.controllerCpf.text = clienteSelecionado['cpf']?.toString() ?? '';
+  if (tipo == 'pf'){
+    formStore.controllerNome.text = clienteSelecionado['nome']?.toString() ?? '';
+    formStore.controllerCpf.text = clienteSelecionado['cpf']?.toString() ?? '';
+  }else if ( tipo == 'pj'){
+    formStore.controllerRazao.text = clienteSelecionado['razaosocial']?.toString() ?? '';
+    formStore.controllerFantasia.text = clienteSelecionado['fantasia']?.toString() ?? '';
+    formStore.controllerCnpj.text = clienteSelecionado['cnpj']?.toString() ?? '';
+  }
   formStore.controllerIe.text = clienteSelecionado['ie']?.toString() ?? '';
   formStore.controllerEndereco.text = clienteSelecionado['endereco']?.toString() ?? '';
-  formStore.controllerNumero.text = clienteSelecionado['n']?.toString() ?? ''; // Assumindo 'n' para o número do endereço
+  formStore.controllerNumero.text = clienteSelecionado['n']?.toString() ?? ''; 
   formStore.controllerBairro.text = clienteSelecionado['bairro']?.toString() ?? '';
   formStore.controllerCep.text = clienteSelecionado['cep'];
   formStore.controllerEmail.text = clienteSelecionado['email']?.toString() ?? '';

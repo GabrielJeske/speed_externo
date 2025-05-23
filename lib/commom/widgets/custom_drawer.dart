@@ -34,11 +34,7 @@ class CustomDrawer extends StatelessWidget {
                       onTap: () {
                         Get.toNamed('/cliente/consulta');
                       },
-                    ),    
-                    ListTile(
-                      leading: Icon(Icons.search),
-                      title: Text('Alteração'),  
-                    ),            
+                    ),                                
                   ],
                 ),
                 ExpansionTile(title: Text('Produtos'),
@@ -48,12 +44,15 @@ class CustomDrawer extends StatelessWidget {
                       leading: Icon(Icons.add) ,
                       title: Text('Cadastro'),  
                       onTap: () {
-                       // Get.toNamed('/clientes/cadastro');
+                        Get.toNamed('/produto/cadastro');
                       },
                     ),
                     ListTile(
                       leading: Icon(Icons.search),
-                      title: Text('Consulta'),  
+                      title: Text('Consulta'),
+                       onTap: () {
+                        Get.toNamed('/produto/consulta');
+                      },  
                     ),                            
                   ],
                 ),

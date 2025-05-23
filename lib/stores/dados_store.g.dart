@@ -65,19 +65,19 @@ mixin _$DadosStore on _DadosStoreBase, Store {
     });
   }
 
-  late final _$showSuggestionsAtom =
-      Atom(name: '_DadosStoreBase.showSuggestions', context: context);
+  late final _$exibeListaClienteAtom =
+      Atom(name: '_DadosStoreBase.exibeListaCliente', context: context);
 
   @override
-  bool get showSuggestions {
-    _$showSuggestionsAtom.reportRead();
-    return super.showSuggestions;
+  bool get exibeListaCliente {
+    _$exibeListaClienteAtom.reportRead();
+    return super.exibeListaCliente;
   }
 
   @override
-  set showSuggestions(bool value) {
-    _$showSuggestionsAtom.reportWrite(value, super.showSuggestions, () {
-      super.showSuggestions = value;
+  set exibeListaCliente(bool value) {
+    _$exibeListaClienteAtom.reportWrite(value, super.exibeListaCliente, () {
+      super.exibeListaCliente = value;
     });
   }
 
@@ -115,22 +115,22 @@ mixin _$DadosStore on _DadosStoreBase, Store {
   }
 
   @override
-  void setShowSuggestions(bool value) {
+  void setListaCliente(bool value) {
     final _$actionInfo = _$_DadosStoreBaseActionController.startAction(
-        name: '_DadosStoreBase.setShowSuggestions');
+        name: '_DadosStoreBase.setListaCliente');
     try {
-      return super.setShowSuggestions(value);
+      return super.setListaCliente(value);
     } finally {
       _$_DadosStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  void selecionarCliente(Map<String, dynamic> clienteSelecionado) {
+  void selecionarCliente(Map<String, dynamic> clienteSelecionado, String tipo) {
     final _$actionInfo = _$_DadosStoreBaseActionController.startAction(
         name: '_DadosStoreBase.selecionarCliente');
     try {
-      return super.selecionarCliente(clienteSelecionado);
+      return super.selecionarCliente(clienteSelecionado, tipo);
     } finally {
       _$_DadosStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -142,7 +142,7 @@ mixin _$DadosStore on _DadosStoreBase, Store {
 listaClientes: ${listaClientes},
 filtro: ${filtro},
 clienSele: ${clienSele},
-showSuggestions: ${showSuggestions},
+exibeListaCliente: ${exibeListaCliente},
 listaFiltrada: ${listaFiltrada}
     ''';
   }

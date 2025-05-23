@@ -4,6 +4,7 @@ import 'package:speed_externo/pages/clientes/cadastro/cadastro_pj.dart';
 
 
 class clienteCadastro extends StatelessWidget {
+
   const clienteCadastro({Key? key}) : super(key: key);
  
 
@@ -22,7 +23,7 @@ class clienteCadastro extends StatelessWidget {
           ),
         ),
         body: TabBarView(
-          children: [
+          children: [        
             CadastroPF(),
             CadastroPJ(),
           ],

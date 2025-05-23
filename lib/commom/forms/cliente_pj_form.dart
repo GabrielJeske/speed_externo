@@ -23,16 +23,35 @@ class ClientePjForm extends StatefulWidget {
 class _ClientePjFormState extends State<ClientePjForm> {
   final formStore = Get.find<FormStore>();
   final dadosStore = Get.find<DadosStore>();
+
+  final FocusNode foco = FocusNode();
   
   @override
   void initState() {
-    super.initState();    
+    super.initState();
+    if (widget.isConsulta){
+      dadosStore.obtemClientes();
+      foco.addListener(() {           
+        Future.delayed(Duration(milliseconds: 300 ), () {
+          dadosStore.setListaCliente(foco.hasFocus);                     
+        });  
+     });
+    }
+     WidgetsBinding.instance.addPostFrameCallback((_) {
+       formStore.resetForm();
+       dadosStore.setFiltro('');
+     });
   }
   
-
   @override
-  void dispose() {
+  void dispose() {    
     super.dispose();
+    foco.dispose(); 
+  }
+
+  void resetForm() {
+    formStore.resetForm();
+    foco.dispose();    
   }
 
 
@@ -50,6 +69,45 @@ class _ClientePjFormState extends State<ClientePjForm> {
              Column(            
               children: [           
                 SizedBox(height: 20),
+                if (widget.isConsulta)          
+                    CustomFormField(
+                      controller:  formStore.controllerRazao,
+                      labelText: 'Razao Social',
+                      foco: foco,
+                      onChanged: (value) {
+                        log('Vai setar o filtro');
+                        dadosStore.setFiltro(value);
+                        dadosStore.setListaCliente(foco.hasFocus);                      
+                      },
+                    ),
+                    Observer( 
+                      builder: (__) {
+                        if ( dadosStore.exibeListaCliente) {
+                          return Container(
+                            constraints: BoxConstraints(maxHeight: 200),
+                            child: ListView.builder(
+                              shrinkWrap: true,                      
+                              itemCount: dadosStore.listaFiltrada.length,
+                              itemBuilder: (contextList, index) { 
+                                final cliente = dadosStore.listaFiltrada[index];
+                                return ListTile(                          
+                                  title: Text(cliente['razaosocial'] ?? ''),
+                                  onTap: () {                              
+                                    log('Vai selecionar o cliente $cliente');
+                                    dadosStore.selecionarCliente(cliente, 'pj');                              
+                                    dadosStore.setListaCliente(false);    
+                                    foco.unfocus(); 
+                                  },
+                                );
+                              },
+                            ),
+                          );
+                        } else {
+                          return SizedBox.shrink();
+                        }
+                      },
+                    ),                   
+                if (!widget.isConsulta)
                 Row(
                   children: [
                     Flexible(
@@ -293,12 +351,12 @@ class _ClientePjFormState extends State<ClientePjForm> {
                         formStore.validateAllFields('pj');
                         if (formStore.isFormValid) {
                           log("validou");
-                          dadosStore.salvaCliente();                          
-                          Get.snackbar("Sucesso", "Cliente salvo com sucesso!");
-                          formStore.resetForm();
-                        } else {
-                          Get.snackbar("Erro", "Por favor, corrija os erros no formulário.");
+                          await dadosStore.salvaCliente();
+                          Get.snackbar("Sucesso", "Cliente salvo com sucesso!");   
+                          formStore.resetForm();                                  
+                        } else {                                                  
                           log("nao salvou nem validou");
+                          Get.snackbar("Erro", "Por favor, corrija os erros no formulário.");
                         }
                       },
                       style: ElevatedButton.styleFrom(

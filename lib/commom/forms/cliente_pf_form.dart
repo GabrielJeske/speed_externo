@@ -28,44 +28,36 @@ class _ClientePfFormState extends State<ClientePfForm> {
   var maskCep = MaskTextInputFormatter(mask: '#####-###', filter: {"#": RegExp(r'[0-9]')});
   var maskNumero = MaskTextInputFormatter(mask: '(##) #####-####', filter: {"#": RegExp(r'[0-9]')});
 
-  final FocusNode _searchFocusNode = FocusNode();
+  final FocusNode foco = FocusNode();
+  
+  
 
   @override
   void initState() {
     super.initState();
     if (widget.isConsulta){
       dadosStore.obtemClientes();
-     // _searchFocusNode.addListener(() {
-        // Quando o foco do _searchFocusNode mudar,
-        // atualize o estado showSuggestions na DadosStore.
-      //  dadosStore.setShowSuggestions(_searchFocusNode.hasFocus);
-   //   });
+      foco.addListener(() {           
+        Future.delayed(Duration(milliseconds: 300 ), () {
+          dadosStore.setListaCliente(foco.hasFocus);                     
+        });  
+     });
     }
+     WidgetsBinding.instance.addPostFrameCallback((_) {
+       formStore.resetForm();
+       dadosStore.setFiltro('');
+     });
   }
   
   @override
-  void dispose() {
+  void dispose() {    
     super.dispose();
-     if (widget.isConsulta) { // Apenas se o listener foi adicionado
-        _searchFocusNode.removeListener(() {
-            // A função exata passada para addListener não é necessária aqui,
-            // mas se você tivesse armazenado a função do listener em uma variável,
-            // você passaria essa variável para removeListener.
-            // Neste caso, como a função é anônima, e _searchFocusNode.dispose()
-            // geralmente lida com a limpeza de seus listeners internos,
-            // apenas o dispose pode ser suficiente. No entanto, para ser explícito:
-            // Se você tem uma função nomeada para o listener:
-            // _searchFocusNode.removeListener(_minhaFuncaoListener);
-            // Para funções anônimas, o dispose é o mais importante.
-        });
-    }
-    _searchFocusNode.dispose(); 
+    foco.dispose(); 
   }
 
   void resetForm() {
     formStore.resetForm();
-    _searchFocusNode.dispose();
-    
+    foco.dispose();    
   }
 
   @override
@@ -81,17 +73,17 @@ class _ClientePfFormState extends State<ClientePfForm> {
               CustomFormField(
                 controller:  formStore.controllerNome,
                 labelText: 'Nome',
-                foco: _searchFocusNode,
+                foco: foco,
                 onChanged: (value) {
                   log('Vai setar o filtro');
                   dadosStore.setFiltro(value);
-                  dadosStore.setShowSuggestions(_searchFocusNode.hasFocus);
-                  //dadosStore.setShowSuggestions(false);            
+                  dadosStore.setListaCliente(foco.hasFocus);
+                 // dadosStore.setShowSuggestions(false);            
                 },
               ),
               Observer( 
                 builder: (__) {
-                  if ( dadosStore.showSuggestions) {
+                  if ( dadosStore.exibeListaCliente) {
                     return Container(
                       constraints: BoxConstraints(maxHeight: 200),
                       child: ListView.builder(
@@ -103,9 +95,9 @@ class _ClientePfFormState extends State<ClientePfForm> {
                             title: Text(cliente['nome'] ?? ''),
                             onTap: () {                              
                               log('Vai selecionar o cliente $cliente');
-                              dadosStore.selecionarCliente(cliente);                              
-                              dadosStore.setShowSuggestions(false);    
-                              _searchFocusNode.unfocus(); 
+                              dadosStore.selecionarCliente(cliente, 'pf');                              
+                              dadosStore.setListaCliente(false);    
+                              foco.unfocus(); 
                             },
                           );
                         },
