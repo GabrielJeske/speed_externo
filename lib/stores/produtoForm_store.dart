@@ -5,12 +5,12 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:mobx/mobx.dart';
 import 'package:speed_externo/stores/validate_store.dart';
 
-part 'clienteForm_store.g.dart';
+part 'produtoForm_store.g.dart';
 
 
-class ClienteFormStore =_ClienteFormStoreBase with _$ClienteFormStore;
+class ProdutoFormStore =_ProdutoFormStoreBase with _$ProdutoFormStore;
 
-abstract class _ClienteFormStoreBase with Store{
+abstract class _ProdutoFormStoreBase with Store{
 
 
     String? cod;

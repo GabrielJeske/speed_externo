@@ -4,8 +4,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:speed_externo/commom/widgets/custom_textField.dart';
-import 'package:speed_externo/stores/clienteForm_store.dart';
-import 'package:speed_externo/stores/dadosCliente_store.dart';
+import 'package:speed_externo/stores/produtoForm_store.dart';
+import 'package:speed_externo/stores/dadosProduto_store.dart';
 import 'package:speed_externo/stores/dados_store.dart';
 import 'package:speed_externo/stores/form_store.dart';
 
@@ -22,9 +22,11 @@ class ProdutoForm extends StatefulWidget {
   State<ProdutoForm> createState() => _ProdutoFormState();
 }
 
+
+
 class _ProdutoFormState extends State<ProdutoForm> {
-  final clienteStore = Get.find<ClienteFormStore>();
-  final dadosClienteStore = Get.find<DadosClienteStore>();
+  final produtoStore = Get.find<ProdutoFormStore>();
+  final dadosProdutoStore = Get.find<DadosProdutoStore>();
   
   var maskncm = MaskTextInputFormatter(mask: '########', filter: {"#": RegExp(r'[0-9]')});
   var maskcst = MaskTextInputFormatter(mask: '###', filter: {"#": RegExp(r'[0-9]')});
@@ -38,16 +40,16 @@ class _ProdutoFormState extends State<ProdutoForm> {
   void initState() {
     super.initState();
     if (widget.isConsulta){
-      dadosClienteStore.obtemProdutos();
+      dadosProdutoStore.obtemProdutos();
       foco.addListener(() {           
         Future.delayed(Duration(milliseconds: 300 ), () {
-          dadosClienteStore.setListaProd(foco.hasFocus);                     
+          dadosProdutoStore.setListaProd(foco.hasFocus);                     
         });  
      });
     }
      WidgetsBinding.instance.addPostFrameCallback((_) {
-       clienteStore.resetForm();
-       dadosClienteStore.setFiltroProd('');
+       produtoStore.resetForm();
+       dadosProdutoStore.setFiltroProd('');
      });
   }
   
@@ -58,7 +60,7 @@ class _ProdutoFormState extends State<ProdutoForm> {
   }
 
   void resetForm() {
-    clienteStore.resetForm();
+    produtoStore.resetForm();
     foco.dispose();    
   }
 
@@ -73,31 +75,31 @@ class _ProdutoFormState extends State<ProdutoForm> {
               SizedBox(height: 20),
               if (widget.isConsulta)
               CustomFormField(
-                controller:  clienteStore.controllerNomeProd,
+                controller:  produtoStore.controllerNomeProd,
                 labelText: 'Nome',
                 foco: foco,
                 onChanged: (value) {
                   log('Vai setar o filtro');
-                  dadosClienteStore.setFiltroProd(value);
-                  dadosClienteStore.setListaProd(foco.hasFocus);                 
+                  dadosProdutoStore.setFiltroProd(value);
+                  dadosProdutoStore.setListaProd(foco.hasFocus);                 
                 },
               ),
               Observer( 
                 builder: (__) {
-                  if ( dadosClienteStore.exibeListaProd) {
+                  if ( dadosProdutoStore.exibeListaProd) {
                     return Container(
                       constraints: BoxConstraints(maxHeight: 200),
                       child: ListView.builder(
                         shrinkWrap: true,                      
-                        itemCount: dadosClienteStore.listaFiltrada.length,
+                        itemCount: dadosProdutoStore.listaFiltrada.length,
                         itemBuilder: (contextList, index) { 
-                          final cliente = dadosClienteStore.listaFiltrada[index];
+                          final cliente = dadosProdutoStore.listaFiltrada[index];
                           return ListTile(                          
                             title: Text(cliente['nome'] ?? ''),
                             onTap: () {                              
                               log('Vai selecionar o cliente $cliente');
-                              dadosClienteStore.selecionarProd(cliente);                              
-                              dadosClienteStore.setListaProd(false);    
+                              dadosProdutoStore.selecionarProd(cliente);                              
+                              dadosProdutoStore.setListaProd(false);    
                               foco.unfocus(); 
                             },
                           );
@@ -114,10 +116,10 @@ class _ProdutoFormState extends State<ProdutoForm> {
                 children: [                
                   Flexible(
                     child: CustomFormField(
-                      controller: clienteStore.controllerNomeProd,
-                      errorText: clienteStore.prodErrors['nome'],
+                      controller: produtoStore.controllerNomeProd,
+                      errorText: produtoStore.prodErrors['nome'],
                       labelText: 'Nome',                                       
-                      onChanged: (value) => clienteStore.setField('nome', value),                      
+                      onChanged: (value) => produtoStore.setField('nome', value),                      
                     ),
                   )
                 ],
@@ -127,11 +129,11 @@ class _ProdutoFormState extends State<ProdutoForm> {
                 children: [
                   Flexible(                   
                     child: CustomFormField(
-                      controller: clienteStore.controllerMarca,                                            
-                      errorText: clienteStore.prodErrors['marca'],
+                      controller: produtoStore.controllerMarca,                                            
+                      errorText: produtoStore.prodErrors['marca'],
                       labelText: 'Marca',
                        readOnly: widget.isConsulta,
-                      onChanged: (value) => clienteStore.setField('marca', value),                      
+                      onChanged: (value) => produtoStore.setField('marca', value),                      
                     ),
                   ),
                   SizedBox(
@@ -140,13 +142,13 @@ class _ProdutoFormState extends State<ProdutoForm> {
                   SizedBox(
                     width: 150,
                     child: CustomFormField(
-                      controller: clienteStore.controllerNcm,
+                      controller: produtoStore.controllerNcm,
                       mask: [maskncm],
                       keyboardType: TextInputType.numberWithOptions(),
-                      errorText: clienteStore.prodErrors['ncm'],
+                      errorText: produtoStore.prodErrors['ncm'],
                       labelText: 'NCM',
                        readOnly: widget.isConsulta,
-                      onChanged: (value) => clienteStore.setField('ncm', value),                      
+                      onChanged: (value) => produtoStore.setField('ncm', value),                      
                     ),
                   )                 
                 ],
@@ -156,24 +158,24 @@ class _ProdutoFormState extends State<ProdutoForm> {
                 children: [
                   Flexible(
                     child: CustomFormField(
-                      controller: clienteStore.controllerCst,
+                      controller: produtoStore.controllerCst,
                       mask: [maskcst],
                       keyboardType: TextInputType.numberWithOptions(),
-                      errorText: clienteStore.prodErrors['cst'],
+                      errorText: produtoStore.prodErrors['cst'],
                       labelText: 'CST',
                        readOnly: widget.isConsulta,
-                      onChanged: (value) => clienteStore.setField('cst', value),                      
+                      onChanged: (value) => produtoStore.setField('cst', value),                      
                     ),
                   ),
                   SizedBox(width: 10),
                   SizedBox(
                     width: 150,
                     child: CustomFormField(
-                      controller: clienteStore.controllerUnidade,                      
+                      controller: produtoStore.controllerUnidade,                      
                       labelText: 'UN',
                        readOnly: widget.isConsulta,
-                      errorText: clienteStore.prodErrors['un'],
-                      onChanged: (value) => clienteStore.setField('un', value),                      
+                      errorText: produtoStore.prodErrors['un'],
+                      onChanged: (value) => produtoStore.setField('un', value),                      
                     ),
                   )
                 ],
@@ -183,24 +185,24 @@ class _ProdutoFormState extends State<ProdutoForm> {
                 children: [
                   Flexible(
                     child: CustomFormField(
-                      controller: clienteStore.controllerCusto,
+                      controller: produtoStore.controllerCusto,
                       labelText: 'Custo',
                       keyboardType: TextInputType.number,
                       readOnly: widget.isConsulta,
-                      errorText: clienteStore.prodErrors['custo'],
-                      onChanged: (value) => clienteStore.setField('custo', value),                    
+                      errorText: produtoStore.prodErrors['custo'],
+                      onChanged: (value) => produtoStore.setField('custo', value),                    
                     ),
                   ),
                   SizedBox(width: 10),
                   SizedBox(
                     width: 80,
                     child: CustomFormField(
-                      controller: clienteStore.controllerVenda,
+                      controller: produtoStore.controllerVenda,
                       keyboardType: TextInputType.number,
                       labelText: 'Venda',
                       readOnly: widget.isConsulta,
-                      errorText: clienteStore.prodErrors['venda'],
-                      onChanged: (value) => clienteStore.setField('venda', value),                      
+                      errorText: produtoStore.prodErrors['venda'],
+                      onChanged: (value) => produtoStore.setField('venda', value),                      
                     ),
                   )
                 ],
@@ -211,7 +213,7 @@ class _ProdutoFormState extends State<ProdutoForm> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      onPressed: clienteStore.resetForm,
+                      onPressed: produtoStore.resetForm,
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                         padding: EdgeInsets.all(15),
@@ -225,12 +227,12 @@ class _ProdutoFormState extends State<ProdutoForm> {
                     SizedBox(width: 10),
                     ElevatedButton(
                       onPressed: () async {
-                        clienteStore.validateAllFields('pf');
-                        if (clienteStore.isFormValid) {
+                        produtoStore.validateAllFields('pf');
+                        if (produtoStore.isFormValid) {
                           log("validou");
-                          await dadosClienteStore.salvaCliente();
+                          await dadosProdutoStore.salvaCliente();
                           Get.snackbar("Sucesso", "Cliente salvo com sucesso!");   
-                          clienteStore.resetForm();                                  
+                          produtoStore.resetForm();                                  
                         } else {                                                  
                           log("nao salvou nem validou");
                           Get.snackbar("Erro", "Por favor, corrija os erros no formulário.");

@@ -100,11 +100,11 @@ void selecionarCliente(Map<String, dynamic> clienteSelecionado, String tipo) {
 
   clienteSelecionado.forEach((key, value) {
   if (tipo == 'pf'){
-    formStore.controllerNome.text = clienteSelecionado['nome']?.toString() ?? '';
-    formStore.controllerCpf.text = clienteSelecionado['cpf']?.toString() ?? '';
+    formStore.controllerNome.text = clienteSelecionado['nome'];
+    formStore.controllerCpf.text = clienteSelecionado['cpf'];
   }else if ( tipo == 'pj'){
-    formStore.controllerRazao.text = clienteSelecionado['razaosocial']?.toString() ?? '';
-    formStore.controllerFantasia.text = clienteSelecionado['fantasia']?.toString() ?? '';
+    formStore.controllerRazao.text = clienteSelecionado['razaosocial'];
+    formStore.controllerFantasia.text = clienteSelecionado['fantasia'];
     formStore.controllerCnpj.text = clienteSelecionado['cnpj']?.toString() ?? '';
   }
   formStore.controllerIe.text = clienteSelecionado['ie']?.toString() ?? '';

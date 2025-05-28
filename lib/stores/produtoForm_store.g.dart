@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'clienteForm_store.dart';
+part of 'produtoForm_store.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -8,17 +8,17 @@ part of 'clienteForm_store.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$ClienteFormStore on _ClienteFormStoreBase, Store {
+mixin _$ProdutoFormStore on _ProdutoFormStoreBase, Store {
   Computed<bool>? _$isFormValidComputed;
 
   @override
   bool get isFormValid =>
       (_$isFormValidComputed ??= Computed<bool>(() => super.isFormValid,
-              name: '_ClienteFormStoreBase.isFormValid'))
+              name: '_ProdutoFormStoreBase.isFormValid'))
           .value;
 
   late final _$prodValuesAtom =
-      Atom(name: '_ClienteFormStoreBase.prodValues', context: context);
+      Atom(name: '_ProdutoFormStoreBase.prodValues', context: context);
 
   @override
   ObservableMap<String, String> get prodValues {
@@ -34,7 +34,7 @@ mixin _$ClienteFormStore on _ClienteFormStoreBase, Store {
   }
 
   late final _$prodErrorsAtom =
-      Atom(name: '_ClienteFormStoreBase.prodErrors', context: context);
+      Atom(name: '_ProdutoFormStoreBase.prodErrors', context: context);
 
   @override
   ObservableMap<String, String?> get prodErrors {
@@ -49,39 +49,39 @@ mixin _$ClienteFormStore on _ClienteFormStoreBase, Store {
     });
   }
 
-  late final _$_ClienteFormStoreBaseActionController =
-      ActionController(name: '_ClienteFormStoreBase', context: context);
+  late final _$_ProdutoFormStoreBaseActionController =
+      ActionController(name: '_ProdutoFormStoreBase', context: context);
 
   @override
   void setField(String chave, String value) {
-    final _$actionInfo = _$_ClienteFormStoreBaseActionController.startAction(
-        name: '_ClienteFormStoreBase.setField');
+    final _$actionInfo = _$_ProdutoFormStoreBaseActionController.startAction(
+        name: '_ProdutoFormStoreBase.setField');
     try {
       return super.setField(chave, value);
     } finally {
-      _$_ClienteFormStoreBaseActionController.endAction(_$actionInfo);
+      _$_ProdutoFormStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void validateAllFields(String tipo) {
-    final _$actionInfo = _$_ClienteFormStoreBaseActionController.startAction(
-        name: '_ClienteFormStoreBase.validateAllFields');
+    final _$actionInfo = _$_ProdutoFormStoreBaseActionController.startAction(
+        name: '_ProdutoFormStoreBase.validateAllFields');
     try {
       return super.validateAllFields(tipo);
     } finally {
-      _$_ClienteFormStoreBaseActionController.endAction(_$actionInfo);
+      _$_ProdutoFormStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void resetForm() {
-    final _$actionInfo = _$_ClienteFormStoreBaseActionController.startAction(
-        name: '_ClienteFormStoreBase.resetForm');
+    final _$actionInfo = _$_ProdutoFormStoreBaseActionController.startAction(
+        name: '_ProdutoFormStoreBase.resetForm');
     try {
       return super.resetForm();
     } finally {
-      _$_ClienteFormStoreBaseActionController.endAction(_$actionInfo);
+      _$_ProdutoFormStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'dadosCliente_store.dart';
+part of 'dadosProduto_store.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -8,17 +8,17 @@ part of 'dadosCliente_store.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$DadosClienteStore on _DadosClienteStoreBase, Store {
+mixin _$DadosProdutoStore on _DadosProdutoStoreBase, Store {
   Computed<List<Map<String, dynamic>>>? _$listaFiltradaComputed;
 
   @override
   List<Map<String, dynamic>> get listaFiltrada => (_$listaFiltradaComputed ??=
           Computed<List<Map<String, dynamic>>>(() => super.listaFiltrada,
-              name: '_DadosClienteStoreBase.listaFiltrada'))
+              name: '_DadosProdutoStoreBase.listaFiltrada'))
       .value;
 
   late final _$listaProdutosAtom =
-      Atom(name: '_DadosClienteStoreBase.listaProdutos', context: context);
+      Atom(name: '_DadosProdutoStoreBase.listaProdutos', context: context);
 
   @override
   ObservableList<Map<String, dynamic>> get listaProdutos {
@@ -34,7 +34,7 @@ mixin _$DadosClienteStore on _DadosClienteStoreBase, Store {
   }
 
   late final _$filtroProdAtom =
-      Atom(name: '_DadosClienteStoreBase.filtroProd', context: context);
+      Atom(name: '_DadosProdutoStoreBase.filtroProd', context: context);
 
   @override
   String get filtroProd {
@@ -50,7 +50,7 @@ mixin _$DadosClienteStore on _DadosClienteStoreBase, Store {
   }
 
   late final _$prodSeleAtom =
-      Atom(name: '_DadosClienteStoreBase.prodSele', context: context);
+      Atom(name: '_DadosProdutoStoreBase.prodSele', context: context);
 
   @override
   Map<String, dynamic> get prodSele {
@@ -66,7 +66,7 @@ mixin _$DadosClienteStore on _DadosClienteStoreBase, Store {
   }
 
   late final _$exibeListaProdAtom =
-      Atom(name: '_DadosClienteStoreBase.exibeListaProd', context: context);
+      Atom(name: '_DadosProdutoStoreBase.exibeListaProd', context: context);
 
   @override
   bool get exibeListaProd {
@@ -82,57 +82,57 @@ mixin _$DadosClienteStore on _DadosClienteStoreBase, Store {
   }
 
   late final _$obtemProdutosAsyncAction =
-      AsyncAction('_DadosClienteStoreBase.obtemProdutos', context: context);
+      AsyncAction('_DadosProdutoStoreBase.obtemProdutos', context: context);
 
   @override
   Future<dynamic> obtemProdutos() {
     return _$obtemProdutosAsyncAction.run(() => super.obtemProdutos());
   }
 
-  late final _$_DadosClienteStoreBaseActionController =
-      ActionController(name: '_DadosClienteStoreBase', context: context);
+  late final _$_DadosProdutoStoreBaseActionController =
+      ActionController(name: '_DadosProdutoStoreBase', context: context);
 
   @override
   void setFiltroProd(String filter) {
-    final _$actionInfo = _$_DadosClienteStoreBaseActionController.startAction(
-        name: '_DadosClienteStoreBase.setFiltroProd');
+    final _$actionInfo = _$_DadosProdutoStoreBaseActionController.startAction(
+        name: '_DadosProdutoStoreBase.setFiltroProd');
     try {
       return super.setFiltroProd(filter);
     } finally {
-      _$_DadosClienteStoreBaseActionController.endAction(_$actionInfo);
+      _$_DadosProdutoStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void setCliente(Map<String, dynamic> prod) {
-    final _$actionInfo = _$_DadosClienteStoreBaseActionController.startAction(
-        name: '_DadosClienteStoreBase.setCliente');
+    final _$actionInfo = _$_DadosProdutoStoreBaseActionController.startAction(
+        name: '_DadosProdutoStoreBase.setCliente');
     try {
       return super.setCliente(prod);
     } finally {
-      _$_DadosClienteStoreBaseActionController.endAction(_$actionInfo);
+      _$_DadosProdutoStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void setListaProd(bool value) {
-    final _$actionInfo = _$_DadosClienteStoreBaseActionController.startAction(
-        name: '_DadosClienteStoreBase.setListaProd');
+    final _$actionInfo = _$_DadosProdutoStoreBaseActionController.startAction(
+        name: '_DadosProdutoStoreBase.setListaProd');
     try {
       return super.setListaProd(value);
     } finally {
-      _$_DadosClienteStoreBaseActionController.endAction(_$actionInfo);
+      _$_DadosProdutoStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void selecionarProd(Map<String, dynamic> produtoSelecionado) {
-    final _$actionInfo = _$_DadosClienteStoreBaseActionController.startAction(
-        name: '_DadosClienteStoreBase.selecionarProd');
+    final _$actionInfo = _$_DadosProdutoStoreBaseActionController.startAction(
+        name: '_DadosProdutoStoreBase.selecionarProd');
     try {
       return super.selecionarProd(produtoSelecionado);
     } finally {
-      _$_DadosClienteStoreBaseActionController.endAction(_$actionInfo);
+      _$_DadosProdutoStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 

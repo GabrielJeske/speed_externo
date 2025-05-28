@@ -62,6 +62,9 @@ class CustomDrawer extends StatelessWidget {
                     ListTile(
                       leading: Icon(Icons.add) ,
                       title: Text('Inclusão'),  
+                      onTap: () {
+                        Get.toNamed('/pedido/inclusao');
+                      },
                     ),
                     ListTile(
                       leading: Icon(Icons.search),

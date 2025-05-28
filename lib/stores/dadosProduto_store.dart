@@ -5,14 +5,14 @@ import 'package:get/get.dart';
 import 'package:mobx/mobx.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:speed_externo/commom/objetos/produto.dart';
-import 'package:speed_externo/stores/clienteForm_store.dart';
+import 'package:speed_externo/stores/produtoForm_store.dart';
 
-part 'dadosCliente_store.g.dart';
+part 'dadosProduto_store.g.dart';
 
 
-class DadosClienteStore =_DadosClienteStoreBase with _$DadosClienteStore;
+class DadosProdutoStore =_DadosProdutoStoreBase with _$DadosProdutoStore;
 
-abstract class _DadosClienteStoreBase with Store{
+abstract class _DadosProdutoStoreBase with Store{
 
   
 
@@ -78,7 +78,7 @@ void setListaProd(bool value) {
 @action
 void selecionarProd(Map<String, dynamic> produtoSelecionado) {
   
-  final clienteForm = Get.find<ClienteFormStore>();
+  final clienteForm = Get.find<ProdutoFormStore>();
 
   prodSele = produtoSelecionado;
   log('Cliente Selecionado $prodSele e $produtoSelecionado');
@@ -86,8 +86,8 @@ void selecionarProd(Map<String, dynamic> produtoSelecionado) {
   clienteForm.resetForm();
 
   produtoSelecionado.forEach((key, value) {
-    clienteForm.controllerCod.text = produtoSelecionado['nome']?.toString() ?? '';    
-    clienteForm.controllerNomeProd.text = produtoSelecionado['cod']?.toString() ?? '';
+    clienteForm.controllerCod.text = produtoSelecionado['cod']?.toString() ?? '';    
+    clienteForm.controllerNomeProd.text = produtoSelecionado['nome']?.toString() ?? '';
     clienteForm.controllerNcm.text = produtoSelecionado['ncm']?.toString() ?? '';
     clienteForm.controllerUnidade.text = produtoSelecionado['un']?.toString() ?? '';
     clienteForm.controllerMarca.text = produtoSelecionado['marca']?.toString() ?? '';
@@ -141,7 +141,7 @@ void selecionarProd(Map<String, dynamic> produtoSelecionado) {
 
   salvaCliente() async{
      Produto produtoJson = Produto();
-    final clienteForm = Get.find<ClienteFormStore>();
+    final clienteForm = Get.find<ProdutoFormStore>();
     try{
       int cod = await obtemCod();
       final fProd = await obtemFileProd();
