@@ -104,11 +104,11 @@ mixin _$DadosProdutoStore on _DadosProdutoStoreBase, Store {
   }
 
   @override
-  void setCliente(Map<String, dynamic> prod) {
+  void setProduto(Map<String, dynamic> prod) {
     final _$actionInfo = _$_DadosProdutoStoreBaseActionController.startAction(
-        name: '_DadosProdutoStoreBase.setCliente');
+        name: '_DadosProdutoStoreBase.setProduto');
     try {
-      return super.setCliente(prod);
+      return super.setProduto(prod);
     } finally {
       _$_DadosProdutoStoreBaseActionController.endAction(_$actionInfo);
     }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:speed_externo/commom/forms/produto_form.dart';
 import 'package:speed_externo/commom/widgets/custom_textField.dart';
 import 'package:speed_externo/stores/dadosPedido_store.dart';
 import 'package:speed_externo/stores/dadosProduto_store.dart';
@@ -205,58 +206,15 @@ var maskdate = MaskTextInputFormatter(mask: '##/##/####', filter: {"#": RegExp(r
               (BuildContext context) {
 
                 final Size screenSize = MediaQuery.of(context).size;
-                final double dialogWidth = screenSize.width * 0.8;
-                final double dialogHeight = screenSize.height * 0.8;
+                final double dialogWidth = screenSize.width * 0.9;
+                final double dialogHeight = screenSize.height * 0.9;
 
                 return AlertDialog(
                   title: const Text('Inclusão de Produtos'),
                   content: SizedBox(
                     width: dialogWidth,
                     height: dialogHeight,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CustomFormField(
-                                    controller:  produtoStore.controllerNomeProd,
-                                    labelText: 'Nome',
-                                    foco: foco2,
-                                    onChanged: (value) {
-                                      log('Vai setar o filtro DO PRODUTO $dadosProdutoStore');
-                                      dadosProdutoStore.setFiltroProd(value);
-                                      dadosProdutoStore.setListaProd(foco2.hasFocus);                 
-                                    },
-                                  ),
-                                  Observer( 
-                                    builder: (__) {
-                    if ( dadosProdutoStore.exibeListaProd) {
-                      return Container(
-                        constraints: BoxConstraints(maxHeight: 200),
-                        child: ListView.builder(
-                          shrinkWrap: true,                      
-                          itemCount: dadosProdutoStore.listaFiltrada.length,
-                          itemBuilder: (contextList, index) { 
-                            final produto = dadosProdutoStore.listaFiltrada[index];
-                            return ListTile(                          
-                              title: Text(produto['nome'] ?? ''),
-                              onTap: () {                              
-                                log('Vai selecionar o cliente $produto');
-                                dadosProdutoStore.selecionarProd(produto);                              
-                                dadosProdutoStore.setListaProd(false);    
-                                foco2.unfocus(); 
-                              },
-                            );
-                          },
-                        ),
-                      );
-                    } else {
-                      return SizedBox.shrink();
-                    }
-                                    },
-                                  ), 
-                        ],
-                      ),
-                    ),
+                    child: ProdutoForm(isConsulta: true,)
                   ),
                   actions: <Widget>[
                     ElevatedButton(

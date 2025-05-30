@@ -72,48 +72,33 @@ class _ProdutoFormState extends State<ProdutoForm> {
         child: Observer(
           builder: (_) => Column(
             children: [
-              SizedBox(height: 20),
-              if (widget.isConsulta)
-              CustomFormField(
-                controller:  produtoStore.controllerNomeProd,
-                labelText: 'Nome',
-                foco: foco,
-                onChanged: (value) {
-                  log('Vai setar o filtro');
-                  dadosProdutoStore.setFiltroProd(value);
-                  dadosProdutoStore.setListaProd(foco.hasFocus);                 
-                },
-              ),
-              Observer( 
-                builder: (__) {
-                  if ( dadosProdutoStore.exibeListaProd) {
-                    return Container(
-                      constraints: BoxConstraints(maxHeight: 200),
-                      child: ListView.builder(
-                        shrinkWrap: true,                      
-                        itemCount: dadosProdutoStore.listaFiltrada.length,
-                        itemBuilder: (contextList, index) { 
-                          final cliente = dadosProdutoStore.listaFiltrada[index];
-                          return ListTile(                          
-                            title: Text(cliente['nome'] ?? ''),
-                            onTap: () {                              
-                              log('Vai selecionar o cliente $cliente');
-                              dadosProdutoStore.selecionarProd(cliente);                              
-                              dadosProdutoStore.setListaProd(false);    
-                              foco.unfocus(); 
-                            },
-                          );
-                        },
-                      ),
-                    );
-                  } else {
-                    return SizedBox.shrink();
-                  }
-                },
-              ), 
-              if (!widget.isConsulta)
               Row(
-                children: [                
+                children: [
+                  SizedBox(height: 20),
+                  SizedBox(
+                  width: 100,
+                  child: CustomFormField(
+                    labelText: 'Cod',
+                    controller: produtoStore.controllerCod,                                            
+                    errorText: produtoStore.prodErrors['cod'],                  
+                    readOnly: widget.isConsulta,                    
+                    ),
+                  ) ,
+                  SizedBox(width: 10),
+                  if (widget.isConsulta)
+                  Flexible(child:
+                    CustomFormField(
+                      controller:  produtoStore.controllerNomeProd,
+                      labelText: 'Nome',
+                      foco: foco,
+                      onChanged: (value) {
+                        log('Vai setar o filtro');
+                        dadosProdutoStore.setFiltroProd(value);
+                        dadosProdutoStore.setListaProd(foco.hasFocus);                 
+                      },
+                    ),
+                  ),
+                  if (!widget.isConsulta)
                   Flexible(
                     child: CustomFormField(
                       controller: produtoStore.controllerNomeProd,
@@ -121,9 +106,33 @@ class _ProdutoFormState extends State<ProdutoForm> {
                       labelText: 'Nome',                                       
                       onChanged: (value) => produtoStore.setField('nome', value),                      
                     ),
-                  )
+                  ),        
                 ],
-              ),
+              ),                                                    
+              Observer( builder: (__) {
+                if ( dadosProdutoStore.exibeListaProd) {
+                  return Container(
+                    constraints: BoxConstraints(maxHeight: 200),
+                    child: ListView.builder(
+                      shrinkWrap: true,                      
+                      itemCount: dadosProdutoStore.listaFiltrada.length,
+                      itemBuilder: (contextList, index) { 
+                        final produto = dadosProdutoStore.listaFiltrada[index];
+                        return ListTile(                          
+                          title: Text(produto['nome'] ?? ''),
+                          onTap: () {                                                            
+                            dadosProdutoStore.selecionarProd(produto);                              
+                            dadosProdutoStore.setListaProd(false);    
+                            foco.unfocus(); 
+                          },
+                        );
+                      },
+                    ),
+                  );
+                } else {
+                  return SizedBox.shrink();
+                }
+              }),                                                                             
               SizedBox(height: 10),
               Row(
                 children: [
@@ -132,13 +141,22 @@ class _ProdutoFormState extends State<ProdutoForm> {
                       controller: produtoStore.controllerMarca,                                            
                       errorText: produtoStore.prodErrors['marca'],
                       labelText: 'Marca',
-                       readOnly: widget.isConsulta,
+                      readOnly: widget.isConsulta,
                       onChanged: (value) => produtoStore.setField('marca', value),                      
                     ),
-                  ),
+                  ),                              
+                  SizedBox(width: 10),
                   SizedBox(
-                    width: 10,
+                    width: 300,
+                    child: CustomFormField(
+                      controller: produtoStore.controllerCod,
+                      labelText: 'Apresentação',
+                      errorText: produtoStore.prodErrors['apresentacao'],
+                      readOnly: widget.isConsulta,
+                      onChanged: (value) => produtoStore.setField('apresentacao', value),
+                    ),
                   ),
+                  SizedBox(width: 10),
                   SizedBox(
                     width: 150,
                     child: CustomFormField(
@@ -147,16 +165,17 @@ class _ProdutoFormState extends State<ProdutoForm> {
                       keyboardType: TextInputType.numberWithOptions(),
                       errorText: produtoStore.prodErrors['ncm'],
                       labelText: 'NCM',
-                       readOnly: widget.isConsulta,
+                      readOnly: widget.isConsulta,
                       onChanged: (value) => produtoStore.setField('ncm', value),                      
                     ),
-                  )                 
-                ],
+                  ),
+                ]
               ),
               SizedBox(height: 10),
               Row(
                 children: [
-                  Flexible(
+                  SizedBox(
+                    width: 50,
                     child: CustomFormField(
                       controller: produtoStore.controllerCst,
                       mask: [maskcst],
@@ -177,7 +196,38 @@ class _ProdutoFormState extends State<ProdutoForm> {
                       errorText: produtoStore.prodErrors['un'],
                       onChanged: (value) => produtoStore.setField('un', value),                      
                     ),
-                  )
+                  ),
+                  SizedBox(width: 10),
+                  SizedBox(
+                    width: 100,
+                    child: CustomFormField(
+                      labelText: 'Grupo 1',
+                      readOnly: widget.isConsulta,
+                      errorText: produtoStore.prodErrors['grupo1'],
+                      onChanged: (value) => produtoStore.setField('grupo1', value),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                   SizedBox(
+                    width: 100,
+                    child: CustomFormField(
+                      labelText: 'Grupo 2',
+                      readOnly: widget.isConsulta,
+                      errorText: produtoStore.prodErrors['grupo2'],
+                      onChanged: (value) => produtoStore.setField('grupo2', value),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                   SizedBox(
+                    width: 100,
+                    child: CustomFormField(
+                      labelText: 'Grupo 3',
+                      readOnly: widget.isConsulta,
+                      errorText: produtoStore.prodErrors['grupo3'],
+                      onChanged: (value) => produtoStore.setField('grupo3', value),
+                    ),
+                  ),
+                  
                 ],
               ),
               SizedBox(height: 10),
@@ -193,6 +243,18 @@ class _ProdutoFormState extends State<ProdutoForm> {
                       onChanged: (value) => produtoStore.setField('custo', value),                    
                     ),
                   ),
+                   SizedBox(width: 10),
+                  SizedBox(
+                    width: 80,
+                    child: CustomFormField(
+                      controller: produtoStore.controllerVenda,
+                      keyboardType: TextInputType.number,
+                      labelText: 'Fabrica',
+                      readOnly: widget.isConsulta,
+                      errorText: produtoStore.prodErrors['fabrica'],
+                      onChanged: (value) => produtoStore.setField('fabrica', value),                      
+                    ),
+                  ),
                   SizedBox(width: 10),
                   SizedBox(
                     width: 80,
@@ -206,7 +268,36 @@ class _ProdutoFormState extends State<ProdutoForm> {
                     ),
                   )
                 ],
-              ),             
+              ),    
+              SizedBox(height: 30),
+              Row(
+                children: [
+
+                  SizedBox(
+                    width: 200,
+                    child: CustomFormField(
+                      controller: produtoStore.controllerVenda,
+                      keyboardType: TextInputType.number,
+                      labelText: 'Estoque Atual',
+                      readOnly: widget.isConsulta,
+                      errorText: produtoStore.prodErrors['atual'],
+                      onChanged: (value) => produtoStore.setField('atual', value),                      
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  SizedBox(
+                    width: 200,
+                    child: CustomFormField(
+                      controller: produtoStore.controllerVenda,
+                      keyboardType: TextInputType.number,
+                      labelText: 'Estoque Parcial',
+                      readOnly: widget.isConsulta,
+                      errorText: produtoStore.prodErrors['parcial'],
+                      onChanged: (value) => produtoStore.setField('parcial', value),                      
+                    ),
+                  ),
+                ],
+              ),
               SizedBox(height: 30),
               if (!widget.isConsulta)
                 Row(
@@ -230,7 +321,7 @@ class _ProdutoFormState extends State<ProdutoForm> {
                         produtoStore.validateAllFields('pf');
                         if (produtoStore.isFormValid) {
                           log("validou");
-                          await dadosProdutoStore.salvaCliente();
+                          await dadosProdutoStore.salvaProduto();
                           Get.snackbar("Sucesso", "Cliente salvo com sucesso!");   
                           produtoStore.resetForm();                                  
                         } else {                                                  

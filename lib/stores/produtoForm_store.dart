@@ -13,15 +13,7 @@ class ProdutoFormStore =_ProdutoFormStoreBase with _$ProdutoFormStore;
 abstract class _ProdutoFormStoreBase with Store{
 
 
-    String? cod;
-  String? nome;
-  String? ncm;
-  String? un;
-  String? marca;
-  String? cst;
-  String? custo;
-  String? venda;
-
+  
   TextEditingController controllerCod = TextEditingController();
   TextEditingController controllerNomeProd = TextEditingController();
   TextEditingController controllerNcm = TextEditingController();
