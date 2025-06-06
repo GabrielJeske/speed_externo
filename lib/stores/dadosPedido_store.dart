@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:mobx/mobx.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:speed_externo/commom/objetos/cliente.dart';
+import 'package:speed_externo/commom/objetos/produto.dart';
 import 'package:speed_externo/stores/pedidoForm_store.dart';
 
 part 'dadosPedido_store.g.dart';
@@ -14,7 +15,16 @@ class DadosPedidoStore =_DadosPedidoStoreBase with _$DadosPedidoStore;
 
 abstract class _DadosPedidoStoreBase with Store{
 
-  
+  @observable
+  ObservableList<Produto> listaProdutos = ObservableList<Produto> ();
+
+
+  @action
+  void addProd(Produto prod){
+    listaProdutos.add(prod);  
+  }
+
+
 
   @observable
   ObservableList<Map<String, dynamic>> listaClientes = ObservableList<Map<String, dynamic>> ();

@@ -16,7 +16,10 @@ abstract class _PedidoStoreBase with Store{
   TextEditingController controllerData = TextEditingController();
   TextEditingController controllerTipo = TextEditingController();
   
-     
+  @observable
+  
+
+
    @observable
    ObservableMap<String, String> formValues = ObservableMap.of({});
 

@@ -17,19 +17,19 @@ mixin _$ProdutoFormStore on _ProdutoFormStoreBase, Store {
               name: '_ProdutoFormStoreBase.isFormValid'))
           .value;
 
-  late final _$prodValuesAtom =
-      Atom(name: '_ProdutoFormStoreBase.prodValues', context: context);
+  late final _$prodAtom =
+      Atom(name: '_ProdutoFormStoreBase.prod', context: context);
 
   @override
-  ObservableMap<String, String> get prodValues {
-    _$prodValuesAtom.reportRead();
-    return super.prodValues;
+  Produto get prod {
+    _$prodAtom.reportRead();
+    return super.prod;
   }
 
   @override
-  set prodValues(ObservableMap<String, String> value) {
-    _$prodValuesAtom.reportWrite(value, super.prodValues, () {
-      super.prodValues = value;
+  set prod(Produto value) {
+    _$prodAtom.reportWrite(value, super.prod, () {
+      super.prod = value;
     });
   }
 
@@ -88,7 +88,7 @@ mixin _$ProdutoFormStore on _ProdutoFormStoreBase, Store {
   @override
   String toString() {
     return '''
-prodValues: ${prodValues},
+prod: ${prod},
 prodErrors: ${prodErrors},
 isFormValid: ${isFormValid}
     ''';

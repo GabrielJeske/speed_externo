@@ -9,11 +9,11 @@ part of 'dadosProduto_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$DadosProdutoStore on _DadosProdutoStoreBase, Store {
-  Computed<List<Map<String, dynamic>>>? _$listaFiltradaComputed;
+  Computed<List<Produto>>? _$listaFiltradaComputed;
 
   @override
-  List<Map<String, dynamic>> get listaFiltrada => (_$listaFiltradaComputed ??=
-          Computed<List<Map<String, dynamic>>>(() => super.listaFiltrada,
+  List<Produto> get listaFiltrada => (_$listaFiltradaComputed ??=
+          Computed<List<Produto>>(() => super.listaFiltrada,
               name: '_DadosProdutoStoreBase.listaFiltrada'))
       .value;
 
@@ -21,13 +21,13 @@ mixin _$DadosProdutoStore on _DadosProdutoStoreBase, Store {
       Atom(name: '_DadosProdutoStoreBase.listaProdutos', context: context);
 
   @override
-  ObservableList<Map<String, dynamic>> get listaProdutos {
+  ObservableList<Produto> get listaProdutos {
     _$listaProdutosAtom.reportRead();
     return super.listaProdutos;
   }
 
   @override
-  set listaProdutos(ObservableList<Map<String, dynamic>> value) {
+  set listaProdutos(ObservableList<Produto> value) {
     _$listaProdutosAtom.reportWrite(value, super.listaProdutos, () {
       super.listaProdutos = value;
     });
@@ -53,13 +53,13 @@ mixin _$DadosProdutoStore on _DadosProdutoStoreBase, Store {
       Atom(name: '_DadosProdutoStoreBase.prodSele', context: context);
 
   @override
-  Map<String, dynamic> get prodSele {
+  Produto get prodSele {
     _$prodSeleAtom.reportRead();
     return super.prodSele;
   }
 
   @override
-  set prodSele(Map<String, dynamic> value) {
+  set prodSele(Produto value) {
     _$prodSeleAtom.reportWrite(value, super.prodSele, () {
       super.prodSele = value;
     });
@@ -104,7 +104,7 @@ mixin _$DadosProdutoStore on _DadosProdutoStoreBase, Store {
   }
 
   @override
-  void setProduto(Map<String, dynamic> prod) {
+  void setProduto(Produto prod) {
     final _$actionInfo = _$_DadosProdutoStoreBaseActionController.startAction(
         name: '_DadosProdutoStoreBase.setProduto');
     try {
@@ -126,7 +126,7 @@ mixin _$DadosProdutoStore on _DadosProdutoStoreBase, Store {
   }
 
   @override
-  void selecionarProd(Map<String, dynamic> produtoSelecionado) {
+  void selecionarProd(Produto produtoSelecionado) {
     final _$actionInfo = _$_DadosProdutoStoreBaseActionController.startAction(
         name: '_DadosProdutoStoreBase.selecionarProd');
     try {

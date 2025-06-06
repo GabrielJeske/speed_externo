@@ -5,7 +5,7 @@ class Produto {
   String? cod;
   String? nome;
   String? ncm;
-  String? un;
+  String? unidade;
   String? marca;
   String? apresentacao;
   String? grupo1;
@@ -25,7 +25,7 @@ class Produto {
     this.cod,
     this.nome,
     this.ncm,
-    this.un,
+    this.unidade,
     this.marca,
     this.apresentacao,
     this.grupo1,
@@ -41,13 +41,13 @@ class Produto {
     this.unitario,
     this.total,
   });
-
+  
   factory Produto.fromJson(Map json){
     return Produto(
       cod: json['cod'],
       nome: json['nome'],
       ncm: json['ncm'],
-      un: json['un'],
+      unidade: json['unidade'],
       marca: json['marca'],
       apresentacao: json['apresentacao'],
       grupo1: json['grupo1'],
@@ -71,7 +71,7 @@ class Produto {
       'cod': cod,
       'nome': nome,
       'ncm': ncm,
-      'un': un,
+      'unidade': unidade,
       'marca': marca,
       'apresentacao': apresentacao,  
       'grupo1': grupo1,  
@@ -89,9 +89,57 @@ class Produto {
     };
   }
   
-  List<Map<String, dynamic>> deserializaJson(String jsonString){
-    List<dynamic> conteudoJson = jsonDecode(jsonString);
-    List<Map<String, dynamic>> listJson = List<Map<String, dynamic>>.from(conteudoJson);
-    return listJson;
+  List<Produto> obtemProdutos(String jsonString){    
+    List<dynamic> listaGenerica= jsonDecode(jsonString);
+    List<Produto> produtos = [];
+    for (Map<String, dynamic> a in listaGenerica) {   
+      Produto produto = Produto.fromJson(a);
+      produtos.add(produto);
+    }
+     return produtos; 
+    }
+    
+   
+
+  Produto copyWith({
+    String? cod,
+    String? nome,
+    String? ncm,
+    String? unidade,
+    String? marca,
+    String? apresentacao,
+    String? grupo1,
+    String? grupo2,
+    String? grupo3,
+    String? cst,
+    String? custo,
+    String? fabrica,
+    String? venda,
+    String? estoqueatual,
+    String? estoqueparcial,
+    String? quantidade,
+    String? unitario,
+    String? total,
+  }) {
+    return Produto(
+      cod: cod ?? this.cod,
+      nome: nome ?? this.nome,
+      ncm: ncm ?? this.ncm,
+      unidade: unidade ?? this.unidade,
+      marca: marca ?? this.marca,
+      apresentacao: apresentacao ?? this.apresentacao,
+      grupo1: grupo1 ?? this.grupo1,
+      grupo2: grupo2 ?? this.grupo2,
+      grupo3: grupo3 ?? this.grupo3,
+      cst: cst ?? this.cst,
+      custo: custo ?? this.custo,
+      fabrica: fabrica ?? this.fabrica,
+      venda: venda ?? this.venda,
+      estoqueatual: estoqueatual ?? this.estoqueatual,
+      estoqueparcial: estoqueparcial ?? this.estoqueparcial,
+      quantidade: quantidade ?? this.quantidade,
+      unitario: unitario ?? this.unitario,
+      total: total ?? this.total,
+    );
   }
 }

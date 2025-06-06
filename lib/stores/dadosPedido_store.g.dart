@@ -17,6 +17,22 @@ mixin _$DadosPedidoStore on _DadosPedidoStoreBase, Store {
               name: '_DadosPedidoStoreBase.listaFiltrada'))
       .value;
 
+  late final _$listaProdutosAtom =
+      Atom(name: '_DadosPedidoStoreBase.listaProdutos', context: context);
+
+  @override
+  ObservableList<Produto> get listaProdutos {
+    _$listaProdutosAtom.reportRead();
+    return super.listaProdutos;
+  }
+
+  @override
+  set listaProdutos(ObservableList<Produto> value) {
+    _$listaProdutosAtom.reportWrite(value, super.listaProdutos, () {
+      super.listaProdutos = value;
+    });
+  }
+
   late final _$listaClientesAtom =
       Atom(name: '_DadosPedidoStoreBase.listaClientes', context: context);
 
@@ -93,6 +109,17 @@ mixin _$DadosPedidoStore on _DadosPedidoStoreBase, Store {
       ActionController(name: '_DadosPedidoStoreBase', context: context);
 
   @override
+  void addProd(Produto prod) {
+    final _$actionInfo = _$_DadosPedidoStoreBaseActionController.startAction(
+        name: '_DadosPedidoStoreBase.addProd');
+    try {
+      return super.addProd(prod);
+    } finally {
+      _$_DadosPedidoStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setFiltro(String filter) {
     final _$actionInfo = _$_DadosPedidoStoreBaseActionController.startAction(
         name: '_DadosPedidoStoreBase.setFiltro');
@@ -139,6 +166,7 @@ mixin _$DadosPedidoStore on _DadosPedidoStoreBase, Store {
   @override
   String toString() {
     return '''
+listaProdutos: ${listaProdutos},
 listaClientes: ${listaClientes},
 filtro: ${filtro},
 clienSele: ${clienSele},

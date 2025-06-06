@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:speed_externo/commom/constantes/produto.dart';
 import 'package:speed_externo/commom/widgets/custom_textField.dart';
 import 'package:speed_externo/stores/produtoForm_store.dart';
 import 'package:speed_externo/stores/dadosProduto_store.dart';
-import 'package:speed_externo/stores/dados_store.dart';
-import 'package:speed_externo/stores/form_store.dart';
+
 
 
 class ProdutoForm extends StatefulWidget {
@@ -25,16 +25,14 @@ class ProdutoForm extends StatefulWidget {
 
 
 class _ProdutoFormState extends State<ProdutoForm> {
+
   final produtoStore = Get.find<ProdutoFormStore>();
   final dadosProdutoStore = Get.find<DadosProdutoStore>();
   
   var maskncm = MaskTextInputFormatter(mask: '########', filter: {"#": RegExp(r'[0-9]')});
   var maskcst = MaskTextInputFormatter(mask: '###', filter: {"#": RegExp(r'[0-9]')});
   
-
   final FocusNode foco = FocusNode();
-  
-  
 
   @override
   void initState() {
@@ -80,7 +78,7 @@ class _ProdutoFormState extends State<ProdutoForm> {
                   child: CustomFormField(
                     labelText: 'Cod',
                     controller: produtoStore.controllerCod,                                            
-                    errorText: produtoStore.prodErrors['cod'],                  
+                    errorText: produtoStore.prodErrors[cod],                  
                     readOnly: widget.isConsulta,                    
                     ),
                   ) ,
@@ -102,9 +100,9 @@ class _ProdutoFormState extends State<ProdutoForm> {
                   Flexible(
                     child: CustomFormField(
                       controller: produtoStore.controllerNomeProd,
-                      errorText: produtoStore.prodErrors['nome'],
+                      errorText: produtoStore.prodErrors[nome],
                       labelText: 'Nome',                                       
-                      onChanged: (value) => produtoStore.setField('nome', value),                      
+                      onChanged: (value) => produtoStore.setField(nome, value),                      
                     ),
                   ),        
                 ],
@@ -119,7 +117,7 @@ class _ProdutoFormState extends State<ProdutoForm> {
                       itemBuilder: (contextList, index) { 
                         final produto = dadosProdutoStore.listaFiltrada[index];
                         return ListTile(                          
-                          title: Text(produto['nome'] ?? ''),
+                          title: Text(produto.nome ?? ''),
                           onTap: () {                                                            
                             dadosProdutoStore.selecionarProd(produto);                              
                             dadosProdutoStore.setListaProd(false);    
@@ -139,21 +137,21 @@ class _ProdutoFormState extends State<ProdutoForm> {
                   Flexible(                   
                     child: CustomFormField(
                       controller: produtoStore.controllerMarca,                                            
-                      errorText: produtoStore.prodErrors['marca'],
+                      errorText: produtoStore.prodErrors[marca],
                       labelText: 'Marca',
                       readOnly: widget.isConsulta,
-                      onChanged: (value) => produtoStore.setField('marca', value),                      
+                      onChanged: (value) => produtoStore.setField(marca, value),                      
                     ),
                   ),                              
                   SizedBox(width: 10),
                   SizedBox(
                     width: 300,
                     child: CustomFormField(
-                      controller: produtoStore.controllerCod,
+                      controller: produtoStore.controllerApre,
                       labelText: 'Apresentação',
-                      errorText: produtoStore.prodErrors['apresentacao'],
+                      errorText: produtoStore.prodErrors[apresentacao],
                       readOnly: widget.isConsulta,
-                      onChanged: (value) => produtoStore.setField('apresentacao', value),
+                      onChanged: (value) => produtoStore.setField(apresentacao, value),
                     ),
                   ),
                   SizedBox(width: 10),
@@ -163,10 +161,10 @@ class _ProdutoFormState extends State<ProdutoForm> {
                       controller: produtoStore.controllerNcm,
                       mask: [maskncm],
                       keyboardType: TextInputType.numberWithOptions(),
-                      errorText: produtoStore.prodErrors['ncm'],
+                      errorText: produtoStore.prodErrors[ncm],
                       labelText: 'NCM',
                       readOnly: widget.isConsulta,
-                      onChanged: (value) => produtoStore.setField('ncm', value),                      
+                      onChanged: (value) => produtoStore.setField(ncm, value),                      
                     ),
                   ),
                 ]
@@ -180,10 +178,10 @@ class _ProdutoFormState extends State<ProdutoForm> {
                       controller: produtoStore.controllerCst,
                       mask: [maskcst],
                       keyboardType: TextInputType.numberWithOptions(),
-                      errorText: produtoStore.prodErrors['cst'],
+                      errorText: produtoStore.prodErrors[cst],
                       labelText: 'CST',
                        readOnly: widget.isConsulta,
-                      onChanged: (value) => produtoStore.setField('cst', value),                      
+                      onChanged: (value) => produtoStore.setField(cst, value),                      
                     ),
                   ),
                   SizedBox(width: 10),
@@ -193,38 +191,41 @@ class _ProdutoFormState extends State<ProdutoForm> {
                       controller: produtoStore.controllerUnidade,                      
                       labelText: 'UN',
                        readOnly: widget.isConsulta,
-                      errorText: produtoStore.prodErrors['un'],
-                      onChanged: (value) => produtoStore.setField('un', value),                      
+                      errorText: produtoStore.prodErrors[unidade],
+                      onChanged: (value) => produtoStore.setField(unidade, value),                      
                     ),
                   ),
                   SizedBox(width: 10),
                   SizedBox(
                     width: 100,
                     child: CustomFormField(
+                      controller: produtoStore.controllerGrupo1,
                       labelText: 'Grupo 1',
                       readOnly: widget.isConsulta,
-                      errorText: produtoStore.prodErrors['grupo1'],
-                      onChanged: (value) => produtoStore.setField('grupo1', value),
+                      errorText: produtoStore.prodErrors[grupo1],
+                      onChanged: (value) => produtoStore.setField(grupo1, value),
                     ),
                   ),
                   SizedBox(width: 10),
                    SizedBox(
                     width: 100,
                     child: CustomFormField(
+                      controller: produtoStore.controllerGrupo2,
                       labelText: 'Grupo 2',
                       readOnly: widget.isConsulta,
-                      errorText: produtoStore.prodErrors['grupo2'],
-                      onChanged: (value) => produtoStore.setField('grupo2', value),
+                      errorText: produtoStore.prodErrors[grupo2],
+                      onChanged: (value) => produtoStore.setField(grupo2, value),
                     ),
                   ),
                   SizedBox(width: 10),
                    SizedBox(
                     width: 100,
                     child: CustomFormField(
+                      controller: produtoStore.controllerGrupo3,
                       labelText: 'Grupo 3',
                       readOnly: widget.isConsulta,
-                      errorText: produtoStore.prodErrors['grupo3'],
-                      onChanged: (value) => produtoStore.setField('grupo3', value),
+                      errorText: produtoStore.prodErrors[grupo3],
+                      onChanged: (value) => produtoStore.setField(grupo3, value),
                     ),
                   ),
                   
@@ -239,20 +240,20 @@ class _ProdutoFormState extends State<ProdutoForm> {
                       labelText: 'Custo',
                       keyboardType: TextInputType.number,
                       readOnly: widget.isConsulta,
-                      errorText: produtoStore.prodErrors['custo'],
-                      onChanged: (value) => produtoStore.setField('custo', value),                    
+                      errorText: produtoStore.prodErrors[custo],
+                      onChanged: (value) => produtoStore.setField(custo, value),                    
                     ),
                   ),
                    SizedBox(width: 10),
                   SizedBox(
                     width: 80,
                     child: CustomFormField(
-                      controller: produtoStore.controllerVenda,
+                      controller: produtoStore.controllerFabrica,
                       keyboardType: TextInputType.number,
                       labelText: 'Fabrica',
                       readOnly: widget.isConsulta,
-                      errorText: produtoStore.prodErrors['fabrica'],
-                      onChanged: (value) => produtoStore.setField('fabrica', value),                      
+                      errorText: produtoStore.prodErrors[fabrica],
+                      onChanged: (value) => produtoStore.setField(fabrica, value),                      
                     ),
                   ),
                   SizedBox(width: 10),
@@ -263,8 +264,8 @@ class _ProdutoFormState extends State<ProdutoForm> {
                       keyboardType: TextInputType.number,
                       labelText: 'Venda',
                       readOnly: widget.isConsulta,
-                      errorText: produtoStore.prodErrors['venda'],
-                      onChanged: (value) => produtoStore.setField('venda', value),                      
+                      errorText: produtoStore.prodErrors[venda],
+                      onChanged: (value) => produtoStore.setField(venda, value),                      
                     ),
                   )
                 ],
@@ -276,24 +277,24 @@ class _ProdutoFormState extends State<ProdutoForm> {
                   SizedBox(
                     width: 200,
                     child: CustomFormField(
-                      controller: produtoStore.controllerVenda,
+                      controller: produtoStore.controllerEstAtual,
                       keyboardType: TextInputType.number,
                       labelText: 'Estoque Atual',
                       readOnly: widget.isConsulta,
-                      errorText: produtoStore.prodErrors['atual'],
-                      onChanged: (value) => produtoStore.setField('atual', value),                      
+                      errorText: produtoStore.prodErrors[estoqueatual],
+                      onChanged: (value) => produtoStore.setField(estoqueatual, value),                      
                     ),
                   ),
                   SizedBox(width: 10),
                   SizedBox(
                     width: 200,
                     child: CustomFormField(
-                      controller: produtoStore.controllerVenda,
+                      controller: produtoStore.controllerEstParcial,
                       keyboardType: TextInputType.number,
                       labelText: 'Estoque Parcial',
                       readOnly: widget.isConsulta,
-                      errorText: produtoStore.prodErrors['parcial'],
-                      onChanged: (value) => produtoStore.setField('parcial', value),                      
+                      errorText: produtoStore.prodErrors[estoqueparcial],
+                      onChanged: (value) => produtoStore.setField(estoqueparcial, value),                      
                     ),
                   ),
                 ],

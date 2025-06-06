@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:mobx/mobx.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:speed_externo/commom/constantes/produto.dart';
 import 'package:speed_externo/commom/objetos/produto.dart';
 import 'package:speed_externo/stores/produtoForm_store.dart';
 
@@ -17,47 +18,34 @@ abstract class _DadosProdutoStoreBase with Store{
   
 
   @observable
-  ObservableList<Map<String, dynamic>> listaProdutos = ObservableList<Map<String, dynamic>> ();
+  ObservableList<Produto> listaProdutos = ObservableList<Produto> ();
 
   @observable
   String filtroProd = '';
 
   @observable
-  Map<String, dynamic> prodSele = {}; 
+  Produto prodSele = Produto(); 
 
-  @action
-  Future obtemProdutos () async{
-    Produto produtoJson = Produto();
-    try{
-      final fProduto = await obtemFileProd();
-      String contJson = await fProduto.readAsString();
-      List<Map<String, dynamic>> produtos = produtoJson.deserializaJson(contJson);
-      listaProdutos = ObservableList<Map<String, dynamic>>.of(produtos);
-      log('Obteve os Produtos $listaProdutos');
-    }catch (e){
-      log('Erro ao obter os Produtos');
-      rethrow;
-    }
-  }
-
+  
   @action
   void setFiltroProd(String filter){
     filtroProd = filter;
   }
 
+
   @action
-  void setProduto(Map<String, dynamic> prod){
+  void setProduto(Produto prod){
     prodSele = prod;
   }
 
   @computed
-List<Map<String, dynamic>> get listaFiltrada {
+List<Produto> get listaFiltrada {
   if (filtroProd.isEmpty) {
     return listaProdutos.toList();
   } else {
 
     return listaProdutos.where((produto) {      
-      final String nomeProduto = produto['nome']?.toString().toLowerCase() ?? '';    
+      final String nomeProduto = produto.nome?.toString().toLowerCase() ?? '';    
 
       return nomeProduto.contains(filtroProd.toLowerCase());
     }).toList();
@@ -73,7 +61,7 @@ void setListaProd(bool value) {
 }
 
 @action
-void selecionarProd(Map<String, dynamic> produtoSelecionado) {
+void selecionarProd(Produto produtoSelecionado) {
   
   final produtoForm = Get.find<ProdutoFormStore>();
 
@@ -82,24 +70,50 @@ void selecionarProd(Map<String, dynamic> produtoSelecionado) {
 
   produtoForm.resetForm();
 
-  produtoSelecionado.forEach((key, value) {
-    produtoForm.controllerCod.text = produtoSelecionado['cod'].toString();    
-    produtoForm.controllerNomeProd.text = produtoSelecionado['nome'];
-    produtoForm.controllerNcm.text = produtoSelecionado['ncm'];
-    produtoForm.controllerUnidade.text = produtoSelecionado['un'];
-    produtoForm.controllerMarca.text = produtoSelecionado['marca'];
-    produtoForm.controllerCst.text = produtoSelecionado['cst'];
-    produtoForm.controllerCusto.text = produtoSelecionado['custo'];
-    produtoForm.controllerVenda.text = produtoSelecionado['venda'];
-  
-  });
+  produtoForm.controllerCod.text = prodSele.cod.toString();
+  produtoForm.controllerNomeProd.text = prodSele.nome.toString();
+  produtoForm.controllerNcm.text = prodSele.ncm.toString();
+  produtoForm.controllerUnidade.text = prodSele.unidade.toString();
+  produtoForm.controllerMarca.text = prodSele.marca.toString();
+  produtoForm.controllerApre.text = prodSele.apresentacao.toString();
+  produtoForm.controllerGrupo1.text = prodSele.grupo1.toString();
+  produtoForm.controllerGrupo2.text = prodSele.grupo2.toString();
+  produtoForm.controllerGrupo3.text = prodSele.grupo3.toString();
+  produtoForm.controllerCst.text = prodSele.cst.toString();
+  produtoForm.controllerCusto.text = prodSele.custo.toString();
+  produtoForm.controllerFabrica.text = prodSele.fabrica.toString();
+  produtoForm.controllerVenda.text = prodSele.venda.toString();
+  produtoForm.controllerEstAtual.text = prodSele.estoqueatual.toString();
+  produtoForm.controllerEstParcial.text = prodSele.estoqueparcial.toString();
+  produtoForm.controllerQuant.text = prodSele.quantidade.toString();
+  produtoForm.controllerUnit.text = prodSele.unitario.toString();
+  produtoForm.controllerTotal.text = prodSele.total.toString();    
 }
+
+
+@action
+  Future obtemProdutos () async{
+    Produto produtoJson = Produto();
+    try{
+      final fProduto = await obtemFileProd();
+      log('Obteve o arquivo de produtos $fProduto');
+      String contJson = await fProduto.readAsString();
+      log('Obteve o conteudo do arquivo de produtos $contJson');    
+      List<Produto> produtos = produtoJson.obtemProdutos(contJson);
+      log('Criou a lista de produtos $produtos');
+      listaProdutos = ObservableList<Produto>.of(produtos);
+      log('Obteve os Produtos $listaProdutos');
+    }catch (e){
+      log('Erro ao obter os Produtos');
+      rethrow;
+    }
+  }
 
   Future<File> obtemFileProd() async{
     try {
       Directory dir = await getApplicationDocumentsDirectory();              
         String path =  dir.path;        
-        File f = File('$path/produtos.json');        
+        File f = File('$path/produtos01.json');        
         bool fExiste = await f.exists();        
         if (fExiste){
           return f;
@@ -121,11 +135,16 @@ void selecionarProd(Map<String, dynamic> produtoSelecionado) {
       File json = await obtemFileProd();
       String contJson = await json.readAsString();
       if (contJson != '[]' ){
-        List<Map<String, dynamic>> listaDeProds = produtoJson.deserializaJson(contJson);        
-        Map<String, dynamic> ultimoProd = listaDeProds.last;        
-        int ultimoCod = ultimoProd['cod'];
-        ultimoCod++;
-        return ultimoCod;
+        List<Produto> listaDeProds = produtoJson.obtemProdutos(contJson);        
+        int codigo = 0;
+        for (Produto produto in listaDeProds){  
+          int a = int.parse(produto.cod ?? '0');                 
+          if ( a > codigo){
+              codigo = a;
+          }
+        }
+        codigo++;
+        return codigo;
       }else {
         return 1;
       }
@@ -136,20 +155,15 @@ void selecionarProd(Map<String, dynamic> produtoSelecionado) {
         
   }
 
-  salvaProduto() async{
-     Produto produtoJson = Produto();
+  salvaProduto() async{    
     final produtoForm = Get.find<ProdutoFormStore>();
     try{
       int cod = await obtemCod();
       final fProd = await obtemFileProd();
       String contJson = await fProd.readAsString();           
-      List<Map<String, dynamic>> produtos = produtoJson.deserializaJson(contJson);
-      final produto = <String, dynamic>{};
-      produtoForm.prodValues.forEach((key, value) {
-        produto[key] = value;
-      });
-      produto["cod"]=cod;
-      produtos.add(produto);
+      List<Produto> produtos = produtoForm.prod.obtemProdutos(contJson);    
+      produtoForm.prod.cod='$cod';
+      produtos.add(produtoForm.prod);
       final jProdutos = jsonEncode(produtos);
       await fProd.writeAsString(jProdutos);  
       log('Salvou porraa $produtos');

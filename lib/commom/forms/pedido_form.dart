@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:speed_externo/commom/constantes/produto.dart';
 import 'package:speed_externo/commom/forms/produto_form.dart';
+import 'package:speed_externo/commom/objetos/produto.dart';
 import 'package:speed_externo/commom/widgets/custom_textField.dart';
 import 'package:speed_externo/stores/dadosPedido_store.dart';
 import 'package:speed_externo/stores/dadosProduto_store.dart';
@@ -170,23 +172,17 @@ var maskdate = MaskTextInputFormatter(mask: '##/##/####', filter: {"#": RegExp(r
                       child: Card(
                         child:ListView.builder(
                           shrinkWrap: true,                      
-                          itemCount: dadosStore.listaFiltrada.length,
+                          itemCount: dadosStore.listaProdutos.length,
                           itemBuilder: (contextList, index) { 
-                            final cliente = dadosStore.listaFiltrada[index];
+                            final produto = dadosStore.listaProdutos[index];
                             return Dismissible(  
                               background:  Container(color: Colors.green),
-                              key: ValueKey(dadosStore.listaFiltrada[index]),     
+                              key: ValueKey(dadosStore.listaProdutos[index]),     
                               onDismissed: (direction) {
                                 
                               },        
                               child: ListTile(
-                                  title: Text(cliente['nome'] ?? ''),
-                              onTap: () {                              
-                                log('chegou aqui');
-                                dadosStore.selecionarCliente(cliente, 'pf');                              
-                                dadosStore.setListaCliente(false);    
-                                foco.unfocus(); 
-                              },
+                                  title: Text(produto.nome ?? ''),                              
                               ),           
                               
                             );
@@ -218,7 +214,12 @@ var maskdate = MaskTextInputFormatter(mask: '##/##/####', filter: {"#": RegExp(r
                   ),
                   actions: <Widget>[
                     ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        Produto produtoSelec = produtoStore.prod;
+                        log('vai obter o objeto do Produto $produtoSelec');
+                        dadosStore.addProd(produtoSelec);
+                        Navigator.pop(context);
+                      },
                       child: const Text('Cancelar'),
                     ),
                     ElevatedButton(
@@ -227,7 +228,7 @@ var maskdate = MaskTextInputFormatter(mask: '##/##/####', filter: {"#": RegExp(r
                     ),
                   ],
                 );
-  }
+              }
           ),
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
