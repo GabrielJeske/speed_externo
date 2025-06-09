@@ -78,10 +78,53 @@ class Cliente {
       'numeroContato': numeroContato,
     };
   }
-  
-  List<Map<String, dynamic>> deserializaJson(String jsonString){
-    List<dynamic> conteudoJson = jsonDecode(jsonString);
-    List<Map<String, dynamic>> listJson = List<Map<String, dynamic>>.from(conteudoJson);
-    return listJson;
+
+  Cliente copyWith({
+    String? id,
+    String? nome,
+    String? cpf,
+    String? razaosocial,
+    String? fantasia,
+    String? cnpj,
+    String? ie,
+    String? endereco,
+    String? numero,
+    String? bairro,
+    String? cep,
+    String? email,
+    String? contato,
+    String? numeroContato,
+    String? contribuinte,
+    String? logadouro,
+  }) {
+    return Cliente(
+      id: id ?? this.id,
+      nome: nome ?? this.nome,
+      cpf: cpf ?? this.cpf,
+      razaosocial: razaosocial ?? this.razaosocial,
+      fantasia: fantasia ?? this.fantasia,
+      cnpj: cnpj ?? this.cnpj,
+      ie: ie ?? this.ie,
+      endereco: endereco ?? this.endereco,
+      numero: numero ?? this.numero,
+      bairro: bairro ?? this.bairro,
+      cep: cep ?? this.cep,
+      email: email ?? this.email,
+      contato: contato ?? this.contato,
+      numeroContato: numeroContato ?? this.numeroContato,
+      contribuinte: contribuinte ?? this.contribuinte,
+      logadouro: logadouro ?? this.logadouro,
+    );
   }
+
+   List<Cliente> obtemClientes(String jsonString){    
+    List<dynamic> listaGenerica= jsonDecode(jsonString);
+    List<Cliente> clientes = [];
+    for (Map<String, dynamic> a in listaGenerica) {   
+      Cliente cliente = Cliente.fromJson(a);
+      clientes.add(cliente);
+    }
+     return clientes; 
+    }
+
 }

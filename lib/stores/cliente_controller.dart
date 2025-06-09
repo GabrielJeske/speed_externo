@@ -1,12 +1,12 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:mobx/mobx.dart';
+import 'package:speed_externo/commom/constantes/chaves.dart';
+import 'package:speed_externo/commom/objetos/cliente.dart';
 import 'package:speed_externo/stores/validate_store.dart';
 
-part 'form_store.g.dart';
+part 'cliente_controller.g.dart';
 
 
 class FormStore =_FormStoreBase with _$FormStore;
@@ -27,26 +27,55 @@ abstract class _FormStoreBase with Store{
   TextEditingController controllerEmail = TextEditingController();
   TextEditingController controllerContato = TextEditingController();
   TextEditingController controllerNumeroContato = TextEditingController();
-     
-   @observable
-   ObservableMap<String, String> formValues = ObservableMap.of({});
+
+  @observable
+  Cliente cliente = Cliente();
+
+  @observable
+  ObservableMap<String, String?> formErrors = ObservableMap.of({});
 
 
-   @observable
-   ObservableMap<String, String?> formErrors = ObservableMap.of({
-   });
+  @computed
+  bool get isFormValid => formErrors.values.every((error) => error == null);
 
-
-   @computed
-   bool get isFormValid => formErrors.values.every((error) => error == null);
-
-
-
-   @action
-   void setField(String chave, String value){
-      formValues[chave]=value;
-       Get.find<ValidateStore>().validateField(chave, value);
-   }
+ @action
+  void setField(String chave, String value){
+    switch (chave) {
+      case id:
+      cliente = cliente.copyWith(id: value) ;
+      case nome:
+      cliente = cliente.copyWith(nome: value) ;
+      case cpf:
+      cliente = cliente.copyWith(cpf: value) ;
+      case razaosocial:
+      cliente = cliente.copyWith(razaosocial: value) ;
+      case fantasia:
+      cliente = cliente.copyWith(fantasia: value) ;
+      case cnpj:
+      cliente = cliente.copyWith(cnpj: value) ;
+      case ie:
+      cliente = cliente.copyWith(ie: value) ;
+      case endereco:
+      cliente = cliente.copyWith(endereco: value) ;
+      case numero:
+      cliente = cliente.copyWith(numero: value) ;
+      case bairro:
+      cliente = cliente.copyWith(bairro: value) ;
+      case cep:
+      cliente = cliente.copyWith(cep: value) ;
+      case email:
+      cliente = cliente.copyWith(email: value) ;
+      case contato:
+      cliente = cliente.copyWith(contato: value) ;
+      case numeroContato:
+      cliente = cliente.copyWith(numeroContato: value) ;
+      case contribuinte:
+      cliente = cliente.copyWith(contribuinte: value) ;
+      case logadouro:
+      cliente = cliente.copyWith(logadouro: value) ;
+    }
+    Get.find<ValidateStore>().validateField(chave, value);
+  }
 
     @action
   void validateAllFields(String tipo) { // tipo pode ser 'pf' ou 'pj'
@@ -69,7 +98,7 @@ abstract class _FormStoreBase with Store{
     controllerEmail.text = '';
     controllerContato.text = '';
     controllerNumeroContato.text = ''; 
-    formValues.clear();
+    cliente = Cliente();
     formErrors.clear();
   }
 

@@ -9,11 +9,11 @@ part of 'dadosPedido_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$DadosPedidoStore on _DadosPedidoStoreBase, Store {
-  Computed<List<Map<String, dynamic>>>? _$listaFiltradaComputed;
+  Computed<List<Cliente>>? _$listaFiltradaComputed;
 
   @override
-  List<Map<String, dynamic>> get listaFiltrada => (_$listaFiltradaComputed ??=
-          Computed<List<Map<String, dynamic>>>(() => super.listaFiltrada,
+  List<Cliente> get listaFiltrada => (_$listaFiltradaComputed ??=
+          Computed<List<Cliente>>(() => super.listaFiltrada,
               name: '_DadosPedidoStoreBase.listaFiltrada'))
       .value;
 
@@ -37,13 +37,13 @@ mixin _$DadosPedidoStore on _DadosPedidoStoreBase, Store {
       Atom(name: '_DadosPedidoStoreBase.listaClientes', context: context);
 
   @override
-  ObservableList<Map<String, dynamic>> get listaClientes {
+  ObservableList<Cliente> get listaClientes {
     _$listaClientesAtom.reportRead();
     return super.listaClientes;
   }
 
   @override
-  set listaClientes(ObservableList<Map<String, dynamic>> value) {
+  set listaClientes(ObservableList<Cliente> value) {
     _$listaClientesAtom.reportWrite(value, super.listaClientes, () {
       super.listaClientes = value;
     });
@@ -69,13 +69,13 @@ mixin _$DadosPedidoStore on _DadosPedidoStoreBase, Store {
       Atom(name: '_DadosPedidoStoreBase.clienSele', context: context);
 
   @override
-  Map<String, dynamic> get clienSele {
+  Cliente get clienSele {
     _$clienSeleAtom.reportRead();
     return super.clienSele;
   }
 
   @override
-  set clienSele(Map<String, dynamic> value) {
+  set clienSele(Cliente value) {
     _$clienSeleAtom.reportWrite(value, super.clienSele, () {
       super.clienSele = value;
     });
@@ -131,7 +131,7 @@ mixin _$DadosPedidoStore on _DadosPedidoStoreBase, Store {
   }
 
   @override
-  void setCliente(Map<String, dynamic> cliente) {
+  void setCliente(Cliente cliente) {
     final _$actionInfo = _$_DadosPedidoStoreBaseActionController.startAction(
         name: '_DadosPedidoStoreBase.setCliente');
     try {
@@ -153,7 +153,7 @@ mixin _$DadosPedidoStore on _DadosPedidoStoreBase, Store {
   }
 
   @override
-  void selecionarCliente(Map<String, dynamic> clienteSelecionado, String tipo) {
+  void selecionarCliente(Cliente clienteSelecionado, String tipo) {
     final _$actionInfo = _$_DadosPedidoStoreBaseActionController.startAction(
         name: '_DadosPedidoStoreBase.selecionarCliente');
     try {

@@ -18,22 +18,19 @@ abstract class _DadosPedidoStoreBase with Store{
   @observable
   ObservableList<Produto> listaProdutos = ObservableList<Produto> ();
 
-
-  @action
-  void addProd(Produto prod){
-    listaProdutos.add(prod);  
-  }
-
-
-
   @observable
-  ObservableList<Map<String, dynamic>> listaClientes = ObservableList<Map<String, dynamic>> ();
+  ObservableList<Cliente> listaClientes = ObservableList<Cliente> ();
 
   @observable
   String filtro = '';
 
   @observable
-  Map<String, dynamic> clienSele = {}; 
+  Cliente clienSele = Cliente();
+  
+  @action
+  void addProd(Produto prod){
+    listaProdutos.add(prod);  
+  }
 
   @action
   Future obtemClientes () async{
@@ -41,8 +38,8 @@ abstract class _DadosPedidoStoreBase with Store{
     try{
       final fCliente = await obtemFileClie();
       String contJson = await fCliente.readAsString();
-      List<Map<String, dynamic>> clientes = clienteJson.deserializaJson(contJson);
-      listaClientes = ObservableList<Map<String, dynamic>>.of(clientes);
+      List<Cliente> clientes = clienteJson.obtemClientes(contJson);
+      listaClientes = ObservableList<Cliente>.of(clientes);
       log('Obteve os clientes $listaClientes');
     }catch (e){
       log('Erro ao obter os clientes');
@@ -56,20 +53,20 @@ abstract class _DadosPedidoStoreBase with Store{
   }
 
   @action
-  void setCliente(Map<String, dynamic> cliente){
+  void setCliente(Cliente cliente){
     clienSele = cliente;
   }
 
   @computed
-List<Map<String, dynamic>> get listaFiltrada {
+List<Cliente> get listaFiltrada {
   if (filtro.isEmpty) {
     return listaClientes.toList();
   } else {
     return listaClientes.where((cliente) {
   
-      final String nomeCliente = cliente['nome']?.toString().toLowerCase() ?? '';
-      final String razaoSocialCliente = cliente['razaosocial']?.toString().toLowerCase() ?? '';
-      final String fantasiaCliente = cliente['fantasia']?.toString().toLowerCase() ?? '';
+      final String nomeCliente = cliente.nome?.toString().toLowerCase() ?? '';
+      final String razaoSocialCliente = cliente.razaosocial?.toString().toLowerCase() ?? '';
+      final String fantasiaCliente = cliente.fantasia?.toString().toLowerCase() ?? '';
 
       bool filtrado = nomeCliente.contains(filtro.toLowerCase()) ||
                         razaoSocialCliente.contains(filtro.toLowerCase()) ||
@@ -89,7 +86,7 @@ void setListaCliente(bool value) {
 }
 
 @action
-void selecionarCliente(Map<String, dynamic> clienteSelecionado, String tipo) {
+void selecionarCliente(Cliente clienteSelecionado, String tipo) {
   
   final pedidoStore = Get.find<PedidoStore>();
 
@@ -98,10 +95,8 @@ void selecionarCliente(Map<String, dynamic> clienteSelecionado, String tipo) {
 
   pedidoStore.resetForm();
 
-  clienteSelecionado.forEach((key, value) {
+  pedidoStore.controllerCliente.text = clienteSelecionado.nome.toString();   
   
-    pedidoStore.controllerCliente.text = clienteSelecionado['nome'];   
-  }); 
 }
 
   Future<File> obtemFileClie() async{
@@ -113,7 +108,7 @@ void selecionarCliente(Map<String, dynamic> clienteSelecionado, String tipo) {
         if (fExiste){
           return f;
         }else {
-          List<Map<String, dynamic>> mapClientes = [];
+          List<Cliente> mapClientes = [];
           final jClientes = jsonEncode(mapClientes);
           await f.writeAsString(jClientes);
           return f;

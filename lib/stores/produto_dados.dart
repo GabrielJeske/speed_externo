@@ -4,11 +4,10 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:mobx/mobx.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:speed_externo/commom/constantes/produto.dart';
 import 'package:speed_externo/commom/objetos/produto.dart';
-import 'package:speed_externo/stores/produtoForm_store.dart';
+import 'package:speed_externo/stores/produto_controller.dart';
 
-part 'dadosProduto_store.g.dart';
+part 'produto_dados.g.dart';
 
 
 class DadosProdutoStore =_DadosProdutoStoreBase with _$DadosProdutoStore;
@@ -113,12 +112,12 @@ void selecionarProd(Produto produtoSelecionado) {
     try {
       Directory dir = await getApplicationDocumentsDirectory();              
         String path =  dir.path;        
-        File f = File('$path/produtos01.json');        
+        File f = File('$path/produtos.json');        
         bool fExiste = await f.exists();        
         if (fExiste){
           return f;
         }else {
-          List<Map<String, dynamic>> mapProds = [];
+          List<Produto> mapProds = [];
           final jProdutos = jsonEncode(mapProds);
           await f.writeAsString(jProdutos);
           return f;

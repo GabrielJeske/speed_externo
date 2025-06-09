@@ -4,8 +4,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:speed_externo/commom/widgets/custom_textField.dart';
-import 'package:speed_externo/stores/dados_store.dart';
-import 'package:speed_externo/stores/form_store.dart';
+import 'package:speed_externo/stores/cliente_dados.dart';
+import 'package:speed_externo/stores/cliente_controller.dart';
 
 
 class ClientePfForm extends StatefulWidget {
@@ -68,7 +68,7 @@ class _ClientePfFormState extends State<ClientePfForm> {
         child: Observer(
           builder: (_) => Column(
             children: [
-              SizedBox(height: 20),
+              SizedBox(height: 5),
               if (widget.isConsulta)
               CustomFormField(
                 controller:  formStore.controllerNome,
@@ -77,8 +77,7 @@ class _ClientePfFormState extends State<ClientePfForm> {
                 onChanged: (value) {
                   log('Vai setar o filtro');
                   dadosStore.setFiltro(value);
-                  dadosStore.setListaCliente(foco.hasFocus);
-                 // dadosStore.setShowSuggestions(false);            
+                  dadosStore.setListaCliente(foco.hasFocus);               
                 },
               ),
               Observer( 
@@ -92,7 +91,7 @@ class _ClientePfFormState extends State<ClientePfForm> {
                         itemBuilder: (contextList, index) { 
                           final cliente = dadosStore.listaFiltrada[index];
                           return ListTile(                          
-                            title: Text(cliente['nome'] ?? ''),
+                            title: Text(cliente.nome ?? ''),
                             onTap: () {                              
                               log('Vai selecionar o cliente $cliente');
                               dadosStore.selecionarCliente(cliente, 'pf');                              
@@ -111,23 +110,21 @@ class _ClientePfFormState extends State<ClientePfForm> {
               if (!widget.isConsulta)
               Row(
                 children: [                
-                  Flexible(
+                  Flexible(             
                     child: CustomFormField(
                       controller: formStore.controllerNome,
                       errorText: formStore.formErrors['nome'],
                       labelText: 'Nome',                                       
-                      onChanged: (value) => formStore.setField('nome', value),
-                      //onFieldSubmitted: (_) => validateStore.validateField('nome', controllers['nome']!.text),
-                      //onEditingComplete: () => validateStore.validateField('nome', controllers['nome']!.text),
+                      onChanged: (value) => formStore.setField('nome', value),                      
                     ),
                   )
                 ],
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 5),
               Row(
                 children: [
-                  SizedBox(
-                    width: 150,
+                  Expanded(
+                    flex: 6,
                     child: CustomFormField(
                       controller: formStore.controllerCpf,
                       mask: [maskCpf],
@@ -135,22 +132,19 @@ class _ClientePfFormState extends State<ClientePfForm> {
                       errorText: formStore.formErrors['cpf'],
                       labelText: 'CPF',
                        readOnly: widget.isConsulta,
-                      onChanged: (value) => formStore.setField('cpf', value),
-                      //onFieldSubmitted: (_) => validateStore.validateField('cpf', controllers['cpf']!.text),
-                      //onEditingComplete: () => validateStore.validateField('cpf', controllers['cpf']!.text),
+                      onChanged: (value) => formStore.setField('cpf', value),                     
                     ),
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Flexible(
+                  SizedBox(width: 10),
+                  Expanded(
+                    flex: 4,
                     child: DropdownButtonFormField<String>(
                       decoration: InputDecoration(
                         labelText: 'Logadouro',                
                         border: OutlineInputBorder(),
                         errorText: formStore.formErrors['logadouro'],
                       ),
-                      value: formStore.formValues['logadouro'] == '' ? null : formStore.formValues['logadouro'],
+                      value: formStore.cliente.logadouro == '' ? null : formStore.cliente.logadouro,
                       items: ['Rua', 'Avenida'].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,                    
@@ -159,24 +153,25 @@ class _ClientePfFormState extends State<ClientePfForm> {
                       }).toList(),
                       onChanged: (String? newValue) {
                         if (newValue != null) {
-                          formStore.setField('logadouro', newValue ?? '');
+                          formStore.setField('logadouro', newValue);
                         }
                       },
                     ),
                   )
                 ],
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 5),
               Row(
                 children: [
-                  Flexible(
+                  Expanded(
+                    flex: 7,
                     child: DropdownButtonFormField<String>(
                       decoration: InputDecoration(
                         labelText: 'Contribuinte',
                         border: OutlineInputBorder(),
                         errorText: formStore.formErrors['contribuinte'],
                       ),
-                      value: formStore.formValues['Contribuinte'] == '' ? null : formStore.formValues['Contribuinte'],
+                      value: formStore.cliente.contribuinte == '' ? null : formStore.cliente.contribuinte,
                       items: ['Contribuinte', 'Não Contribuinte', 'Isento'].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -185,74 +180,68 @@ class _ClientePfFormState extends State<ClientePfForm> {
                       }).toList(),
                       onChanged: (String? newValue) {
                         if (newValue != null) {
-                          formStore.setField('contribuinte', newValue ?? '');
+                          formStore.setField('contribuinte', newValue );
                         }
                       },
                     ),
                   ),
                   SizedBox(width: 10),
-                  SizedBox(
-                    width: 150,
+                  Expanded(
+                    flex: 6,
                     child: CustomFormField(
                       controller: formStore.controllerIe,
                       keyboardType: TextInputType.number,
                       labelText: 'IE',
                        readOnly: widget.isConsulta,
                       errorText: formStore.formErrors['ie'],
-                      onChanged: (value) => formStore.setField('ie', value),
-                      //onFieldSubmitted: (_) => validateStore.validateField('ie', controllers['ie']!.text),
-                      //onEditingComplete: () => validateStore.validateField('ie', controllers['ie']!.text),
+                      onChanged: (value) => formStore.setField('ie', value),                      
                     ),
                   )
                 ],
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 5),
               Row(
                 children: [
-                  Flexible(
+                  Expanded(
+                    flex: 7,
                     child: CustomFormField(
                       controller: formStore.controllerEndereco,
                       labelText: 'Endereco',
                        readOnly: widget.isConsulta,
                       errorText: formStore.formErrors['endereco'],
-                      onChanged: (value) => formStore.setField('endereco', value),
-                      //onFieldSubmitted: (_) => validateStore.validateField('endereco', controllers['endereco']!.text),
-                      //onEditingComplete: () => validateStore.validateField('endereco', controllers['endereco']!.text),
+                      onChanged: (value) => formStore.setField('endereco', value),                    
                     ),
                   ),
                   SizedBox(width: 10),
-                  SizedBox(
-                    width: 80,
+                  Expanded(
+                    flex: 3,
                     child: CustomFormField(
                       controller: formStore.controllerNumero,
                       keyboardType: TextInputType.number,
                       labelText: 'Nº',
                       readOnly: widget.isConsulta,
                       errorText: formStore.formErrors['n'],
-                      onChanged: (value) => formStore.setField('n', value),
-                      //onFieldSubmitted: (_) => validateStore.validateField('n', controllers['n']!.text),
-                      //onEditingComplete: () => validateStore.validateField('n', controllers['n']!.text),
+                      onChanged: (value) => formStore.setField('n', value),                     
                     ),
                   )
                 ],
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 5),
               Row(
                 children: [
-                  Flexible(
+                  Expanded(
+                    flex: 6,
                     child: CustomFormField(
                       controller: formStore.controllerBairro,
                       labelText: 'Bairro',
                       readOnly: widget.isConsulta,
                       errorText: formStore.formErrors['bairro'],
-                      onChanged: (value) => formStore.setField('bairro', value),
-                      //onFieldSubmitted: (_) => validateStore.validateField('bairro', controllers['bairro']!.text),
-                      //onEditingComplete: () => validateStore.validateField('bairro', controllers['bairro']!.text),
+                      onChanged: (value) => formStore.setField('bairro', value),                     
                     ),
                   ),
                   SizedBox(width: 10),
-                  SizedBox(
-                    width: 120,
+                  Expanded(
+                    flex: 5,
                     child: CustomFormField(
                       controller: formStore.controllerCep,
                       mask: [maskCep],
@@ -260,48 +249,44 @@ class _ClientePfFormState extends State<ClientePfForm> {
                       labelText: 'Cep',
                       readOnly: widget.isConsulta,
                       errorText: formStore.formErrors['cep'],
-                      onChanged: (value) => formStore.setField('cep', value),
-                      //onFieldSubmitted: (_) => validateStore.validateField('cep', controllers['cep']!.text),
-                      //onEditingComplete: () => validateStore.validateField('cep', controllers['cep']!.text),
+                      onChanged: (value) => formStore.setField('cep', value),                     
                     ),
                   )
                 ],
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 5),
               Row(
                 children: [
-                  Flexible(
+                  Expanded(
+                    flex: 10,
                     child: CustomFormField(
                       controller: formStore.controllerEmail,
                       labelText: 'E-mail',
                       readOnly: widget.isConsulta,
                       errorText: formStore.formErrors['email'],
-                      onChanged: (value) => formStore.setField('email', value),
-                      //onFieldSubmitted: (_) => validateStore.validateField('email', controllers['email']!.text),
-                      //onEditingComplete: () => validateStore.validateField('email', controllers['email']!.text),
+                      onChanged: (value) => formStore.setField('email', value),                     
                     ),
                   )
                 ],
               ),
               SizedBox(
-                height: 10,
+                height: 5,
               ),
               Row(
                 children: [
-                  SizedBox(
-                    width: 150,
+                  Expanded(
+                    flex: 4,
                     child: CustomFormField(
                       controller: formStore.controllerContato,
                       labelText: 'contato',
                       readOnly: widget.isConsulta,
                       errorText: formStore.formErrors['contato'],
-                      onChanged: (value) => formStore.setField('contato', value),
-                      //onFieldSubmitted: (_) => validateStore.validateField('contato', controllers['contato']!.text),
-                      //onEditingComplete: () => validateStore.validateField('contato', controllers['contato']!.text),
+                      onChanged: (value) => formStore.setField('contato', value),                      
                     ),
                   ),
                   SizedBox(width: 10),
-                  Flexible(
+                  Expanded(
+                    flex: 6,
                     child: CustomFormField(
                       controller: formStore.controllerNumeroContato,
                       mask: [maskNumero],
@@ -309,9 +294,7 @@ class _ClientePfFormState extends State<ClientePfForm> {
                       labelText: 'Numero',
                       readOnly: widget.isConsulta,
                       errorText: formStore.formErrors['numero'],
-                      onChanged: (value) => formStore.setField('numero', value),
-                      //onFieldSubmitted: (_) => validateStore.validateField('numero', controllers['numero']!.text),
-                      //onEditingComplete: () => validateStore.validateField('numero', controllers['numero']!.text),
+                      onChanged: (value) => formStore.setField('numero', value),                     
                     ),
                   )
                 ],

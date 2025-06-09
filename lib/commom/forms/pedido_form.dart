@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:speed_externo/commom/constantes/produto.dart';
 import 'package:speed_externo/commom/forms/produto_form.dart';
 import 'package:speed_externo/commom/objetos/produto.dart';
 import 'package:speed_externo/commom/widgets/custom_textField.dart';
 import 'package:speed_externo/stores/dadosPedido_store.dart';
-import 'package:speed_externo/stores/dadosProduto_store.dart';
+import 'package:speed_externo/stores/produto_dados.dart';
 import 'package:speed_externo/stores/pedidoForm_store.dart';
-import 'package:speed_externo/stores/produtoForm_store.dart';
+import 'package:speed_externo/stores/produto_controller.dart';
 
 class PedidoForm extends StatefulWidget {
   const PedidoForm({super.key});
@@ -111,7 +110,7 @@ var maskdate = MaskTextInputFormatter(mask: '##/##/####', filter: {"#": RegExp(r
                                         itemBuilder: (contextList, index) { 
                                           final cliente = dadosStore.listaFiltrada[index];
                                           return ListTile(                          
-                                            title: Text(cliente['nome'] ?? ''),
+                                            title: Text(cliente.nome ?? ''),
                                             onTap: () {                              
                                               log('chegou aqui');
                                               dadosStore.selecionarCliente(cliente, 'pf');                              
@@ -125,11 +124,12 @@ var maskdate = MaskTextInputFormatter(mask: '##/##/####', filter: {"#": RegExp(r
                                   } else {
                                     return SizedBox.shrink();
                                   }
-                                }),              
+                                }),        
+                            SizedBox(height: 5),
                             Row(
                               children: [
-                                SizedBox(
-                                  width: 150,                                
+                                Expanded(
+                                  flex: 5,                                
                                   child: CustomFormField(
                                     controller: pedidoStore.controllerData,
                                     mask: [maskdate],
@@ -137,8 +137,8 @@ var maskdate = MaskTextInputFormatter(mask: '##/##/####', filter: {"#": RegExp(r
                                   ),
                                 ),
                                 SizedBox(width: 10),
-                                SizedBox( 
-                                  width: 150,                               
+                                Expanded( 
+                                  flex: 5,                               
                                   child: DropdownButtonFormField<String>(
                                     decoration: InputDecoration(                        
                                       labelText: 'Tipo', 
@@ -176,7 +176,7 @@ var maskdate = MaskTextInputFormatter(mask: '##/##/####', filter: {"#": RegExp(r
                           itemBuilder: (contextList, index) { 
                             final produto = dadosStore.listaProdutos[index];
                             return Dismissible(  
-                              background:  Container(color: Colors.green),
+                              background:  Container(color: Colors.red),
                               key: ValueKey(dadosStore.listaProdutos[index]),     
                               onDismissed: (direction) {
                                 
@@ -202,8 +202,8 @@ var maskdate = MaskTextInputFormatter(mask: '##/##/####', filter: {"#": RegExp(r
               (BuildContext context) {
 
                 final Size screenSize = MediaQuery.of(context).size;
-                final double dialogWidth = screenSize.width * 0.9;
-                final double dialogHeight = screenSize.height * 0.9;
+                final double dialogWidth = screenSize.width  ;
+                final double dialogHeight = screenSize.height;
 
                 return AlertDialog(
                   title: const Text('Inclusão de Produtos'),
@@ -214,16 +214,17 @@ var maskdate = MaskTextInputFormatter(mask: '##/##/####', filter: {"#": RegExp(r
                   ),
                   actions: <Widget>[
                     ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Cancelar'),
+                    ),
+                    ElevatedButton(
+                      
                       onPressed: () {
                         Produto produtoSelec = produtoStore.prod;
                         log('vai obter o objeto do Produto $produtoSelec');
                         dadosStore.addProd(produtoSelec);
                         Navigator.pop(context);
                       },
-                      child: const Text('Cancelar'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
                       child: const Text('Salvar'),
                     ),
                   ],

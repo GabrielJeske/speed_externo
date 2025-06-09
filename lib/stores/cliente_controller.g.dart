@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'form_store.dart';
+part of 'cliente_controller.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -17,19 +17,19 @@ mixin _$FormStore on _FormStoreBase, Store {
               name: '_FormStoreBase.isFormValid'))
           .value;
 
-  late final _$formValuesAtom =
-      Atom(name: '_FormStoreBase.formValues', context: context);
+  late final _$clienteAtom =
+      Atom(name: '_FormStoreBase.cliente', context: context);
 
   @override
-  ObservableMap<String, String> get formValues {
-    _$formValuesAtom.reportRead();
-    return super.formValues;
+  Cliente get cliente {
+    _$clienteAtom.reportRead();
+    return super.cliente;
   }
 
   @override
-  set formValues(ObservableMap<String, String> value) {
-    _$formValuesAtom.reportWrite(value, super.formValues, () {
-      super.formValues = value;
+  set cliente(Cliente value) {
+    _$clienteAtom.reportWrite(value, super.cliente, () {
+      super.cliente = value;
     });
   }
 
@@ -88,7 +88,7 @@ mixin _$FormStore on _FormStoreBase, Store {
   @override
   String toString() {
     return '''
-formValues: ${formValues},
+cliente: ${cliente},
 formErrors: ${formErrors},
 isFormValid: ${isFormValid}
     ''';

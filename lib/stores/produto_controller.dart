@@ -3,18 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:mobx/mobx.dart';
-import 'package:speed_externo/commom/constantes/produto.dart';
+import 'package:speed_externo/commom/constantes/chaves.dart';
 import 'package:speed_externo/commom/objetos/produto.dart';
 import 'package:speed_externo/stores/validate_store.dart';
 
-part 'produtoForm_store.g.dart';
+part 'produto_controller.g.dart';
 
 
 class ProdutoFormStore =_ProdutoFormStoreBase with _$ProdutoFormStore;
 
 abstract class _ProdutoFormStoreBase with Store{
-
-
 
   TextEditingController controllerCod = TextEditingController();
   TextEditingController controllerNomeProd = TextEditingController();
@@ -48,7 +46,6 @@ abstract class _ProdutoFormStoreBase with Store{
   @action
   void setField(String chave, String value){
     switch (chave) {
-      //obtem as chaves de /lib/commom/constantes/produto.dart
       case cod:
       prod = prod.copyWith(cod: value) ;
       case nome:
@@ -91,7 +88,7 @@ abstract class _ProdutoFormStoreBase with Store{
   }
 
     @action
-  void validateAllFields(String tipo) { // tipo pode ser 'pf' ou 'pj'
+  void validateAllFields(String tipo) {
     log('Chamou ValidadeAll');
     Get.find<ValidateStore>().validateAllFields(tipo);
   }
