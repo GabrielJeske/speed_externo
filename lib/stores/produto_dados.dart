@@ -22,15 +22,13 @@ abstract class _DadosProdutoStoreBase with Store{
   @observable
   String filtroProd = '';
 
-  @observable
-  Produto prodSele = Produto(); 
-
-  
   @action
   void setFiltroProd(String filter){
     filtroProd = filter;
   }
 
+  @observable
+  Produto prodSele = Produto(); 
 
   @action
   void setProduto(Produto prod){
@@ -112,7 +110,7 @@ void selecionarProd(Produto produtoSelecionado) {
     try {
       Directory dir = await getApplicationDocumentsDirectory();              
         String path =  dir.path;        
-        File f = File('$path/produtos.json');        
+        File f = File('$path/produto.json');        
         bool fExiste = await f.exists();        
         if (fExiste){
           return f;

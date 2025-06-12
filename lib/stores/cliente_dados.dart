@@ -119,7 +119,7 @@ void selecionarCliente(Cliente clienteSelecionado, String tipo) {
     try {
       Directory dir = await getApplicationDocumentsDirectory();              
         String path =  dir.path;        
-        File f = File('$path/cliente05.json');        
+        File f = File('$path/clientes.json');        
         bool fExiste = await f.exists();        
         if (fExiste){
           return f;
@@ -143,11 +143,11 @@ void selecionarCliente(Cliente clienteSelecionado, String tipo) {
       if (contJson != '[]' ){
         List<Cliente> listaDeClientes = clienteJson.obtemClientes(contJson);
         int id = 0;        
-        for (Cliente cliente in listaDeClientes){
-          int a = int.parse(cliente.id ?? '0');
-          if (a > id){
-            id = a;
-          }    
+        for (Cliente cliente in listaDeClientes){          
+          int a = int.parse(cliente.id ?? '0' );
+            if (a > id){
+              id = a;          
+            }            
         }        
         id++;
         return id;
@@ -157,25 +157,28 @@ void selecionarCliente(Cliente clienteSelecionado, String tipo) {
     }catch (e) {
       log('Erro ao obter o id $e');
       rethrow;
-    }
-        
+    }        
   }
 
   salvaCliente() async{
     final formStore = Get.find<FormStore>();
     try{
       int id = await obtemId();
+      log('Obteve o id $id');
       final fCliente = await obtemFileClie();
+      log('Obteve o arquivo de clientes $fCliente');
       String contJson = await fCliente.readAsString();           
+      log('Obsete o conteudo do arquiv $contJson');
       List<Cliente> clientes = formStore.cliente.obtemClientes(contJson);
-      formStore.cliente.id='$id';
+      log('Criou a lista de cliente $clientes');
+      formStore.cliente.id=id.toString();
+      log('Atribui o id ');
       clientes.add(formStore.cliente);
       final jClientes = jsonEncode(clientes);
       await fCliente.writeAsString(jClientes);  
       log('Salvou porraa $clientes');
     }catch (e){
-      log('Erro ao salvar o cliente $e');
-      rethrow;
+      throw 'Erro ao salvar o cliente $e';
     }
   }
 

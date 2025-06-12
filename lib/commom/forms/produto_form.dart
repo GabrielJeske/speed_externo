@@ -9,14 +9,14 @@ import 'package:speed_externo/commom/widgets/custom_textField.dart';
 import 'package:speed_externo/stores/produto_controller.dart';
 import 'package:speed_externo/stores/produto_dados.dart';
 
-
-
 class ProdutoForm extends StatefulWidget {
   final bool isConsulta;
+  final bool isAlteracao;
 
   ProdutoForm({
     Key? key,
     this.isConsulta = false,
+    this.isAlteracao = false,
   }) : super(key: key);
 
   @override

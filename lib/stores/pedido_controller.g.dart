@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'pedidoForm_store.dart';
+part of 'pedido_controller.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -17,19 +17,19 @@ mixin _$PedidoStore on _PedidoStoreBase, Store {
               name: '_PedidoStoreBase.isFormValid'))
           .value;
 
-  late final _$formValuesAtom =
-      Atom(name: '_PedidoStoreBase.formValues', context: context);
+  late final _$pedidoAtom =
+      Atom(name: '_PedidoStoreBase.pedido', context: context);
 
   @override
-  ObservableMap<String, String> get formValues {
-    _$formValuesAtom.reportRead();
-    return super.formValues;
+  Pedido get pedido {
+    _$pedidoAtom.reportRead();
+    return super.pedido;
   }
 
   @override
-  set formValues(ObservableMap<String, String> value) {
-    _$formValuesAtom.reportWrite(value, super.formValues, () {
-      super.formValues = value;
+  set pedido(Pedido value) {
+    _$pedidoAtom.reportWrite(value, super.pedido, () {
+      super.pedido = value;
     });
   }
 
@@ -88,7 +88,7 @@ mixin _$PedidoStore on _PedidoStoreBase, Store {
   @override
   String toString() {
     return '''
-formValues: ${formValues},
+pedido: ${pedido},
 formErrors: ${formErrors},
 isFormValid: ${isFormValid}
     ''';

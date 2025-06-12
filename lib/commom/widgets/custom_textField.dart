@@ -32,23 +32,29 @@ class CustomFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextFormField(
-        controller: controller,
-        inputFormatters: mask,
-        decoration: InputDecoration(
-          labelText: labelText,
-          errorText: errorText,
-          border: const OutlineInputBorder(),
+    // Não precisamos mais da Size diretamente aqui para definir a altura do TextFormField
+    return TextFormField(
+      controller: controller,
+      inputFormatters: mask,
+      decoration: InputDecoration(
+        labelText: labelText,
+        labelStyle: const TextStyle( // Adicionado const para otimização
+          fontSize: 15
         ),
-        keyboardType: keyboardType,
-        validator: validator,
-        readOnly: readOnly,
-        onChanged: onChanged, 
-        onFieldSubmitted: onFieldSubmitted,
-        onEditingComplete: onEditingComplete,
-        focusNode: foco,
+        errorText: errorText,
+        border: const OutlineInputBorder(),
+        // Adicione aqui se desejar um padding vertical mais consistente
+        contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
+      ),
+      keyboardType: keyboardType,
+      validator: validator,
+      readOnly: readOnly,
+      onChanged: onChanged,
+      onFieldSubmitted: onFieldSubmitted,
+      onEditingComplete: onEditingComplete,
+      focusNode: foco,
+      style: const TextStyle(
+        fontSize: 16
       ),
     );
   }

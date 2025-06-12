@@ -6,86 +6,99 @@ class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {   
     return  Drawer(
-       child: Column( 
-              children: [
-                SizedBox(height: 25),
-                ListTile(
-                  leading: Icon(Icons.home),
-                  title: Text('Inicio'),
-                   onTap: () {
-                        Get.toNamed('/');
-                      },
-                ),
-                ExpansionTile(title: Text('Clientes'),
-                leading: Icon(Icons.person),
+       child: LayoutBuilder( builder: (context, constraints) {
+         return SingleChildScrollView(
+            child: ConstrainedBox(constraints: BoxConstraints(
+              minHeight: constraints.maxHeight
+            ),
+            child: IntrinsicHeight(
+              child: Column( 
                   children: [
+                    SizedBox(height: 25),
                     ListTile(
-                      leading: Icon(Icons.add) ,
-                      title: Text('Cadastro'), 
-                      onTap: () {
-                        Get.toNamed('/cliente/cadastro');
-                      },
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.search),
-                      title: Text('Consulta'),  
-                      onTap: () {
-                        Get.toNamed('/cliente/consulta');
-                      },
-                    ),                                
-                  ],
-                ),
-                ExpansionTile(title: Text('Produtos'),
-                leading: Icon(Icons.shopping_bag_outlined),
-                  children: [
-                    ListTile(
-                      leading: Icon(Icons.add) ,
-                      title: Text('Cadastro'),  
-                      onTap: () {
-                        Get.toNamed('/produto/cadastro');
-                      },
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.search),
-                      title: Text('Consulta'),
+                      leading: Icon(Icons.home),
+                      title: Text('Inicio'),
                        onTap: () {
-                        Get.toNamed('/produto/consulta');
-                      },  
-                    ),                            
-                  ],
-                ),
-                ExpansionTile(title: Text('Pedidos'),
-                leading: Icon(Icons.shopping_cart),
-                  children: [
+                            Get.toNamed('/');
+                          },
+                    ),
+                    ExpansionTile(title: Text('Clientes'),
+                    leading: Icon(Icons.person),
+                      children: [
+                        ListTile(
+                          leading: Icon(Icons.add) ,
+                          title: Text('Cadastro'), 
+                          onTap: () {
+                            Get.toNamed('/cliente/cadastro');
+                          },
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.search),
+                          title: Text('Consulta'),  
+                          onTap: () {
+                            Get.toNamed('/cliente/consulta');
+                          },
+                        ),                                
+                      ],
+                    ),
+                    ExpansionTile(title: Text('Produtos'),
+                    leading: Icon(Icons.shopping_bag_outlined),
+                      children: [
+                        ListTile(
+                          leading: Icon(Icons.add) ,
+                          title: Text('Cadastro'),  
+                          onTap: () {
+                            Get.toNamed('/produto/cadastro');
+                          },
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.search),
+                          title: Text('Consulta'),
+                           onTap: () {
+                            Get.toNamed('/produto/consulta');
+                          },  
+                        ),                            
+                      ],
+                    ),
+                    ExpansionTile(title: Text('Pedidos'),
+                    leading: Icon(Icons.shopping_cart),
+                      children: [
+                        ListTile(
+                          leading: Icon(Icons.add) ,
+                          title: Text('Inclusão'),  
+                          onTap: () {
+                            Get.toNamed('/pedido/inclusao');
+                          },
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.search),
+                          title: Text('Consulta'),  
+                        ),
+                      ],
+                    ),                  
+                    Spacer(),
                     ListTile(
-                      leading: Icon(Icons.add) ,
-                      title: Text('Inclusão'),  
+                      leading: Icon(Icons.settings),
+                      title: Text('Configuracoes'),
                       onTap: () {
-                        Get.toNamed('/pedido/inclusao');
-                      },
+                            Get.toNamed('/config');
+                          },
                     ),
                     ListTile(
-                      leading: Icon(Icons.search),
-                      title: Text('Consulta'),  
-                    ),
+                      leading: Icon(Icons.logout),
+                      title: Text('Sair'),
+                    )
                   ],
-                ),
-                Expanded(child: Container()),
-                ListTile(
-                  leading: Icon(Icons.settings),
-                  title: Text('Configuracoes'),
-                  onTap: () {
-                        Get.toNamed('/config');
-                      },
-                ),
-                ListTile(
-                  leading: Icon(Icons.logout),
-                  title: Text('Sair'),
-                )
-              ],
-        ),
+                        ),
+            ),
+            ),
+            
+         );
+       },        
+         
+       ),
       );
   }
 }

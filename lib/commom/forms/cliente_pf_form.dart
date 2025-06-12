@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:speed_externo/commom/constantes/chaves.dart';
 import 'package:speed_externo/commom/widgets/custom_textField.dart';
 import 'package:speed_externo/stores/cliente_dados.dart';
 import 'package:speed_externo/stores/cliente_controller.dart';
@@ -220,8 +221,8 @@ class _ClientePfFormState extends State<ClientePfForm> {
                       keyboardType: TextInputType.number,
                       labelText: 'Nº',
                       readOnly: widget.isConsulta,
-                      errorText: formStore.formErrors['n'],
-                      onChanged: (value) => formStore.setField('n', value),                     
+                      errorText: formStore.formErrors[numero],
+                      onChanged: (value) => formStore.setField(numero, value),                     
                     ),
                   )
                 ],
@@ -280,7 +281,7 @@ class _ClientePfFormState extends State<ClientePfForm> {
                       controller: formStore.controllerContato,
                       labelText: 'contato',
                       readOnly: widget.isConsulta,
-                      errorText: formStore.formErrors['contato'],
+                      errorText: formStore.formErrors[''],
                       onChanged: (value) => formStore.setField('contato', value),                      
                     ),
                   ),
@@ -293,8 +294,8 @@ class _ClientePfFormState extends State<ClientePfForm> {
                       keyboardType: TextInputType.numberWithOptions(),
                       labelText: 'Numero',
                       readOnly: widget.isConsulta,
-                      errorText: formStore.formErrors['numero'],
-                      onChanged: (value) => formStore.setField('numero', value),                     
+                      errorText: formStore.formErrors[numeroContato],
+                      onChanged: (value) => formStore.setField(numeroContato, value),                     
                     ),
                   )
                 ],

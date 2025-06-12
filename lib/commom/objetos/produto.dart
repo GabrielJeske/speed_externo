@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 class Produto {
+  String? nProd;
   String? cod;
   String? nome;
   String? ncm;
@@ -20,7 +21,8 @@ class Produto {
   String? unitario;
   String? total;
   
-  Produto({
+   Produto({
+    this.nProd,
     this.cod,
     this.nome,
     this.ncm,
@@ -43,6 +45,7 @@ class Produto {
   
   factory Produto.fromJson(Map json){
     return Produto(
+      nProd: json['nProd'],
       cod: json['cod'],
       nome: json['nome'],
       ncm: json['ncm'],
@@ -67,6 +70,7 @@ class Produto {
 
   Map toJson(){
     return{
+      'nProd': nProd,
       'cod': cod,
       'nome': nome,
       'ncm': ncm,
@@ -101,6 +105,7 @@ class Produto {
    
 
   Produto copyWith({
+    String? nProd,
     String? cod,
     String? nome,
     String? ncm,
@@ -121,6 +126,7 @@ class Produto {
     String? total,
   }) {
     return Produto(
+      nProd: nProd ?? this.nProd,
       cod: cod ?? this.cod,
       nome: nome ?? this.nome,
       ncm: ncm ?? this.ncm,

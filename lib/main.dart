@@ -6,10 +6,10 @@ import 'package:speed_externo/routes.dart';
 import 'package:speed_externo/stores/produto_controller.dart';
 import 'package:speed_externo/stores/config_store.dart';
 import 'package:speed_externo/stores/produto_dados.dart';
-import 'package:speed_externo/stores/dadosPedido_store.dart';
+import 'package:speed_externo/stores/pedido_dados.dart';
 import 'package:speed_externo/stores/cliente_dados.dart';
 import 'package:speed_externo/stores/cliente_controller.dart';
-import 'package:speed_externo/stores/pedidoForm_store.dart';
+import 'package:speed_externo/stores/pedido_controller.dart';
 import 'package:speed_externo/stores/validate_store.dart';
 
 

@@ -62,7 +62,13 @@ class _ClientePjFormState extends State<ClientePjForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return LayoutBuilder(builder:(context, constraints) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(constraints: BoxConstraints(
+            minHeight: constraints.maxHeight
+          ),
+          child: IntrinsicHeight(
+            child: Container(
         padding: EdgeInsets.all(10),
         child: SingleChildScrollView(
           child: Observer(builder: (_) =>
@@ -361,6 +367,10 @@ class _ClientePjFormState extends State<ClientePjForm> {
             ),
           ),
         ),
-      );
+      )
+          ),
+          ),
+        );
+    },);
   }
 }

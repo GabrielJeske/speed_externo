@@ -4,10 +4,10 @@ import 'dart:convert';
 class Pedido {
   String? cod;
   String? codClie;
-  List<Map<String, dynamic>> listProd;
+  List<Map<String, dynamic>>? listProd;
   String? data;
   String? tipo;
-  Map<String, dynamic>? fatur;
+  String? fatur;
   
   Pedido({
     this.cod,
@@ -17,6 +17,24 @@ class Pedido {
     this.tipo,
     this.fatur,
   });
+
+  Pedido copyWith({
+    String? cod,
+    String? codClie,
+    List<Map<String, dynamic>>? listProd,
+    String? data,
+    String? tipo,
+    String? fatur,    
+  }) {
+    return Pedido(
+      cod: cod ?? this.cod,
+      codClie: codClie ?? this.codClie,
+      data: data ?? this.data,
+      tipo: tipo ?? this.tipo,
+      fatur: fatur ?? this.fatur,
+      listProd: listProd ?? this.listProd,      
+    );
+  }
 
   factory Pedido.fromJson(Map json){
     return Pedido(
