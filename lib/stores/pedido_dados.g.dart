@@ -9,6 +9,22 @@ part of 'pedido_dados.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$DadosPedidoStore on _DadosPedidoStoreBase, Store {
+  late final _$_itemCounterAtom =
+      Atom(name: '_DadosPedidoStoreBase._itemCounter', context: context);
+
+  @override
+  int get _itemCounter {
+    _$_itemCounterAtom.reportRead();
+    return super._itemCounter;
+  }
+
+  @override
+  set _itemCounter(int value) {
+    _$_itemCounterAtom.reportWrite(value, super._itemCounter, () {
+      super._itemCounter = value;
+    });
+  }
+
   late final _$pedidoAtom =
       Atom(name: '_DadosPedidoStoreBase.pedido', context: context);
 
@@ -88,17 +104,6 @@ mixin _$DadosPedidoStore on _DadosPedidoStoreBase, Store {
         name: '_DadosPedidoStoreBase.addProd');
     try {
       return super.addProd(prod);
-    } finally {
-      _$_DadosPedidoStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void removerProd(Produto produto) {
-    final _$actionInfo = _$_DadosPedidoStoreBaseActionController.startAction(
-        name: '_DadosPedidoStoreBase.removerProd');
-    try {
-      return super.removerProd(produto);
     } finally {
       _$_DadosPedidoStoreBaseActionController.endAction(_$actionInfo);
     }

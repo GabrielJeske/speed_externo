@@ -6,6 +6,7 @@ import 'package:speed_externo/commom/constantes/chaves.dart';
 import 'package:speed_externo/commom/objetos/pedido.dart';
 import 'package:speed_externo/commom/objetos/produto.dart';
 import 'package:speed_externo/stores/validate_store.dart';
+import 'package:flutter/material.dart';
 
 part 'pedido_controller.g.dart';
 

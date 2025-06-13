@@ -160,7 +160,7 @@ var maskdate = MaskTextInputFormatter(mask: '##/##/####', filter: {"#": RegExp(r
                   ),
                   Observer(builder:  (conext) =>
                     Container(                    
-                      height: screenSize.height * 0.45,
+                      height: screenSize.height * 0.38,
                       width: screenSize.width,
                         child: ListView.builder(
                                                 shrinkWrap: true,                      
@@ -171,9 +171,10 @@ var maskdate = MaskTextInputFormatter(mask: '##/##/####', filter: {"#": RegExp(r
                                                     background:  Container(color: Colors.red),
                                                     key: ValueKey(dadosStore.listaProdutos[index]),     
                                                     onDismissed: (direction) {
-                                                      dadosStore.removerProd(produto);
+                                                     // dadosStore.removerProd(produto);
                                                     },        
-                                                    child: Card(
+                                                    child: Card(                                                     
+                                                      color: (int.tryParse(produto.nProd ?? '0') ?? 0) % 2 == 0? Colors.black12 : Colors.black38, 
                                                       child: ListTile(                                
                                                           title: Column(
                                                             children: [
@@ -206,8 +207,10 @@ var maskdate = MaskTextInputFormatter(mask: '##/##/####', filter: {"#": RegExp(r
                                                                     flex: 2,
                                                                    child: CustomFormField( 
                                                                                 labelText:  'Quantidade',
-                                                                                 controller: dadosStore.getControllerParaProduto(produto),
-                                                                                //onChanged: (value) => dadosStore.setQtd(value, produto),
+                                                                                // controller: dadosStore.getQuantidadeControllerParaProduto(produto),
+                                                                                // onChanged: (valorDigitado) {
+                                                                                //   dadosStore.recalcularTotal(produto);
+                                                                                // },                                                                              
                                                                                 readOnly: false,
                                                                     )
                                                                     ),
@@ -224,7 +227,7 @@ var maskdate = MaskTextInputFormatter(mask: '##/##/####', filter: {"#": RegExp(r
                                                                     flex: 2,
                                                                   child: CustomFormField( 
                                                                                 labelText:  'Total',
-                                                                                controller:TextEditingController(text: produto.venda),
+                                                                               // controller:dadosStore.getTotalControllerParaProduto(produto),
                                                                                 readOnly: true,
                                                                     )
                                                                     ),
@@ -289,11 +292,11 @@ var maskdate = MaskTextInputFormatter(mask: '##/##/####', filter: {"#": RegExp(r
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)
                           ),
-                          padding: EdgeInsets.all(15),
+                          padding: EdgeInsets.all(5),
                           foregroundColor: Colors.black,
                           textStyle: TextStyle(fontSize: 20)
                         ),
-                        child: Text('Add')
+                        child: Icon(Icons.add)
                       )  
                   ),
                   
@@ -305,39 +308,34 @@ var maskdate = MaskTextInputFormatter(mask: '##/##/####', filter: {"#": RegExp(r
                           Row(               
                       children: [
                         Expanded(
-                          flex: 1,                                        
+                          flex: 2,                                        
                             child: Column(
                               children: [                          
-                                CustomFormField(labelText: 'Desconto %')
+                                CustomFormField(
+                                  labelText: 'Desconto %'
+                                )
                               ],
                             ),                                              
                         ), 
-                        SizedBox(width: 10),
+                        SizedBox(width: 30),
                         Expanded(
-                          flex: 1,
+                          flex: 2,
                           child:CustomFormField(
                             labelText: 'Desconto R\$'
                           )
-                        ),
-                        SizedBox(width: 100),
+                        ),        
+                         SizedBox(width: 10),                
                         Expanded(
-                          flex: 2,
-                          child: Container(                      
-                            child: Column(
-                              children: [                          
-                                CustomFormField(labelText: 'teste') 
-                              ],
-                            ),
-                          ),
-                        ),
-                        
+                          flex: 4,
+                          child: CustomFormField(labelText: 'Total Parcial'),
+                        ),                        
                       ],
                     ),
                     SizedBox(height: 10),
                     Row(
                       children: [
                          Expanded(
-                          flex: 1,                                        
+                            flex: 2,
                             child: Column(
                               children: [                          
                                 CustomFormField(labelText: 'Entrada')
@@ -348,14 +346,23 @@ var maskdate = MaskTextInputFormatter(mask: '##/##/####', filter: {"#": RegExp(r
                         Text('+'),
                         SizedBox(width: 10),
                         Expanded(
-                          flex: 1,
+                          flex: 2,
                           child:CustomFormField(
                             labelText: 'Parcelas'
                           )
-                        ),
+                        ),                           
                         SizedBox(width: 10),
-                        Expanded( 
-                                  flex: 2,                               
+                        Expanded(
+                          flex: 4,
+                          child: CustomFormField(labelText: 'Total Descontos'),                          
+                        ),
+                      ],
+                    ),   
+                    SizedBox(height: 10),
+                    Row(
+                      children: [
+                        SizedBox( 
+                                  width: screenSize.width * 0.49,                               
                                   child: DropdownButtonFormField<String>(                                  
                                     decoration: InputDecoration(                        
                                       labelText: 'Forma de pagamento', 
@@ -403,22 +410,14 @@ var maskdate = MaskTextInputFormatter(mask: '##/##/####', filter: {"#": RegExp(r
                                       }                                                                                                                                                                  
                                     },
                                   )
-                                ),           
-                        SizedBox(width: 100),
-                        Expanded(
-                          flex: 4,
-                          child: Column(
-                            children: [     
-                              Column(
-                                  children: [CustomFormField(labelText: 'teste') ],                                
-                              )                  
-                              
-                            ],
-                          ),                          
+                                ),     
+                                SizedBox(width: 10),
+                                 Expanded(
+                          flex: 5,
+                          child: CustomFormField(labelText: 'Total Venda'),
                         ),
                       ],
-                    ),
-                    SizedBox(height: 10,)
+                    )
                         ],
                       )                                                    
                     ),

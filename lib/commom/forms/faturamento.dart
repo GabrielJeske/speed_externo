@@ -6,6 +6,7 @@ import 'package:speed_externo/stores/pedido_dados.dart';
 import 'package:speed_externo/commom/widgets/custom_textField.dart';
 import 'package:speed_externo/stores/produto_controller.dart';
 
+
 class Faturamento extends StatelessWidget {
   final dadosStore = Get.find<DadosPedidoStore>();
   final produtoStore = Get.find<ProdutoFormStore>();
