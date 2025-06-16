@@ -73,19 +73,24 @@ mixin _$DadosPedidoStore on _DadosPedidoStoreBase, Store {
     });
   }
 
-  late final _$_DadosPedidoStoreBaseActionController =
-      ActionController(name: '_DadosPedidoStoreBase', context: context);
+  late final _$controllersTotalAtom =
+      Atom(name: '_DadosPedidoStoreBase.controllersTotal', context: context);
 
   @override
-  void setQtd(String value, Produto produto) {
-    final _$actionInfo = _$_DadosPedidoStoreBaseActionController.startAction(
-        name: '_DadosPedidoStoreBase.setQtd');
-    try {
-      return super.setQtd(value, produto);
-    } finally {
-      _$_DadosPedidoStoreBaseActionController.endAction(_$actionInfo);
-    }
+  ObservableMap<String, TextEditingController> get controllersTotal {
+    _$controllersTotalAtom.reportRead();
+    return super.controllersTotal;
   }
+
+  @override
+  set controllersTotal(ObservableMap<String, TextEditingController> value) {
+    _$controllersTotalAtom.reportWrite(value, super.controllersTotal, () {
+      super.controllersTotal = value;
+    });
+  }
+
+  late final _$_DadosPedidoStoreBaseActionController =
+      ActionController(name: '_DadosPedidoStoreBase', context: context);
 
   @override
   void setEdit(bool value) {
@@ -110,22 +115,12 @@ mixin _$DadosPedidoStore on _DadosPedidoStoreBase, Store {
   }
 
   @override
-  void addClie(Cliente clie) {
-    final _$actionInfo = _$_DadosPedidoStoreBaseActionController.startAction(
-        name: '_DadosPedidoStoreBase.addClie');
-    try {
-      return super.addClie(clie);
-    } finally {
-      _$_DadosPedidoStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   String toString() {
     return '''
 pedido: ${pedido},
 edit: ${edit},
-listaProdutos: ${listaProdutos}
+listaProdutos: ${listaProdutos},
+controllersTotal: ${controllersTotal}
     ''';
   }
 }
