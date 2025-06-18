@@ -1,9 +1,8 @@
-
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:mobx/mobx.dart';
-import 'package:speed_externo/commom/constantes/chaves.dart';
 import 'package:speed_externo/commom/objetos/cliente.dart';
 import 'package:speed_externo/commom/objetos/pedido.dart';
 import 'package:speed_externo/commom/objetos/produto.dart';
@@ -14,6 +13,21 @@ part 'pedido_dados.g.dart';
 class DadosPedidoStore =_DadosPedidoStoreBase with _$DadosPedidoStore;
 
 abstract class _DadosPedidoStoreBase with Store{
+
+  @observable
+  double descPorcent = 0.0;
+  
+  @observable
+  double descReal = 0.0;
+
+  @observable
+  double desconto = 0.0;
+
+  @observable
+  double totalPedido = 0.0;
+
+  @observable
+  double totalProd = 0.0;
 
   @observable
   int _itemCounter = 0;
@@ -28,49 +42,30 @@ abstract class _DadosPedidoStoreBase with Store{
   ObservableList<Produto> listaProdutos = ObservableList<Produto> ();
 
   Map<String, TextEditingController> controllersQtd = {};
+  Map<String, TextEditingController> controllersTotal = {};
 
-  @observable
+  TextEditingController controllerTotalPedido = TextEditingController();
+  TextEditingController controllerTotalProd = TextEditingController();
+  TextEditingController controllerDescPorcent = TextEditingController();
+  TextEditingController controllerDescReal = TextEditingController();
+
+  TextEditingController getControllerQtd(Produto produto) {
+    final controller = controllersQtd[produto.nProd];
+    if (controller == null) {
+      throw Exception('Controller não encontrado para o produto com nProd: ${produto.nProd}');
+    }
+    return controller;
+  }
+
   
-  ObservableMap<String, TextEditingController> controllersTotal = ObservableMap();
- 
+  TextEditingController getControllerTotal(Produto produto) {
+    final controller = controllersTotal[produto.nProd];
+    if (controller == null) {
+      throw Exception('Controller não encontrado para o produto com nProd: ${produto.nProd}');
+    }
+    return controller;
+  }  
 
-void setQtd(String value, Produto produto) {
-  // 1. Encontra o índice do produto na lista para garantir a modificação correta.
-  final index = listaProdutos.indexWhere((p) => p.nProd == produto.nProd);
-  if (index == -1) {
-    // Se não encontrar o produto, não faz nada.
-    return;
-  }
-
-  // --- Lógica de cálculo e atualização ---
-
-  // 2. Converte a quantidade (value) de forma segura.
-  // int.tryParse retorna null se a string for inválida (ex: ''), em vez de quebrar.
-  final int quantidade = int.tryParse(value) ?? 0;
-
-  // Atualiza a quantidade no objeto do produto.
-  listaProdutos[index].quantidade = value;
-
-  // 3. Converte o valor de venda de forma segura.
-  double valorVenda = 0.0;
-  final vendaString = listaProdutos[index].venda;
-
-  if (vendaString != null && vendaString.isNotEmpty) {
-    String valorLimpo = vendaString
-        .replaceAll('R\$', '')
-        .trim()
-        .replaceAll('.', '')
-        .replaceAll(',', '.');
-    valorVenda = double.tryParse(valorLimpo) ?? 0.0;
-  }
-
-  // 4. Calcula o novo total.
-  final double novoTotal = valorVenda * quantidade;
-
-  // 5. ATUALIZA O TOTAL no objeto do produto.
-  // Esta é a parte crucial que faltava.
-  listaProdutos[index].total = novoTotal.toStringAsFixed(2);
-}
 
   @action
   void setEdit (bool value){
@@ -82,31 +77,125 @@ void setQtd(String value, Produto produto) {
 void addProd(Produto prod) {
   _itemCounter++;
 
-  // (Lógica de cálculo do totalCalculado que já fizemos)
-  double vendaValor = 0.0;
-  if (prod.venda != null && prod.venda!.isNotEmpty) {
-    String valorLimpo = prod.venda!
-        .replaceAll('R\$', '').trim().replaceAll('.', '').replaceAll(',', '.');
-    vendaValor = double.tryParse(valorLimpo) ?? 0.0;
-  }
-  const double quantidadeValor = 1.0;
-  double totalCalculado = vendaValor * quantidadeValor;
-  // --- Fim da lógica ---
-
   Produto newProd = prod.copyWith(
     nProd: '$_itemCounter',
     quantidade: '1',
-    total: totalCalculado.toStringAsFixed(2),
+    total: prod.venda,
   );
   
-  // Adiciona o controller de quantidade
-  controllersQtd['$_itemCounter'] = TextEditingController(text: '1');
+  final controllerQtd = TextEditingController(text: newProd.quantidade);
+  controllersQtd[newProd.nProd!] = controllerQtd;
 
-  // Adiciona o NOVO controller de total ao mapa observável
-  controllersTotal['$_itemCounter'] = TextEditingController(text: newProd.total);
+  final controllerTotal = TextEditingController(text: newProd.venda);
+  controllersTotal[newProd.nProd!] = controllerTotal;
+
+
+  controllerQtd.addListener(() => calculaTotal(newProd));
 
   listaProdutos.add(newProd);
+
+  calculaTotal(newProd);
+  calculaTotalPedido();
+
+  if (controllerDescPorcent.text.isNotEmpty) {
+    calculaDescReal(controllerDescPorcent.text);
+  }
+
 }
+
+  void calculaDescPorcent(String value) {
+    log( 'Calculando desconto porcentagem com valor: $value');
+    String descRealLimpo = value.replaceAll(',', '.').trim();
+    log('Desc Real Limpo: $descRealLimpo');
+    descReal = double.tryParse(descRealLimpo) ?? 0.0;
+    log('Desc Porcent Inicial: $descPorcent');
+    descPorcent = (descReal / totalProd) * 100;
+    desconto = descReal;
+    log('Desc Porcent: $descPorcent');
+    controllerDescPorcent.text = descPorcent.toStringAsFixed(2).replaceAll('.', ',');  
+    calculaTotalPedido();
+  }
+
+  void calculaDescReal( String value) {
+    log('Calculando desconto real com valor: $value');
+    String descPorcentLimpo = value.replaceAll(',', '.').trim();
+    log('Desc Porcent Limpo: $descPorcentLimpo');
+    descReal = double.tryParse(descPorcentLimpo) ?? 0.0;
+    log('Desc Real Inicial: $descReal');
+    descReal = (totalProd * descReal) / 100;
+    desconto = descReal;
+    log('Desc Real: $descReal = ($totalProd * $descReal) / 100');
+    controllerDescReal.text = descReal.toStringAsFixed(2).replaceAll('.', ',');
+    calculaTotalPedido();
+  }
+
+  void calculaTotalPedido (){
+    double valorTotalPedido = 0;
+    double valorProdutos = 0;
+    if (controllersTotal.isEmpty) {
+      controllerTotalPedido.text = '0,00';
+      totalPedido = 0.0;
+      controllerTotalProd.text = '0,00';
+      totalProd = 0.0;
+      return;
+    } else {
+     controllersTotal.forEach((key, controller) {
+      String valorVendaLimpo = controller.text
+        ?.replaceAll(',', '.')
+        .trim() ?? '0.0';
+        double valorTotal = double.tryParse(valorVendaLimpo) ?? 0.0;
+
+          valorProdutos  = (valorProdutos + valorTotal);
+      });
+       valorTotalPedido = (valorProdutos - desconto);              
+    }
+  
+    controllerTotalPedido.text = ' ${valorTotalPedido.toStringAsFixed(2).replaceAll('.', ',')}';
+    controllerTotalProd.text = ' ${valorProdutos.toStringAsFixed(2).replaceAll('.', ',')}';
+    totalPedido = valorTotalPedido;
+    totalProd = valorProdutos;
+    log('Valor Total dos Produtos: $valorProdutos');
+    log('Total do Pedido: $totalPedido');
+  }
+
+  void calculaTotal (Produto produto){
+
+    final controllerQtd = controllersQtd[produto.nProd];
+    final controllerTotal = controllersTotal[produto.nProd];
+
+    if (controllerQtd == null || controllerTotal == null) return;
+
+    int quantidade = int.tryParse(controllerQtd.text) ?? 0;
+
+    String valorVendaLimpo = produto.venda
+        ?.replaceAll(',', '.')
+        .trim() ?? '0.0';
+    final double valorVenda = double.tryParse(valorVendaLimpo) ?? 0.0;
+
+    final double total = quantidade * valorVenda;
+
+  
+    controllerTotal.text = ' ${total.toStringAsFixed(2).replaceAll('.', ',')}';
+    
+  }
+
+    @action
+  void removerProd(Produto produto) {
+    
+    final controllerQtd = controllersQtd[produto.nProd];
+    final controllerTotal = controllersTotal[produto.nProd];
+
+    controllerQtd?.removeListener(() => calculaTotal(produto));
+
+    controllerQtd?.dispose();
+    controllerTotal?.dispose();
+
+    controllersQtd.remove(produto.nProd);
+    controllersTotal.remove(produto.nProd); 
+
+    listaProdutos.remove(produto);
+    calculaTotalPedido();
+  }
 
  @action
   void addClie(Cliente clie){    

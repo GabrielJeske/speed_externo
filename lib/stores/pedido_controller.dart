@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:mobx/mobx.dart';
-import 'package:speed_externo/commom/constantes/chaves.dart';
 import 'package:speed_externo/commom/objetos/pedido.dart';
-import 'package:speed_externo/commom/objetos/produto.dart';
 import 'package:speed_externo/stores/validate_store.dart';
-import 'package:flutter/material.dart';
 
 part 'pedido_controller.g.dart';
 
@@ -18,17 +14,26 @@ abstract class _PedidoStoreBase with Store{
 
   TextEditingController controllerCliente = TextEditingController();
   TextEditingController controllerData = TextEditingController();
-
   TextEditingController controllerTipo = TextEditingController();
   
   @observable
   Pedido pedido = Pedido(listProd: []);
 
   @observable
+  String tipoSelecionado = 'A Vista';
+
+  @computed
+  bool get isAPrazo => tipoSelecionado == 'A Prazo';
+
+
+  @observable
   ObservableMap<String, String?> formErrors = ObservableMap.of({
   });
 
-
+  @action
+  void setTipo(String novoValor) {
+    tipoSelecionado = novoValor;
+  }
   @computed
   bool get isFormValid => formErrors.values.every((error) => error == null);
    
@@ -41,7 +46,8 @@ abstract class _PedidoStoreBase with Store{
       pedido = pedido.copyWith(codClie: value) ;      
       case 'data':
       pedido = pedido.copyWith(data: value) ;
-      case 'tipo':       
+      case 'tipo':    
+      setTipo(value);   
       pedido = pedido.copyWith(tipo: value) ;
       case 'nome':
       controllerCliente.text = value;      
@@ -62,6 +68,7 @@ abstract class _PedidoStoreBase with Store{
     controllerData.text = '';  
     pedido = Pedido(listProd: []);
     formErrors.clear();
+     setTipo('A Vista');
   }
 
 }
