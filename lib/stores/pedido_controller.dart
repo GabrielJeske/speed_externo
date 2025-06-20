@@ -11,9 +11,11 @@ class PedidoStore =_PedidoStoreBase with _$PedidoStore;
 
 abstract class _PedidoStoreBase with Store{
 
-
+                      
   TextEditingController controllerCliente = TextEditingController();
-  TextEditingController controllerData = TextEditingController();
+  TextEditingController controllerData = TextEditingController( text: "${DateTime.now().day.toString().padLeft(2, '0')}/"
+                      "${DateTime.now().month.toString().padLeft(2, '0')}/"
+                      "${DateTime.now().year}");
   TextEditingController controllerTipo = TextEditingController();
   
   @observable
@@ -41,16 +43,14 @@ abstract class _PedidoStoreBase with Store{
 
  @action
   void setField(String chave, String value){
-    switch (chave) {
-      case 'cliente':
-      pedido = pedido.copyWith(codClie: value) ;      
-      case 'data':
-      pedido = pedido.copyWith(data: value) ;
+    switch (chave) {      
       case 'tipo':    
       setTipo(value);   
       pedido = pedido.copyWith(tipo: value) ;
       case 'nome':
-      controllerCliente.text = value;      
+      controllerCliente.text = value;   
+      case 'codClie':
+      pedido = pedido.copyWith(codClie: value) ;   
     }
     Get.find<ValidateStore>().validateField(chave, value); 
   }

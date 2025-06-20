@@ -105,22 +105,6 @@ mixin _$DadosPedidoStore on _DadosPedidoStoreBase, Store {
     });
   }
 
-  late final _$pedidoAtom =
-      Atom(name: '_DadosPedidoStoreBase.pedido', context: context);
-
-  @override
-  Pedido get pedido {
-    _$pedidoAtom.reportRead();
-    return super.pedido;
-  }
-
-  @override
-  set pedido(Pedido value) {
-    _$pedidoAtom.reportWrite(value, super.pedido, () {
-      super.pedido = value;
-    });
-  }
-
   late final _$editAtom =
       Atom(name: '_DadosPedidoStoreBase.edit', context: context);
 
@@ -208,7 +192,6 @@ descReal: ${descReal},
 desconto: ${desconto},
 totalPedido: ${totalPedido},
 totalProd: ${totalProd},
-pedido: ${pedido},
 edit: ${edit},
 listaProdutos: ${listaProdutos}
     ''';

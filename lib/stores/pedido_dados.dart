@@ -1,11 +1,15 @@
+import 'dart:convert';
 import 'dart:developer';
-
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:get/get.dart';
 import 'package:mobx/mobx.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:speed_externo/commom/objetos/cliente.dart';
 import 'package:speed_externo/commom/objetos/pedido.dart';
 import 'package:speed_externo/commom/objetos/produto.dart';
+import 'package:speed_externo/stores/faturamento_controller.dart';
+import 'package:speed_externo/stores/pedido_controller.dart';
 
 part 'pedido_dados.g.dart';
 
@@ -13,6 +17,8 @@ part 'pedido_dados.g.dart';
 class DadosPedidoStore =_DadosPedidoStoreBase with _$DadosPedidoStore;
 
 abstract class _DadosPedidoStoreBase with Store{
+
+  Pedido pedido = Pedido(listProd: []);
 
   @observable
   double descPorcent = 0.0;
@@ -32,8 +38,6 @@ abstract class _DadosPedidoStoreBase with Store{
   @observable
   int _itemCounter = 0;
 
-  @observable
-  Pedido pedido = Pedido(listProd: []);
 
   @observable
   bool edit = false;
@@ -197,9 +201,89 @@ void addProd(Produto prod) {
     calculaTotalPedido();
   }
 
- @action
+ 
+
+
+  Future<File> obtemFilePedido() async{
+    try {
+      Directory dir = await getApplicationDocumentsDirectory();              
+        String path =  dir.path;        
+        File f = File('$path/pedidos01.json');        
+        bool fExiste = await f.exists();        
+        if (fExiste){
+          return f;
+        }else {
+          List<Pedido> mapPedidos = [];
+          final jClientes = jsonEncode(mapPedidos);
+          await f.writeAsString(jClientes);
+          return f;
+        }
+    } catch (e) {
+      log('erro ao obter Arquivo de pedidos $e');
+      rethrow;
+    }      
+  }
+
+  Future<int> obtemCodPedido() async{
+    Pedido pedidoJson = Pedido(listProd: []);
+    try {      
+      File json = await obtemFilePedido();
+      String contJson = await json.readAsString();
+      if (contJson != '[]' ){
+        List<Pedido> listaDePedidos = pedidoJson.obtemPedidos(contJson);
+        int id = 0;        
+        for (Pedido pedido in listaDePedidos){          
+          int a = int.parse(pedido.cod ?? '0' );
+            if (a > id){
+              id = a;          
+            }            
+        }        
+        id++;
+        return id;
+      }else {
+        return 1;
+      }
+    }catch (e) {
+      log('Erro ao obter o id $e');
+      rethrow;
+    }        
+  }
+
+  salvaPedido() async{
+    Pedido pedido = Pedido(listProd: []);
+    final fatur = Get.find<FaturamentoController>();
+    final pedidoController = Get.find<PedidoStore>();
+    try{      
+      int id = await obtemCodPedido();
+      
+      final fPedidos = await obtemFilePedido();
+      
+      String contJson = await fPedidos.readAsString();
+   
+      List<Pedido> pedidos = pedido.obtemPedidos(contJson);
+    
+      pedido = pedido.copyWith(
+        faturamento: fatur.faturamento,
+        listProd: listaProdutos,
+        cod: id.toString(),
+        data: pedidoController.pedido.data,
+        tipo: pedidoController.pedido.tipo,
+        codClie: pedidoController.pedido.codClie,
+      );
+      
+      pedidos.add(pedido);
+      final jPedido = jsonEncode(pedidos);
+      await fPedidos.writeAsString(jPedido);  
+      log('Salvou porraa $jPedido');
+    }catch (e){
+      throw 'Erro ao salvar o pedido $e';
+    }
+  }
+
+   @action
   void addClie(Cliente clie){    
     pedido.codClie = pedido.cod;
   }
+  
   
 }
