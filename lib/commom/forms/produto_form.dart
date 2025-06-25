@@ -248,10 +248,11 @@ class _ProdutoFormState extends State<ProdutoForm> {
                   Expanded(
                     flex: 3,
                     child: CustomFormField(
+                      prefixText: 'R\$',
                        mask: [
                         CurrencyTextInputFormatter.currency(
                           locale: 'pt_BR',
-                          symbol: 'R\$',
+                          symbol: '',
                           decimalDigits: 2,
                         ),
                       ],
@@ -267,10 +268,11 @@ class _ProdutoFormState extends State<ProdutoForm> {
                   Expanded(
                     flex: 3,
                     child: CustomFormField(
+                      prefixText: 'R\$',
                       mask: [
                         CurrencyTextInputFormatter.currency(
                           locale: 'pt_BR',
-                          symbol: 'R\$',
+                          symbol: '',
                           decimalDigits: 2,
                         ),
                       ],
@@ -286,10 +288,11 @@ class _ProdutoFormState extends State<ProdutoForm> {
                   Expanded(
                     flex: 3,
                     child: CustomFormField(
+                      prefixText: 'R\$',
                        mask: [
                         CurrencyTextInputFormatter.currency(
                           locale: 'pt_BR',
-                          symbol: 'R\$',
+                          symbol: '',
                           decimalDigits: 2,
                         ),
                       ],

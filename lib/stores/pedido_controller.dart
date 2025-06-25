@@ -19,11 +19,10 @@ abstract class _PedidoStoreBase with Store{
   TextEditingController controllerTipo = TextEditingController();
   
   @observable
-  Pedido pedido = Pedido(listProd: []);
+  Pedido pedido = Pedido(listProd: [], tipo: 'A Vista');
 
   @observable
   String tipoSelecionado = 'A Vista';
-
   @computed
   bool get isAPrazo => tipoSelecionado == 'A Prazo';
 

@@ -174,17 +174,6 @@ mixin _$DadosPedidoStore on _DadosPedidoStoreBase, Store {
   }
 
   @override
-  void addClie(Cliente clie) {
-    final _$actionInfo = _$_DadosPedidoStoreBaseActionController.startAction(
-        name: '_DadosPedidoStoreBase.addClie');
-    try {
-      return super.addClie(clie);
-    } finally {
-      _$_DadosPedidoStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   String toString() {
     return '''
 descPorcent: ${descPorcent},

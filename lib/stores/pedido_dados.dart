@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:mobx/mobx.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:speed_externo/commom/objetos/cliente.dart';
 import 'package:speed_externo/commom/objetos/pedido.dart';
 import 'package:speed_externo/commom/objetos/produto.dart';
 import 'package:speed_externo/stores/faturamento_controller.dart';
@@ -254,6 +253,9 @@ void addProd(Produto prod) {
     final fatur = Get.find<FaturamentoController>();
     final pedidoController = Get.find<PedidoStore>();
     try{      
+      String date = "${DateTime.now().day.toString().padLeft(2, '0')}/"
+                    "${DateTime.now().month.toString().padLeft(2, '0')}/"
+                    "${DateTime.now().year}";                
       int id = await obtemCodPedido();
       
       final fPedidos = await obtemFilePedido();
@@ -266,9 +268,10 @@ void addProd(Produto prod) {
         faturamento: fatur.faturamento,
         listProd: listaProdutos,
         cod: id.toString(),
-        data: pedidoController.pedido.data,
+        data: date,
         tipo: pedidoController.pedido.tipo,
         codClie: pedidoController.pedido.codClie,
+        status: 'pendente',
       );
       
       pedidos.add(pedido);
@@ -280,10 +283,10 @@ void addProd(Produto prod) {
     }
   }
 
-   @action
-  void addClie(Cliente clie){    
-    pedido.codClie = pedido.cod;
-  }
+  //  @action
+  // void addClie(Cliente clie){    
+  //   pedido.codClie = clie.id;
+  // }
   
   
 }

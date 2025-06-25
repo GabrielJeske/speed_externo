@@ -1,7 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/routes/default_transitions.dart';
 import 'package:mobx/mobx.dart';
 import 'package:speed_externo/commom/objetos/conta.dart';
 import 'package:speed_externo/commom/objetos/faturamento.dart';
@@ -67,7 +65,8 @@ abstract class _FaturamentoController with Store {
     contas.clear();
      final pedido = Get.find<DadosPedidoStore>();
      total = pedido.totalPedido - entrada;
-     if (entrada > 0.0) {
+     if (pedido.pedido.tipo == 'A Prazo') {
+       if (entrada > 0.0) {
      contas.add(Conta(
         id: 'entrada',
         valor: entrada,
@@ -85,6 +84,15 @@ abstract class _FaturamentoController with Store {
       ));
     }
       } 
+     } else {
+        contas.add(Conta(
+        id: '1',
+        valor: total,
+        vencimento: DateTime.now(),
+        formaPagamento: formaPagamento,
+      ));
+     }
+    
   }
 
   void salvarFaturamento() {

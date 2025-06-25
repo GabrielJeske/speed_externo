@@ -13,6 +13,7 @@ class CustomFormField extends StatelessWidget {
   final void Function(String)? onFieldSubmitted;
   final void Function()? onEditingComplete;
   FocusNode? foco;
+  String? prefixText;
 
   CustomFormField({
     Key? key,
@@ -27,7 +28,8 @@ class CustomFormField extends StatelessWidget {
     this.mask,
     this.onFieldSubmitted,
     this.onEditingComplete,
-    this.foco
+    this.foco,
+    this.prefixText,
   }) : super(key: key);
 
   @override
@@ -37,6 +39,7 @@ class CustomFormField extends StatelessWidget {
       controller: controller,
       inputFormatters: mask,
       decoration: InputDecoration(
+        prefixText: prefixText,
         labelText: labelText,
         labelStyle: const TextStyle( // Adicionado const para otimização
           fontSize: 15

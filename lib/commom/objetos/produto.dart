@@ -68,7 +68,7 @@ class Produto {
     );
   }
 
-  Map toJson(){
+ Map<String, dynamic> toJson() {
     return{
       'nProd': nProd,
       'cod': cod,
@@ -83,8 +83,8 @@ class Produto {
       'cst': cst,
       'fabrica':fabrica,
       'custo': custo,
-      'venda': venda,   
-      'fabrestoqueatualica':estoqueatual,
+      'venda': venda,
+      'estoqueatual':estoqueatual,
       'estoqueparcial':estoqueparcial,
       'quantidade':quantidade,
       'unitario':unitario,

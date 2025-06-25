@@ -1,13 +1,16 @@
 import 'dart:convert';
+import 'package:speed_externo/commom/objetos/faturamento.dart';
+import 'package:speed_externo/commom/objetos/produto.dart';
 
 
 class Pedido {
   String? cod;
   String? codClie;
-  List<Map<String, dynamic>>? listProd;
+  List<Produto>? listProd;
   String? data;
   String? tipo;
-  String? fatur;
+  Faturamento? faturamento;
+  String? status;
   
   Pedido({
     this.cod,
@@ -15,55 +18,75 @@ class Pedido {
     required this.listProd,
     this.data,
     this.tipo,
-    this.fatur,
+    this.faturamento,
+    this.status,
   });
 
   Pedido copyWith({
     String? cod,
     String? codClie,
-    List<Map<String, dynamic>>? listProd,
+    List<Produto>? listProd,
     String? data,
     String? tipo,
-    String? fatur,    
+    Faturamento? faturamento,
+    String? status,
   }) {
     return Pedido(
       cod: cod ?? this.cod,
       codClie: codClie ?? this.codClie,
       data: data ?? this.data,
       tipo: tipo ?? this.tipo,
-      fatur: fatur ?? this.fatur,
-      listProd: listProd ?? this.listProd,      
+      faturamento: faturamento ?? this.faturamento,
+      listProd: listProd ?? this.listProd,
+      status: status ?? this.status,
     );
   }
+ factory Pedido.fromJson(Map<String, dynamic> json) {
 
-  factory Pedido.fromJson(Map json){
+    // 1. Pega a lista "crua" (List<dynamic>) do JSON.
+    var listFromJson = json['listProd'] as List?;
+
+    // 2. Transforma a lista crua em uma List<Produto>.
+    // Se a lista do json for nula, cria uma lista vazia.
+    List<Produto> productList = listFromJson != null
+        ? listFromJson.map((p) => Produto.fromJson(p)).toList()
+        : [];
+
     return Pedido(
       cod: json['cod'],
-      codClie: json['codClie'],
-      listProd: json['listProd'],
       data: json['data'],
       tipo: json['tipo'],
-      fatur:  json['fatur'],      
+      codClie: json['codClie'],
+      faturamento: json['faturamento'] != null
+          ? Faturamento.fromJson(json['faturamento'])
+          : null,
+      
+      // 3. Atribui a lista devidamente convertida.
+      listProd: productList,
+      status: json['status'],
     );
   }
+ Map<String, dynamic> toJson() => {
+    'cod': cod,
+    'data': data,
+    'tipo': tipo,
+    'codClie': codClie,
+    'status': status,
+    // Usa o '?' para o caso de faturamento ser nulo
+    'faturamento': faturamento?.toJson(),
+    // Usa o '?' para o caso de a lista ser nula (conforme discutimos)
+    'listProd': listProd?.map((p) => p.toJson()).toList(),
+  };
 
-  Map toJson(){
-    return{
-      'cod': cod,
-      'codClie': codClie,
-      'listProd': listProd,
-      'data': data,
-      'tipo': tipo,
-      'fatur':  fatur,      
-    };
+  List<Pedido> obtemPedidos(String jsonString) {
+    List<dynamic> listaGenerica = jsonDecode(jsonString);
+    List<Pedido> pedidos = [];
+    for (Map<String, dynamic> a in listaGenerica) {
+      Pedido pedido = Pedido.fromJson(a);
+      pedidos.add(pedido);
+    }
+    return pedidos;
   }
-  
-  List<Map<String, dynamic>> deserializaJson(String jsonString){
-    List<dynamic> conteudoJson = jsonDecode(jsonString);
-    List<Map<String, dynamic>> listJson = List<Map<String, dynamic>>.from(conteudoJson);
-    return listJson;
-  }
-
   
 
 }
