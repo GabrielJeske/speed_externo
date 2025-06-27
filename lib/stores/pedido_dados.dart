@@ -17,6 +17,9 @@ class DadosPedidoStore =_DadosPedidoStoreBase with _$DadosPedidoStore;
 
 abstract class _DadosPedidoStoreBase with Store{
 
+  @observable
+  ObservableList<Pedido> listaDePedidos = ObservableList<Pedido> ();
+
   Pedido pedido = Pedido(listProd: []);
 
   @observable
@@ -283,10 +286,19 @@ void addProd(Produto prod) {
     }
   }
 
-  //  @action
-  // void addClie(Cliente clie){    
-  //   pedido.codClie = clie.id;
-  // }
-  
+ 
+  @action
+    Future obtemPedidos () async{
+      Pedido pedido = Pedido(listProd: []);
+      try{
+        final fPedido = await obtemFilePedido();    
+        String contJson = await fPedido.readAsString();
+        List<Pedido> pedidos = pedido.obtemPedidos(contJson);
+        listaDePedidos = ObservableList<Pedido>.of(pedidos);
+      }catch (e){
+        log('Erro ao obter os Produtos');
+        rethrow;
+      }
+  }  
   
 }

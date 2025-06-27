@@ -61,8 +61,8 @@ class Produto {
       venda: json['venda'],
       estoqueatual: json['estoqueatual'],
       estoqueparcial: json['estoqueparcial'],          
-      quantidade: json['cusquantidadeto'],          
-      unitario: json['custunitarioo'],          
+      quantidade: json['quantidade'],          
+      unitario: json['unitario'],          
       total: json['total'],          
 
     );

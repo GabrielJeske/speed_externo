@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:speed_externo/commom/objetos/pedido.dart';
 import 'package:speed_externo/stores/validate_store.dart';
@@ -13,9 +14,7 @@ abstract class _PedidoStoreBase with Store{
 
                       
   TextEditingController controllerCliente = TextEditingController();
-  TextEditingController controllerData = TextEditingController( text: "${DateTime.now().day.toString().padLeft(2, '0')}/"
-                      "${DateTime.now().month.toString().padLeft(2, '0')}/"
-                      "${DateTime.now().year}");
+  TextEditingController controllerData = TextEditingController( text: DateFormat('yyyy-MM-dd').format(DateTime.now()));
   TextEditingController controllerTipo = TextEditingController();
   
   @observable
@@ -23,6 +22,7 @@ abstract class _PedidoStoreBase with Store{
 
   @observable
   String tipoSelecionado = 'A Vista';
+
   @computed
   bool get isAPrazo => tipoSelecionado == 'A Prazo';
 

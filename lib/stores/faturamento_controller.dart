@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mobx/mobx.dart';
 import 'package:speed_externo/commom/objetos/conta.dart';
 import 'package:speed_externo/commom/objetos/faturamento.dart';
+import 'package:speed_externo/stores/pedido_controller.dart';
 import 'package:speed_externo/stores/pedido_dados.dart';
 
 part 'faturamento_controller.g.dart';
@@ -64,8 +65,9 @@ abstract class _FaturamentoController with Store {
   void geraContas() {
     contas.clear();
      final pedido = Get.find<DadosPedidoStore>();
+     final pedidoController = Get.find<PedidoStore>();
      total = pedido.totalPedido - entrada;
-     if (pedido.pedido.tipo == 'A Prazo') {
+     if (pedidoController.pedido.tipo == 'A Prazo') {
        if (entrada > 0.0) {
      contas.add(Conta(
         id: 'entrada',
@@ -75,9 +77,9 @@ abstract class _FaturamentoController with Store {
       ));
      }     
     if (faturamento.parcelas != null && faturamento.parcelas! > 0) {
-      for (int i = 0; i < faturamento.parcelas!; i++) {
-      contas.add(Conta(
-        id: '$i',
+      for (int i = 0; i < faturamento.parcelas!; i++) {      
+        contas.add(Conta(
+        id: '${i +1}',
         valor: total / faturamento.parcelas!,
         vencimento: DateTime.now().add(Duration(days: 30 * i)),
         formaPagamento: formaPagamento,

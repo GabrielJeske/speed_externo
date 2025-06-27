@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:speed_externo/commom/constantes/chaves.dart';
 import 'package:speed_externo/commom/widgets/custom_textField.dart';
+import 'package:speed_externo/pages/clientes/consulta/consulta_pj.dart';
 import 'package:speed_externo/stores/cliente_dados.dart';
 import 'package:speed_externo/stores/cliente_controller.dart';
 
@@ -72,7 +73,7 @@ class _ClientePfFormState extends State<ClientePfForm> {
               SizedBox(height: 5),
               if (widget.isConsulta)
               CustomFormField(
-                controller:  formStore.controllerNome,
+                controller:  formStore.controllerRazao,
                 labelText: 'Nome',
                 foco: foco,
                 onChanged: (value) {
@@ -92,12 +93,15 @@ class _ClientePfFormState extends State<ClientePfForm> {
                         itemBuilder: (contextList, index) { 
                           final cliente = dadosStore.listaFiltrada[index];
                           return ListTile(                          
-                            title: Text(cliente.nome ?? ''),
+                            title: Text(cliente.razaosocial ?? ''),
                             onTap: () {                              
                               log('Vai selecionar o cliente $cliente');
-                              dadosStore.selecionarCliente(cliente, 'pf');                              
-                              dadosStore.setListaCliente(false);    
-                              foco.unfocus(); 
+                              dadosStore.selecionarCliente(cliente, 'pf');    
+                              if (dadosStore.clienSele.cnpj == null || dadosStore.clienSele.cnpj == '') {
+                                 Get.toNamed('/cliente/cadastro_pj');
+                              }
+                              dadosStore.setListaCliente(false);
+                              foco.unfocus();
                             },
                           );
                         },
@@ -113,7 +117,7 @@ class _ClientePfFormState extends State<ClientePfForm> {
                 children: [                
                   Flexible(             
                     child: CustomFormField(
-                      controller: formStore.controllerNome,
+                      controller: formStore.controllerFantasia,
                       errorText: formStore.formErrors['nome'],
                       labelText: 'Nome',                                       
                       onChanged: (value) => formStore.setField('nome', value),                      
@@ -127,7 +131,7 @@ class _ClientePfFormState extends State<ClientePfForm> {
                   Expanded(
                     flex: 6,
                     child: CustomFormField(
-                      controller: formStore.controllerCpf,
+                      controller: formStore.controllerCnpj,
                       mask: [maskCpf],
                       keyboardType: TextInputType.numberWithOptions(),
                       errorText: formStore.formErrors['cpf'],
@@ -137,35 +141,8 @@ class _ClientePfFormState extends State<ClientePfForm> {
                     ),
                   ),
                   SizedBox(width: 10),
-                  Expanded(
+                   Expanded(
                     flex: 4,
-                    child: DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        labelText: 'Logadouro',                
-                        border: OutlineInputBorder(),
-                        errorText: formStore.formErrors['logadouro'],
-                      ),
-                      value: formStore.cliente.logadouro == '' ? null : formStore.cliente.logadouro,
-                      items: ['Rua', 'Avenida'].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,                    
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        if (newValue != null) {
-                          formStore.setField('logadouro', newValue);
-                        }
-                      },
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(height: 5),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 7,
                     child: DropdownButtonFormField<String>(
                       decoration: InputDecoration(
                         labelText: 'Contribuinte',
@@ -186,9 +163,14 @@ class _ClientePfFormState extends State<ClientePfForm> {
                       },
                     ),
                   ),
+                ],
+              ),
+              SizedBox(height: 5),
+              Row(
+                children: [                 
                   SizedBox(width: 10),
                   Expanded(
-                    flex: 6,
+                    flex: 4,
                     child: CustomFormField(
                       controller: formStore.controllerIe,
                       keyboardType: TextInputType.number,
@@ -196,6 +178,19 @@ class _ClientePfFormState extends State<ClientePfForm> {
                        readOnly: widget.isConsulta,
                       errorText: formStore.formErrors['ie'],
                       onChanged: (value) => formStore.setField('ie', value),                      
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    flex: 6,
+                    child: CustomFormField(
+                      controller: formStore.controllerCep,
+                      mask: [maskCep],
+                      keyboardType: TextInputType.numberWithOptions(),
+                      labelText: 'Cep',
+                      readOnly: widget.isConsulta,
+                      errorText: formStore.formErrors['cep'],
+                      onChanged: (value) => formStore.setField('cep', value),                     
                     ),
                   )
                 ],
@@ -215,22 +210,6 @@ class _ClientePfFormState extends State<ClientePfForm> {
                   ),
                   SizedBox(width: 10),
                   Expanded(
-                    flex: 3,
-                    child: CustomFormField(
-                      controller: formStore.controllerNumero,
-                      keyboardType: TextInputType.number,
-                      labelText: 'Nº',
-                      readOnly: widget.isConsulta,
-                      errorText: formStore.formErrors[numero],
-                      onChanged: (value) => formStore.setField(numero, value),                     
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(height: 5),
-              Row(
-                children: [
-                  Expanded(
                     flex: 6,
                     child: CustomFormField(
                       controller: formStore.controllerBairro,
@@ -240,21 +219,8 @@ class _ClientePfFormState extends State<ClientePfForm> {
                       onChanged: (value) => formStore.setField('bairro', value),                     
                     ),
                   ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    flex: 5,
-                    child: CustomFormField(
-                      controller: formStore.controllerCep,
-                      mask: [maskCep],
-                      keyboardType: TextInputType.numberWithOptions(),
-                      labelText: 'Cep',
-                      readOnly: widget.isConsulta,
-                      errorText: formStore.formErrors['cep'],
-                      onChanged: (value) => formStore.setField('cep', value),                     
-                    ),
-                  )
                 ],
-              ),
+              ),              
               SizedBox(height: 5),
               Row(
                 children: [

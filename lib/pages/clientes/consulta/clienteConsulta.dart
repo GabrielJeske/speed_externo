@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:speed_externo/pages/clientes/consulta/consulta_pf.dart';
 import 'package:speed_externo/pages/clientes/consulta/consulta_pj.dart';
 
+class Clienteconsulta extends StatefulWidget {
+  const Clienteconsulta({super.key});
 
-class ClienteConsulta extends StatelessWidget {
-  const ClienteConsulta({Key? key}) : super(key: key);
- 
+  @override
+  State<Clienteconsulta> createState() => _ClienteconsultaState();
+}
 
+class _ClienteconsultaState extends State<Clienteconsulta> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -30,4 +33,4 @@ class ClienteConsulta extends StatelessWidget {
       ),
     );
   }
- }
+}

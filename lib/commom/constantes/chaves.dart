@@ -1,3 +1,17 @@
+//Chaves dos  Cliente
+const String id = 'id';
+const  String razaosocial = 'razaosocial';
+const String fantasia = 'fantasia';
+const  String cnpj = 'cnpj';
+const  String ie = 'ie';
+const String endereco = 'endereco';
+const  String cep = 'cep';
+const  String email = 'email';
+const  String contato = 'contato';
+const  String numeroContato = 'numeroContato';
+const  String contribuinte = 'contribuinte';
+
+
 const String cod = 'cod';
 const  String nome = 'nome';
 const String ncm = 'ncm';
@@ -16,18 +30,3 @@ const  String estoqueparcial = 'estoqueparcial';
 const  String quantidade = 'quantidade';
 const  String unitario = 'unitario';
 const  String total = 'total';
-const String id = 'id';
-const String cpf = 'cpf';
-const  String razaosocial = 'razaosocial';
-const String fantasia = 'fantasia';
-const  String cnpj = 'cnpj';
-const  String ie = 'ie';
-const String endereco = 'endereco';
-const  String numero = 'numero';
-const  String bairro = 'bairro';
-const  String cep = 'cep';
-const  String email = 'email';
-const  String contato = 'contato';
-const  String numeroContato = 'numeroContato';
-const  String contribuinte = 'contribuinte';
-const  String logadouro = 'logadouro';

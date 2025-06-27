@@ -6,8 +6,8 @@ import 'package:mobx/mobx.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:speed_externo/commom/objetos/cliente.dart';
 import 'package:speed_externo/stores/cliente_controller.dart';
-
-part 'cliente_dados.g.dart';
+import 'package:http/http.dart' as http; 
+part 'cliente_dados.g.dart';  
 
 
 class DadosStore =_DadosStoreBase with _$DadosStore;
@@ -25,17 +25,18 @@ abstract class _DadosStoreBase with Store{
   @observable
   Cliente clienSele = Cliente(); 
 
+
   @action
   Future obtemClientes () async{
-    Cliente clienteJson = Cliente();
     try{
-      final fCliente = await obtemFileClie();
-      String contJson = await fCliente.readAsString();
-      List<Cliente> clientes = clienteJson.obtemClientes(contJson);
-      listaClientes = ObservableList<Cliente>.of(clientes);
-      log('Obteve os clientes $listaClientes');
+      String jsonResp = await obtemJsonClientes();
+
+       List<Cliente> clientes = obtemCliente(jsonResp); // Passe a string JSON original ou a lista decodificada, dependendo da sua implementação de Cliente.obtemClientes
+
+        listaClientes = ObservableList<Cliente>.of(clientes);
+
     }catch (e){
-      log('Erro ao obter os clientes');
+      log('Erro ao obter os clientes');       
       rethrow;
     }
   }
@@ -59,20 +60,15 @@ List<Cliente> get listaFiltrada {
   } else {
 
     return listaClientes.where((cliente) {
-      // Obtém e normaliza o nome do cliente (para PF e PJ)
-      final String nomeCliente = cliente.nome?.toString().toLowerCase() ?? '';
-
-      // Obtém e normaliza a razão social (para PJ)
-      // Se a chave não existir ou for nula, resultará em string vazia.
+  
       final String razaoSocialCliente = cliente.razaosocial?.toString().toLowerCase() ?? '';
 
       // Obtém e normaliza o nome fantasia (para PJ)
       final String fantasiaCliente = cliente.fantasia?.toString().toLowerCase() ?? '';
 
       // Verifica se o filtroLower está contido em qualquer um dos campos
-      bool filtrado = nomeCliente.contains(filtro.toLowerCase()) ||
-                        razaoSocialCliente.contains(filtro.toLowerCase()) ||
-                        fantasiaCliente.contains(filtro.toLowerCase());
+      bool filtrado = razaoSocialCliente.contains(filtro.toLowerCase()) ||
+                      fantasiaCliente.contains(filtro.toLowerCase());
 
       return filtrado;
     }).toList();
@@ -97,23 +93,44 @@ void selecionarCliente(Cliente clienteSelecionado, String tipo) {
 
   formStore.resetForm();
 
-  if (tipo == 'pf'){
-    formStore.controllerNome.text = clienteSelecionado.nome.toString();
-    formStore.controllerCpf.text = clienteSelecionado.cpf.toString();
-  }else if ( tipo == 'pj'){
     formStore.controllerRazao.text = clienteSelecionado.razaosocial.toString();
     formStore.controllerFantasia.text = clienteSelecionado.fantasia.toString();
     formStore.controllerCnpj.text = clienteSelecionado.cnpj.toString();
-  }
   formStore.controllerIe.text = clienteSelecionado.ie.toString();
   formStore.controllerEndereco.text = clienteSelecionado.endereco.toString();
-  formStore.controllerNumero.text = clienteSelecionado.endereco.toString(); 
-  formStore.controllerBairro.text = clienteSelecionado.bairro.toString();
   formStore.controllerCep.text = clienteSelecionado.cep.toString();
   formStore.controllerEmail.text = clienteSelecionado.email.toString();
   formStore.controllerContato.text = clienteSelecionado.contato.toString();
-  formStore.controllerNumeroContato.text = clienteSelecionado.numero.toString();
-}
+} 
+
+  List<Cliente> obtemCliente(String jsonString){    
+    List<dynamic> listaGenerica= jsonDecode(jsonString);
+    List<Cliente> clientes = [];
+    for (Map<String, dynamic> a in listaGenerica) {   
+      Cliente cliente = Cliente.fromJson(a);
+      clientes.add(cliente);
+    }
+     return clientes; 
+    }
+    
+   Future<String> obtemJsonClientes() async{
+
+    Uri urlClientes = Uri.parse("https://1587bcd2-f1c9-4bd7-b4fa-10940fdf1042.mock.pstmn.io/name");
+
+    try {
+      log('Obtendo pedidos de $urlClientes ${DateTime.now().toIso8601String()}');
+      http.Response  resp = await http.get(urlClientes);
+      log('Resposta obtida ${DateTime.now().toIso8601String()}');
+      if (resp.statusCode == 200) {
+        return resp.body;
+      } else {
+        throw Exception('Falha ao obter pedidos');
+      }
+    } catch (e) {
+      log('erro ao obter Arquivo de pedidos $e');
+      rethrow;
+    }      
+  }
 
   Future<File> obtemFileClie() async{
     try {
@@ -136,12 +153,11 @@ void selecionarCliente(Cliente clienteSelecionado, String tipo) {
   }
 
   Future<int> obtemId() async{
-    Cliente clienteJson = Cliente();
     try {      
       File json = await obtemFileClie();
       String contJson = await json.readAsString();
       if (contJson != '[]' ){
-        List<Cliente> listaDeClientes = clienteJson.obtemClientes(contJson);
+        List<Cliente> listaDeClientes = obtemCliente(contJson);
         int id = 0;        
         for (Cliente cliente in listaDeClientes){          
           int a = int.parse(cliente.id ?? '0' );
@@ -169,7 +185,7 @@ void selecionarCliente(Cliente clienteSelecionado, String tipo) {
       log('Obteve o arquivo de clientes $fCliente');
       String contJson = await fCliente.readAsString();           
       log('Obsete o conteudo do arquiv $contJson');
-      List<Cliente> clientes = formStore.cliente.obtemClientes(contJson);
+      List<Cliente> clientes = obtemCliente(contJson);
       log('Criou a lista de cliente $clientes');
       formStore.cliente.id=id.toString();
       log('Atribui o id ');
@@ -181,6 +197,7 @@ void selecionarCliente(Cliente clienteSelecionado, String tipo) {
       throw 'Erro ao salvar o cliente $e';
     }
   }
+
 
 
 }

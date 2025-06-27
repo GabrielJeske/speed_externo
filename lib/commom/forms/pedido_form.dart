@@ -386,12 +386,12 @@ class _PedidoFormState extends State<PedidoForm> {
                         title: const Text('Faturamento'),
                         content: ConstrainedBox(
                           constraints: BoxConstraints(
-                            maxWidth: 600.0,
+                            maxWidth: screenSize.width,
                             maxHeight: screenSize.height * 0.8,
                             minHeight: screenSize.height * 0.4,
                           ),
                           child: SizedBox(
-                            width: screenSize.width * 0.7,
+                            width: screenSize.width ,
                             height: screenSize.height * 0.5,
                             child: Faturamento(),
                           ),
@@ -484,13 +484,13 @@ class _PedidoFormState extends State<PedidoForm> {
                                         itemBuilder: (contextList, index) { 
                                           final cliente = dadosCliente.listaFiltrada[index];
                                           return ListTile(                          
-                                            title: Text(cliente.nome ?? ''),
+                                            title: Text(cliente.razaosocial ?? ''),
                                             onTap: () {                                                                      
                                               log('chegou aqui 1 ');
                                               dadosCliente.selecionarCliente(cliente, 'pf');                              
                                               dadosCliente.setListaCliente(false);  
                                               pedidoStore.setField('cliente', cliente.toString());  
-                                              pedidoStore.setField('nome', cliente.nome.toString());  
+                                              pedidoStore.setField('nome', cliente.razaosocial.toString());  
                                               pedidoStore.setField('codClie', cliente.id.toString());                                                 
                                              // dadosStore.addClie(cliente);                                                                                                                  
                                               foco.unfocus();                                          

@@ -17,11 +17,8 @@ abstract class _FormStoreBase with Store{
   TextEditingController controllerRazao = TextEditingController();
   TextEditingController controllerFantasia = TextEditingController();
   TextEditingController controllerCnpj = TextEditingController();
-  TextEditingController controllerNome = TextEditingController();
-  TextEditingController controllerCpf = TextEditingController();
   TextEditingController controllerIe = TextEditingController();
   TextEditingController controllerEndereco = TextEditingController();
-  TextEditingController controllerNumero = TextEditingController();
   TextEditingController controllerBairro = TextEditingController();
   TextEditingController controllerCep = TextEditingController();
   TextEditingController controllerEmail = TextEditingController();
@@ -45,8 +42,6 @@ abstract class _FormStoreBase with Store{
       cliente = cliente.copyWith(id: value) ;
       case nome:
       cliente = cliente.copyWith(nome: value) ;
-      case cpf:
-      cliente = cliente.copyWith(cpf: value) ;
       case razaosocial:
       cliente = cliente.copyWith(razaosocial: value) ;
       case fantasia:
@@ -57,9 +52,6 @@ abstract class _FormStoreBase with Store{
       cliente = cliente.copyWith(ie: value) ;
       case endereco:
       cliente = cliente.copyWith(endereco: value) ;
-      case numero:
-      cliente = cliente.copyWith(numero: value) ;
-      case bairro:
       cliente = cliente.copyWith(bairro: value) ;
       case cep:
       cliente = cliente.copyWith(cep: value) ;
@@ -71,8 +63,6 @@ abstract class _FormStoreBase with Store{
       cliente = cliente.copyWith(numeroContato: value) ;
       case contribuinte:
       cliente = cliente.copyWith(contribuinte: value) ;
-      case logadouro:
-      cliente = cliente.copyWith(logadouro: value) ;
     }
     Get.find<ValidateStore>().validateField(chave, value);
   }
@@ -88,11 +78,8 @@ abstract class _FormStoreBase with Store{
     controllerRazao.text = '';
     controllerFantasia.text = '';
     controllerCnpj.text = '';
-    controllerNome.text = '';
-    controllerCpf.text = '';
     controllerIe.text = '';
     controllerEndereco.text = '';
-    controllerNumero.text = '';
     controllerBairro.text = '';
     controllerCep.text = '';
     controllerEmail.text = '';

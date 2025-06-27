@@ -64,14 +64,9 @@ abstract class _ValidateStoreBase with Store{
     log('Chgou no  ValidadeAll e obetve os dados $fieldsToValidate');
 
       if (tipo == 'pf'){
-        validateField('nome', fieldsToValidate.nome ?? '');
-        validateField('cpf', fieldsToValidate.cpf ?? '');
         validateField('email', fieldsToValidate.email ?? '');
         validateField('endereco', fieldsToValidate.endereco ?? '');
-        validateField('bairro', fieldsToValidate.bairro ?? '');
         validateField('cep', fieldsToValidate.cep ?? '');
-        validateField('n', fieldsToValidate.numero ?? '');
-        validateField('logadouro', fieldsToValidate.logadouro ?? '');
         validateField('contato', fieldsToValidate.contato ?? '');
         validateField('numero', fieldsToValidate.numeroContato ?? '');
         validateField('contribuinte', fieldsToValidate.contribuinte ?? '');
@@ -82,10 +77,7 @@ abstract class _ValidateStoreBase with Store{
         validateField('fantasia', fieldsToValidate.fantasia ?? '');     
         validateField('email', fieldsToValidate.email ?? '');
         validateField('endereco', fieldsToValidate.endereco ?? '');
-        validateField('bairro', fieldsToValidate.bairro ?? '');
         validateField('cep', fieldsToValidate.cep ?? '');
-        validateField('n', fieldsToValidate.numero ?? '');
-        validateField('logadouro', fieldsToValidate.logadouro ?? '');
         validateField('contato', fieldsToValidate.contato ?? '');
         validateField('numero', fieldsToValidate.numeroContato ?? '');
         validateField('contribuinte', fieldsToValidate.contribuinte ?? '');

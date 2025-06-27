@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:speed_externo/stores/faturamento_controller.dart';
 import 'package:speed_externo/stores/pedido_controller.dart';
 import 'package:speed_externo/commom/widgets/custom_textField.dart';
@@ -20,12 +21,19 @@ class Faturamento extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size; 
-   
-    return Column(
+    return LayoutBuilder(builder: (context, constraints) {
+      return SingleChildScrollView(
+        child: ConstrainedBox(constraints: BoxConstraints(         
+          maxHeight: screenSize.height,
+        ),
+        child: IntrinsicHeight(
+          child: Container(      
+          padding: EdgeInsets.all(10),
+          child: Column(
       children: [
            
         Observer( builder: (context) {
-          if (pedidoDados.pedido.tipo == 'A Prazo') {  
+          if (pedidoStore.pedido.tipo == 'A Prazo') {  
             return Row(
             children: [
               Expanded(
@@ -85,70 +93,78 @@ class Faturamento extends StatelessWidget {
             ),
           ],
         ),
+        SizedBox(height: 10),
         Observer(builder:  (conext) =>
-                        Container(
-                          height: screenSize.height * 0.30,
-                          width: screenSize.width,
+                        SizedBox(
+                          height: screenSize.height * 0.30,                          
                             child: ListView.builder(
                                                     shrinkWrap: true,                      
                                                     itemCount: faturamento.contas.length,
                                                     itemBuilder: (contextList, index) { 
                                                       final conta = faturamento.contas[index];
                                                       return Card(
+                                                        color: Colors.black,
                                                         child: ListTile(                                
                                                             title: Column(
                                                               children: [
                                                                 Row(
                                                                   children: [
-                                                                     Expanded(
-                                                                      flex: 1,
+                                                                    Expanded(
+                                                                      flex: 4,
                                                                       child: CustomFormField( 
-                                                                                  labelText:  'Parcela',
-                                                                                  controller:TextEditingController(text: conta.id),
-                                                                                  readOnly: true,
+                                                                        labelText:  'Parcela',
+                                                                        controller:TextEditingController(text: conta.id),
+                                                                        readOnly: true,
                                                                       )
                                                                     ),
                                                                     SizedBox(width: 5),
                                                                     Expanded(
+                                                                      flex: 6,
+                                                                      child: CustomFormField( 
+                                                                        labelText:  'Forma de Pagamento',
+                                                                        controller:TextEditingController(text: conta.formaPagamento),
+                                                                        readOnly: true,
+                                                                      )
+                                                                    ),                                                                                                                                                                                                                                                                                                                                                                                                                                            
+                                                                  ],                                                                
+                                                                ),
+                                                                SizedBox(height: 10),
+                                                                Row(
+                                                                  children: [
+                                                                    Expanded(
                                                                       flex: 2,
                                                                       child: CustomFormField( 
-                                                                                  labelText:  'Vencimento',
-                                                                                  controller:TextEditingController(text: conta.vencimento.toString()),
-                                                                                  readOnly: true,
+                                                                        labelText:  'Vencimento',
+                                                                        controller:TextEditingController(text: DateFormat('yyyy-MM-dd').format(conta.vencimento!)),
+                                                                        readOnly: true,
                                                                       )
-                                                                      ),    
-                                                                      SizedBox(height: 10),
-                                                                Expanded(
-                                                                  flex: 3,
-                                                                 child: CustomFormField( 
-                                                                              labelText:  'Valor',
-                                                                              controller:TextEditingController(text: conta.valor.toString()),                                                                               
-                                                                  )
-                                                                  ),
-                                                                SizedBox(width: 5),
-                                                                                                                                 Expanded(
-                                                                  flex: 4,
-                                                                  child: CustomFormField( 
-                                                                              labelText:  'Forma de Pagamento',
-                                                                              controller:TextEditingController(text: conta.formaPagamento),
-                                                                              readOnly: true,
-                                                                  )
-                                                                  ),                                                                                                         
+                                                                    ),    
+                                                                    SizedBox(width: 5),
+                                                                    Expanded(
+                                                                      flex: 3,
+                                                                      child: CustomFormField( 
+                                                                        labelText:  'Valor',
+                                                                        controller:TextEditingController(text: conta.valor.toString()),                                                                               
+                                                                      )
+                                                                    ),
                                                                   ],
-                                                                
-                                                                ),
-                                                                                                                 
+                                                                )                                              
                                                               ],
+                                                              
                                                             ),                                                                                       
                                                         ),
                                                       );
                                                     },
-                            )
-                          
-                          
+                            )                                                    
                         ),
                       ),
       ],
-    );
+    )
+          )          
+        )          
+        ),    
+      );
+    });      
+    
   }
 }
