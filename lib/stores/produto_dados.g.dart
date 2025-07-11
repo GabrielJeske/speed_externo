@@ -85,7 +85,7 @@ mixin _$DadosProdutoStore on _DadosProdutoStoreBase, Store {
       AsyncAction('_DadosProdutoStoreBase.obtemProdutos', context: context);
 
   @override
-  Future<dynamic> obtemProdutos() {
+  Future<void> obtemProdutos() {
     return _$obtemProdutosAsyncAction.run(() => super.obtemProdutos());
   }
 

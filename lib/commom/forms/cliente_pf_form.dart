@@ -4,8 +4,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:speed_externo/commom/constantes/chaves.dart';
+import 'package:speed_externo/commom/widgets/custom_buttom.dart';
 import 'package:speed_externo/commom/widgets/custom_textField.dart';
-import 'package:speed_externo/pages/clientes/consulta/consulta_pj.dart';
 import 'package:speed_externo/stores/cliente_dados.dart';
 import 'package:speed_externo/stores/cliente_controller.dart';
 
@@ -23,8 +23,8 @@ class ClientePfForm extends StatefulWidget {
 }
 
 class _ClientePfFormState extends State<ClientePfForm> {
-  final formStore = Get.find<FormStore>();
-  final dadosStore = Get.find<DadosStore>();
+  final clienteController = Get.find<ClienteController>();
+  final dadosCliente = Get.find<ClienteDados>();
   
   var maskCpf = MaskTextInputFormatter(mask: '###.###.###-##', filter: {"#": RegExp(r'[0-9]')});
   var maskCep = MaskTextInputFormatter(mask: '#####-###', filter: {"#": RegExp(r'[0-9]')});
@@ -38,16 +38,16 @@ class _ClientePfFormState extends State<ClientePfForm> {
   void initState() {
     super.initState();
     if (widget.isConsulta){
-      dadosStore.obtemClientes();
+      dadosCliente.obtemClientes();
       foco.addListener(() {           
         Future.delayed(Duration(milliseconds: 300 ), () {
-          dadosStore.setListaCliente(foco.hasFocus);                     
+          dadosCliente.setListaCliente(foco.hasFocus);                     
         });  
      });
     }
      WidgetsBinding.instance.addPostFrameCallback((_) {
-       formStore.resetForm();
-       dadosStore.setFiltro('');
+       clienteController.resetForm();
+       dadosCliente.setFiltro('');
      });
   }
   
@@ -58,7 +58,7 @@ class _ClientePfFormState extends State<ClientePfForm> {
   }
 
   void resetForm() {
-    formStore.resetForm();
+    clienteController.resetForm();
     foco.dispose();    
   }
 
@@ -73,54 +73,83 @@ class _ClientePfFormState extends State<ClientePfForm> {
               SizedBox(height: 5),
               if (widget.isConsulta)
               CustomFormField(
-                controller:  formStore.controllerRazao,
+                controller:  clienteController.controllerRazao,
                 labelText: 'Nome',
                 foco: foco,
-                onChanged: (value) {
-                  log('Vai setar o filtro');
-                  dadosStore.setFiltro(value);
-                  dadosStore.setListaCliente(foco.hasFocus);               
+                onTap: () {
+                  clienteController.resetForm();
+                },
+                onChanged: (value) {             
+                  dadosCliente.setFiltro(value);
+                  dadosCliente.setListaCliente(foco.hasFocus);               
                 },
               ),
-              Observer( 
+                Observer(
                 builder: (__) {
-                  if ( dadosStore.exibeListaCliente) {
-                    return Container(
-                      constraints: BoxConstraints(maxHeight: 200),
-                      child: ListView.builder(
-                        shrinkWrap: true,                      
-                        itemCount: dadosStore.listaFiltrada.length,
-                        itemBuilder: (contextList, index) { 
-                          final cliente = dadosStore.listaFiltrada[index];
-                          return ListTile(                          
-                            title: Text(cliente.razaosocial ?? ''),
-                            onTap: () {                              
-                              log('Vai selecionar o cliente $cliente');
-                              dadosStore.selecionarCliente(cliente, 'pf');    
-                              if (dadosStore.clienSele.cnpj == null || dadosStore.clienSele.cnpj == '') {
-                                 Get.toNamed('/cliente/cadastro_pj');
-                              }
-                              dadosStore.setListaCliente(false);
-                              foco.unfocus();
-                            },
-                          );
-                        },
+                  if (dadosCliente.exibeListaCliente) {
+                  return Container(
+                    constraints: BoxConstraints(maxHeight: 200),
+                    child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: dadosCliente.listaFiltrada.length,
+                    itemBuilder: (contextList, index) {
+                      final cliente = dadosCliente.listaFiltrada[index];
+                      return ListTile(
+                        contentPadding: EdgeInsets.all(0),
+                      title: Row(
+                        children: [
+                        SizedBox(width: 10),
+                        Expanded(
+                          flex: 2,
+                          child: Text(cliente.razaosocial ?? '', style: TextStyle(fontSize: 12),),
+                        ),                                             
+                        SizedBox(width: 10),
+                        SizedBox(
+                          height: 25,
+                          child: VerticalDivider(
+                            color: Theme.of(context).colorScheme.outline, // Cor da sua linha (como você já estava a usar)
+                            thickness: 2,        // Espessura da sua linha
+                            indent: 0,           // Remove qualquer espaçamento em cima
+                            endIndent: 0,        // Remove qualquer espaçamento em baixo
+                            width: 10,           // Largura que o divisor ocupa na Row (ajuste se precisar de mais espaço lateral)
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          flex: 2,
+                          child: Text(cliente.fantasia ?? '', style: TextStyle(fontSize: 12),),
+                        ),
+                        ],
                       ),
-                    );
+                      onTap: () {                        
+                        log('Vai selecionar o cliente $cliente');
+                        dadosCliente.selecionarCliente(cliente);  
+                        log('toma ${cliente.cnpj}');                      
+                        dadosCliente.setListaCliente(false);
+                        if (cliente.cnpj == null) {
+                         Get.toNamed('/cliente/cadastro_pj');
+                         log('salve');
+                        }
+                        foco.unfocus();
+                      },
+                      );
+                    },
+                    ),
+                  );
                   } else {
-                    return SizedBox.shrink();
+                  return SizedBox.shrink();
                   }
                 },
-              ), 
+                ),
               if (!widget.isConsulta)
               Row(
                 children: [                
                   Flexible(             
                     child: CustomFormField(
-                      controller: formStore.controllerFantasia,
-                      errorText: formStore.formErrors['nome'],
+                      controller: clienteController.controllerFantasia,
+                      errorText: clienteController.formErrors[razaosocial],
                       labelText: 'Nome',                                       
-                      onChanged: (value) => formStore.setField('nome', value),                      
+                      onChanged: (value) => clienteController.setField(razaosocial, value),                      
                     ),
                   )
                 ],
@@ -131,13 +160,13 @@ class _ClientePfFormState extends State<ClientePfForm> {
                   Expanded(
                     flex: 6,
                     child: CustomFormField(
-                      controller: formStore.controllerCnpj,
+                      controller: clienteController.controllerCnpj,
                       mask: [maskCpf],
                       keyboardType: TextInputType.numberWithOptions(),
-                      errorText: formStore.formErrors['cpf'],
+                      errorText: clienteController.formErrors[cnpj],
                       labelText: 'CPF',
                        readOnly: widget.isConsulta,
-                      onChanged: (value) => formStore.setField('cpf', value),                     
+                      onChanged: (value) => clienteController.setField(cnpj, value),                     
                     ),
                   ),
                   SizedBox(width: 10),
@@ -146,51 +175,51 @@ class _ClientePfFormState extends State<ClientePfForm> {
                     child: DropdownButtonFormField<String>(
                       decoration: InputDecoration(
                         labelText: 'Contribuinte',
-                        border: OutlineInputBorder(),
-                        errorText: formStore.formErrors['contribuinte'],
+                        border: OutlineInputBorder(),                        
                       ),
-                      value: formStore.cliente.contribuinte == '' ? null : formStore.cliente.contribuinte,
-                      items: ['Contribuinte', 'Não Contribuinte', 'Isento'].map((String value) {
+                      value: clienteController.contribuitePadrao,
+                      items: [contribuinte1, contribuinte2, contribuinte9].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value),
                         );
                       }).toList(),
-                      onChanged: (String? newValue) {
+                      onChanged: widget.isConsulta ? null : (String? newValue) {
                         if (newValue != null) {
-                          formStore.setField('contribuinte', newValue );
+                          clienteController.formErrors[ie]=null;                                        
+                          clienteController.setField(contribuinte, newValue.substring(0, 1));                      
                         }
                       },
+                      style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
                     ),
                   ),
                 ],
               ),
               SizedBox(height: 5),
               Row(
-                children: [                 
-                  SizedBox(width: 10),
+                children: [                                   
                   Expanded(
                     flex: 4,
                     child: CustomFormField(
-                      controller: formStore.controllerIe,
+                      controller: clienteController.controllerIe,
                       keyboardType: TextInputType.number,
                       labelText: 'IE',
-                       readOnly: widget.isConsulta,
-                      errorText: formStore.formErrors['ie'],
-                      onChanged: (value) => formStore.setField('ie', value),                      
+                      readOnly: widget.isConsulta,                   
+                      errorText: clienteController.formErrors[ie],                                          
+                      onChanged: (value) => clienteController.setField(ie, value),                      
                     ),
                   ),
                   SizedBox(width: 10),
                   Expanded(
                     flex: 6,
                     child: CustomFormField(
-                      controller: formStore.controllerCep,
+                      controller: clienteController.controllerCep,
                       mask: [maskCep],
                       keyboardType: TextInputType.numberWithOptions(),
                       labelText: 'Cep',
                       readOnly: widget.isConsulta,
-                      errorText: formStore.formErrors['cep'],
-                      onChanged: (value) => formStore.setField('cep', value),                     
+                      errorText: clienteController.formErrors[cep],
+                      onChanged: (value) => clienteController.setField(cep, value),                     
                     ),
                   )
                 ],
@@ -201,22 +230,22 @@ class _ClientePfFormState extends State<ClientePfForm> {
                   Expanded(
                     flex: 7,
                     child: CustomFormField(
-                      controller: formStore.controllerEndereco,
+                      controller: clienteController.controllerEndereco,
                       labelText: 'Endereco',
                        readOnly: widget.isConsulta,
-                      errorText: formStore.formErrors['endereco'],
-                      onChanged: (value) => formStore.setField('endereco', value),                    
+                      errorText: clienteController.formErrors[endereco],
+                      onChanged: (value) => clienteController.setField(endereco, value),                    
                     ),
                   ),
                   SizedBox(width: 10),
                   Expanded(
                     flex: 6,
                     child: CustomFormField(
-                      controller: formStore.controllerBairro,
+                      controller: clienteController.controllerBairro,
                       labelText: 'Bairro',
                       readOnly: widget.isConsulta,
-                      errorText: formStore.formErrors['bairro'],
-                      onChanged: (value) => formStore.setField('bairro', value),                     
+                      errorText: clienteController.formErrors[bairro],
+                      onChanged: (value) => clienteController.setField(bairro, value),                     
                     ),
                   ),
                 ],
@@ -227,11 +256,11 @@ class _ClientePfFormState extends State<ClientePfForm> {
                   Expanded(
                     flex: 10,
                     child: CustomFormField(
-                      controller: formStore.controllerEmail,
+                      controller: clienteController.controllerEmail,
                       labelText: 'E-mail',
                       readOnly: widget.isConsulta,
-                      errorText: formStore.formErrors['email'],
-                      onChanged: (value) => formStore.setField('email', value),                     
+                      errorText: clienteController.formErrors[email],
+                      onChanged: (value) => clienteController.setField(email, value),                     
                     ),
                   )
                 ],
@@ -244,24 +273,24 @@ class _ClientePfFormState extends State<ClientePfForm> {
                   Expanded(
                     flex: 4,
                     child: CustomFormField(
-                      controller: formStore.controllerContato,
+                      controller: clienteController.controllerContato,
                       labelText: 'contato',
                       readOnly: widget.isConsulta,
-                      errorText: formStore.formErrors[''],
-                      onChanged: (value) => formStore.setField('contato', value),                      
+                      errorText: clienteController.formErrors[contato],
+                      onChanged: (value) => clienteController.setField(contato, value),                      
                     ),
                   ),
                   SizedBox(width: 10),
                   Expanded(
                     flex: 6,
                     child: CustomFormField(
-                      controller: formStore.controllerNumeroContato,
+                      controller: clienteController.controllerNumeroContato,
                       mask: [maskNumero],
                       keyboardType: TextInputType.numberWithOptions(),
                       labelText: 'Numero',
                       readOnly: widget.isConsulta,
-                      errorText: formStore.formErrors[numeroContato],
-                      onChanged: (value) => formStore.setField(numeroContato, value),                     
+                      errorText: clienteController.formErrors[numeroContato],
+                      onChanged: (value) => clienteController.setField(numeroContato, value),                     
                     ),
                   )
                 ],
@@ -271,39 +300,25 @@ class _ClientePfFormState extends State<ClientePfForm> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                      onPressed: formStore.resetForm,
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                        padding: EdgeInsets.all(15),
-                        foregroundColor: Colors.black,
-                        textStyle: TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                      child: Text('CANCELAR'),
+                    CustomButtom(
+                      onPressed: clienteController.resetForm,                      
+                      label: Text('Cancelar'),
                     ),
                     SizedBox(width: 10),
-                    ElevatedButton(
+                    CustomButtom(
                       onPressed: () async {
-                        formStore.validateAllFields('pf');
-                        if (formStore.isFormValid) {
+                        clienteController.validateAllFields();
+                        if (clienteController.isFormValid) {
                           log("validou");
-                          await dadosStore.salvaCliente();
+                         await dadosCliente.salvaCliente();
                           Get.snackbar("Sucesso", "Cliente salvo com sucesso!");   
-                          formStore.resetForm();                                  
+                          clienteController.resetForm();                                  
                         } else {                                                  
                           log("nao salvou nem validou");
                           Get.snackbar("Erro", "Por favor, corrija os erros no formulário.");
                         }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                        padding: EdgeInsets.all(15),
-                        foregroundColor: Colors.black,
-                        textStyle: TextStyle(fontSize: 20),
-                      ),
-                      child: Text('SALVAR'),
+                      },                  
+                      label: Text('Salvar') ,                    
                     )
                   ],
                 ),

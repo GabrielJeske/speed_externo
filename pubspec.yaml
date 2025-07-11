@@ -36,9 +36,12 @@ dependencies:
   mobx: ^2.5.0
   flutter_mobx: ^2.3.0
   mask_text_input_formatter: ^2.0.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
   path_provider: ^2.1.5
   currency_text_input_formatter: ^2.2.9
   responsive_framework: ^1.1.1
+  crypto: ^3.0.3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -49,6 +52,8 @@ dev_dependencies:
     sdk: flutter
   build_runner: ^2.4.15
   mobx_codegen: ^2.7.0  
+  hive_generator: ^2.0.0
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

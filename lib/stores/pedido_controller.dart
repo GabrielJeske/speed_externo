@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:speed_externo/commom/objetos/pedido.dart';
-import 'package:speed_externo/stores/validate_store.dart';
+import 'package:speed_externo/funcoes/validate.dart';
 
 part 'pedido_controller.g.dart';
 
@@ -51,15 +51,20 @@ abstract class _PedidoStoreBase with Store{
       case 'codClie':
       pedido = pedido.copyWith(codClie: value) ;   
     }
-    Get.find<ValidateStore>().validateField(chave, value); 
+    Get.find<Validate>().validateField(chave, value); 
   }
 
 
     @action
   void validateAllFields(){ 
-    Get.find<ValidateStore>().validateAllFields;
+    Get.find<Validate>().validateAllFields;
   }
 
+  @action
+  void resetClie() {
+    controllerCliente.text = '';  
+  }
+  
   @action
   void resetForm() {
     controllerCliente.text = '';

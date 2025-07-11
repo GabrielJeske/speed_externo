@@ -1,24 +1,47 @@
 import 'dart:convert';
+import 'package:hive/hive.dart';
 
+part 'produto.g.dart';
+
+@HiveType(typeId: 1)
 class Produto {
+  @HiveField(0)
   String? nProd;
+  @HiveField(1)
   String? cod;
+  @HiveField(2)
   String? nome;
+  @HiveField(3)
   String? ncm;
+  @HiveField(4)
   String? unidade;
+  @HiveField(5)
   String? marca;
+  @HiveField(6)
   String? apresentacao;
+  @HiveField(7)
   String? grupo1;
+  @HiveField(8)
   String? grupo2;
+  @HiveField(9)
   String? grupo3;
+  @HiveField(10)
   String? cst;
+  @HiveField(11)
   String? custo;
+  @HiveField(12)
   String? fabrica;
+  @HiveField(13)
   String? venda;
+  @HiveField(14)
   String? estoqueatual;
+  @HiveField(15)
   String? estoqueparcial;
+  @HiveField(16)
   String? quantidade;
+  @HiveField(17)
   String? unitario;
+  @HiveField(18)
   String? total;
   
    Produto({

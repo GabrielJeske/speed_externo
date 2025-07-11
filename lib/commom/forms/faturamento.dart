@@ -89,6 +89,7 @@ class Faturamento extends StatelessWidget {
                                        faturamento.setField('formaPagamento', newValue);                                       
                                      }
                                    },
+                                   style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
                                  ),
             ),
           ],
@@ -103,7 +104,7 @@ class Faturamento extends StatelessWidget {
                                                     itemBuilder: (contextList, index) { 
                                                       final conta = faturamento.contas[index];
                                                       return Card(
-                                                        color: Colors.black,
+                                                       color: (int.tryParse(conta.id ?? '0') ?? 0) % 2 == 0? Theme.of(context).colorScheme.surface : Theme.of(context).colorScheme.surfaceContainerLowest, 
                                                         child: ListTile(                                
                                                             title: Column(
                                                               children: [

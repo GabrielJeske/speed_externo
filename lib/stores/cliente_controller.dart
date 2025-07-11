@@ -4,14 +4,14 @@ import 'package:get/get.dart';
 import 'package:mobx/mobx.dart';
 import 'package:speed_externo/commom/constantes/chaves.dart';
 import 'package:speed_externo/commom/objetos/cliente.dart';
-import 'package:speed_externo/stores/validate_store.dart';
+import 'package:speed_externo/funcoes/validate.dart';
 
 part 'cliente_controller.g.dart';
 
 
-class FormStore =_FormStoreBase with _$FormStore;
+class ClienteController =ClienteControllerBase with _$ClienteController;
 
-abstract class _FormStoreBase with Store{
+abstract class ClienteControllerBase with Store{
 
 
   TextEditingController controllerRazao = TextEditingController();
@@ -26,7 +26,10 @@ abstract class _FormStoreBase with Store{
   TextEditingController controllerNumeroContato = TextEditingController();
 
   @observable
-  Cliente cliente = Cliente();
+  Cliente cliente = Cliente(contribuinte: '9');
+
+  @observable
+  String contribuitePadrao = contribuinte9;
 
   @observable
   ObservableMap<String, String?> formErrors = ObservableMap.of({});
@@ -38,43 +41,53 @@ abstract class _FormStoreBase with Store{
  @action
   void setField(String chave, String value){
     switch (chave) {
-      case id:
-      cliente = cliente.copyWith(id: value) ;
-      case nome:
-      cliente = cliente.copyWith(nome: value) ;
       case razaosocial:
       cliente = cliente.copyWith(razaosocial: value) ;
+      break;
       case fantasia:
       cliente = cliente.copyWith(fantasia: value) ;
+      break;
       case cnpj:
       cliente = cliente.copyWith(cnpj: value) ;
+      break;
+      case cpf:
+      cliente = cliente.copyWith(cnpj: value) ;
+      break;
       case ie:
       cliente = cliente.copyWith(ie: value) ;
+      break;
       case endereco:
       cliente = cliente.copyWith(endereco: value) ;
-      cliente = cliente.copyWith(bairro: value) ;
+      break;
       case cep:
       cliente = cliente.copyWith(cep: value) ;
+      break;
       case email:
       cliente = cliente.copyWith(email: value) ;
+      break;
       case contato:
       cliente = cliente.copyWith(contato: value) ;
+      break;
       case numeroContato:
       cliente = cliente.copyWith(numeroContato: value) ;
+      break;
       case contribuinte:
       cliente = cliente.copyWith(contribuinte: value) ;
+      Get.find<Validate>().validateField(ie, cliente.ie ?? '');
+      break;
     }
-    Get.find<ValidateStore>().validateField(chave, value);
+    Get.find<Validate>().validateField(chave, value);
   }
 
     @action
-  void validateAllFields(String tipo) { // tipo pode ser 'pf' ou 'pj'
+  void validateAllFields() {
     log('Chamou ValidadeAll');
-    Get.find<ValidateStore>().validateAllFields(tipo);
+    Get.find<Validate>().validateAllFields();
   }
 
   @action
   void resetForm() {
+    contribuitePadrao = contribuinte9;
     controllerRazao.text = '';
     controllerFantasia.text = '';
     controllerCnpj.text = '';

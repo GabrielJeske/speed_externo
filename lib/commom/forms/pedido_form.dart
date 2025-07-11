@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:speed_externo/commom/forms/faturamento.dart';
 import 'package:speed_externo/commom/forms/produto_form.dart';
+import 'package:speed_externo/commom/widgets/custom_buttom.dart';
 import 'package:speed_externo/commom/widgets/custom_textField.dart';
 import 'package:speed_externo/stores/cliente_controller.dart';
 import 'package:speed_externo/stores/cliente_dados.dart';
@@ -25,8 +26,8 @@ class _PedidoFormState extends State<PedidoForm> {
 
   final pedidoStore = Get.find<PedidoStore>();
   final dadosStore = Get.find<DadosPedidoStore>();
-  final clienteStore = Get.find<FormStore>();
-  final dadosCliente = Get.find<DadosStore>();
+  final clienteStore = Get.find<ClienteController>();
+  final dadosCliente = Get.find<ClienteDados>();
   final produtoStore = Get.find<ProdutoFormStore>();
   final dadosProdutoStore = Get.find<DadosProdutoStore>();
   final faturamento = Get.find<FaturamentoController>();
@@ -103,7 +104,12 @@ class _PedidoFormState extends State<PedidoForm> {
                                     controller:  pedidoStore.controllerCliente,
                                     readOnly: dadosStore.edit,
                                     labelText: 'Cliente',
-                                    foco: foco,                                                              
+                                    foco: foco,                 
+                                    onTap:   () {
+                                    if (!dadosStore.edit) {
+                                      pedidoStore.resetClie();
+                                    }                                    
+                                    },                                    
                                     onChanged: (value) {                                                                                                                                                  
                                       dadosCliente.setFiltro(value);                                                                      
                                       dadosCliente.setListaCliente(foco.hasFocus);                                    
@@ -148,6 +154,7 @@ class _PedidoFormState extends State<PedidoForm> {
                                         pedidoStore.setField('tipo', newValue);                                       
                                       }
                                     },
+                                    style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
                                   ),
                                 ),
                               ),
@@ -168,13 +175,25 @@ class _PedidoFormState extends State<PedidoForm> {
                                                 itemBuilder: (contextList, index) { 
                                                   final produto = dadosStore.listaProdutos[index];
                                                   return Dismissible(                                
-                                                    background:  Container(color: Colors.red),
+                                                    background:  Container(
+                                                      color: Theme.of(context).colorScheme.errorContainer,
+                                                      child: Align(
+                                                        alignment: Alignment.centerRight,
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.only(right: 16.0),
+                                                          child: Icon(
+                                                            Icons.delete,
+                                                            color: Theme.of(context).colorScheme.onErrorContainer,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
                                                     key: ValueKey(dadosStore.listaProdutos[index]),     
                                                     onDismissed: (direction) {
                                                       dadosStore.removerProd(produto);
                                                     },        
                                                     child: Card(                                                     
-                                                      color: (int.tryParse(produto.nProd ?? '0') ?? 0) % 2 == 0? Colors.black12 : Colors.black38, 
+                                                      color: (int.tryParse(produto.nProd ?? '0') ?? 0) % 2 == 0? Theme.of(context).colorScheme.surface : Theme.of(context).colorScheme.surfaceContainerHigh, 
                                                       child: ListTile(                                
                                                           title: Column(
                                                             children: [
@@ -244,7 +263,7 @@ class _PedidoFormState extends State<PedidoForm> {
                   Observer( builder: (_) {
                     return pedidoStore.pedido.codClie != null
                     ? Card(child: 
-                     ElevatedButton(
+                     CustomButtom(
                           onPressed:                        
                           () => showDialog<String>(
                           context: context,
@@ -268,17 +287,17 @@ class _PedidoFormState extends State<PedidoForm> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                     ElevatedButton(
+                     CustomButtom(
                         onPressed: () => Navigator.pop(context),
-                        child: const Text('Cancelar'),
+                        label: Text('Cancelar'),
                       ),
-                      ElevatedButton(                  
+                      CustomButtom(                  
                         onPressed: () {                        
                           dadosStore.addProd(dadosProdutoStore.prodSele);
                           Navigator.pop(context);
                           dadosStore.setEdit(true);
                         },
-                        child: const Text('Salvar'),
+                        label: const Text('Salvar'),
                       ),
                                     ],
                                   )
@@ -288,15 +307,7 @@ class _PedidoFormState extends State<PedidoForm> {
                               
                                   }
                           ),
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)
-                            ),
-                            padding: EdgeInsets.all(5),
-                            foregroundColor: Colors.black,
-                            textStyle: TextStyle(fontSize: 20)
-                          ),
-                          child: Icon(Icons.add)
+                         label: Icon(Icons.add),
                         )  
                     ): SizedBox.shrink();
                   }),
@@ -375,7 +386,7 @@ class _PedidoFormState extends State<PedidoForm> {
       children: [                                                      
         Expanded(
           flex:4,
-          child: ElevatedButton(onPressed: () {
+          child: CustomButtom(onPressed: () {
           faturamento.total = dadosStore.totalPedido;
           faturamento.geraContas();
             showDialog<String>(
@@ -397,31 +408,31 @@ class _PedidoFormState extends State<PedidoForm> {
                           ),
                         ),
                       actions: [
-                        ElevatedButton(
+                        CustomButtom(
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: const Text('Cancelar'),
+                          label: const Text('Cancelar'),
                         ),
-                        ElevatedButton(
+                        CustomButtom(
                           onPressed: () {
                             faturamento.salvarFaturamento();
                             Navigator.of(context).pop();
                           },
-                          child: const Text('Confirmar'),
+                          label: const Text('Confirmar'),
                         ),
                       ],
                       ),
                     );
                   });
               },
-              child: Text('Faturamento'),
+              label: Text('Faturamento'),
           ),
         ),
         SizedBox(width: 10),
         Expanded(
           flex: 4,
-          child: ElevatedButton(
+          child: CustomButtom(
             onPressed: () {
              showDialog<String>(
                   context: context,
@@ -431,34 +442,31 @@ class _PedidoFormState extends State<PedidoForm> {
                          title: const Text('Finalizar Pedido'),
                          content: const Text('Tem certeza que deseja finalizar o pedido?'),
                          actions: <Widget>[
-                           ElevatedButton(
+                           CustomButtom(
                              onPressed: () {
                                log('Pedido cancelado');
                                Navigator.of(context).pop();
                              },
-                             child: const Text('Cancelar'),
+                             label: const Text('Cancelar'),
                            ),
-                           ElevatedButton(
+                           CustomButtom(
                              onPressed: () {
-                              dadosStore.salvaPedido();
-                               log('Pedido finalizado');
-                               print(pedidoStore.pedido.toJson());
+                              dadosStore.salvaPedido();                            
                                Navigator.of(context).pop();
                              },
-                             child: const Text('Confirmar'),
+                             label: const Text('Confirmar'),
                            ),
                          ],
                        );
                   
                   });
               },
-              child: Text('Finalizar Pedido'),
+              label: Text('Finalizar Pedido'),
           ),
         ),
       ],
     );
     } else {
-      // Se não for 'A Vista' nem 'A Prazo', retorna SizedBox.shrink()
       return SizedBox.shrink();
     }
 }),
@@ -473,8 +481,8 @@ class _PedidoFormState extends State<PedidoForm> {
                               if ( dadosCliente.exibeListaCliente && dadosStore.listaProdutos.isEmpty) {
                                 return Positioned(
                                    top: screenSize.height * 0.1,
-                                   left: screenSize.width * 0.01,
-                                   right: screenSize.height *0.2 ,
+                                   left: screenSize.width * 0.0,
+                                   right: screenSize.height *0.0 ,
                                   child: Card(                                    
                                     child: Container(
                                       constraints: BoxConstraints(maxHeight: screenSize.height *0.2),
@@ -483,16 +491,41 @@ class _PedidoFormState extends State<PedidoForm> {
                                         itemCount: dadosCliente.listaFiltrada.length,
                                         itemBuilder: (contextList, index) { 
                                           final cliente = dadosCliente.listaFiltrada[index];
-                                          return ListTile(                          
-                                            title: Text(cliente.razaosocial ?? ''),
+                                          return 
+                                          ListTile(                          
+                                          contentPadding: EdgeInsets.all(0),
+                                            title: Row(
+                                              children: [
+                                                SizedBox(width: 10),
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: Text(cliente.razaosocial ?? '', style: TextStyle(fontSize: 12),),
+                                                ),                                             
+                                              SizedBox(width: 10),
+                                              SizedBox(
+                                                height: 25,
+                                                child: VerticalDivider(
+                                                  color: Theme.of(context).colorScheme.outline, // Cor da sua linha (como você já estava a usar)
+                                                  thickness: 2,        // Espessura da sua linha
+                                                  indent: 0,           // Remove qualquer espaçamento em cima
+                                                  endIndent: 0,        // Remove qualquer espaçamento em baixo
+                                                  width: 10,           // Largura que o divisor ocupa na Row (ajuste se precisar de mais espaço lateral)
+                                                ),
+                                              ),
+                                              SizedBox(width: 10),
+                                              Expanded(
+                                                flex: 2,
+                                                child: Text(cliente.fantasia ?? '', style: TextStyle(fontSize: 12),),
+                                              ),
+                                              ],
+                                            ),
                                             onTap: () {                                                                      
                                               log('chegou aqui 1 ');
-                                              dadosCliente.selecionarCliente(cliente, 'pf');                              
+                                              dadosCliente.selecionarCliente(cliente);                              
                                               dadosCliente.setListaCliente(false);  
                                               pedidoStore.setField('cliente', cliente.toString());  
                                               pedidoStore.setField('nome', cliente.razaosocial.toString());  
-                                              pedidoStore.setField('codClie', cliente.id.toString());                                                 
-                                             // dadosStore.addClie(cliente);                                                                                                                  
+                                              pedidoStore.setField('codClie', cliente.id.toString());                                                                                                                                                                                                             
                                               foco.unfocus();                                          
                                             },
                                           );

@@ -5,6 +5,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:speed_externo/commom/constantes/chaves.dart';
+import 'package:speed_externo/commom/widgets/custom_buttom.dart';
 import 'package:speed_externo/commom/widgets/custom_textField.dart';
 import 'package:speed_externo/stores/produto_controller.dart';
 import 'package:speed_externo/stores/produto_dados.dart';
@@ -93,6 +94,9 @@ class _ProdutoFormState extends State<ProdutoForm> {
                       controller:  produtoStore.controllerNomeProd,
                       labelText: 'Nome',
                       foco: foco,
+                      onTap: () {
+                        produtoStore .resetForm();
+                      },
                       onChanged: (value) {
                         log('Vai setar o filtro');
                         dadosProdutoStore.setFiltroProd(value);
@@ -339,39 +343,25 @@ class _ProdutoFormState extends State<ProdutoForm> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
+                    CustomButtom(
                       onPressed: produtoStore.resetForm,
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                        padding: EdgeInsets.all(15),
-                        foregroundColor: Colors.black,
-                        textStyle: TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                      child: Text('CANCELAR'),
+                      label: Text('Cancelar'),
                     ),
                     SizedBox(width: 10),
-                    ElevatedButton(
+                    CustomButtom(
                       onPressed: () async {
                         produtoStore.validateAllFields('pf');
                         if (produtoStore.isFormValid) {
                           log("validou");
-                          await dadosProdutoStore.salvaProduto();
+                          //await dadosProdutoStore.salvaProduto();
                           Get.snackbar("Sucesso", "Produto salvo com sucesso!");   
                           produtoStore.resetForm();                                  
                         } else {                                                  
                           log("nao salvou nem validou");
                           Get.snackbar("Erro", "Por favor, corrija os erros no formulário.");
                         }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                        padding: EdgeInsets.all(15),
-                        foregroundColor: Colors.black,
-                        textStyle: TextStyle(fontSize: 20),
-                      ),
-                      child: Text('SALVAR'),
+                      },                      
+                      label: Text('Salvar'),
                     )
                   ],
                 ),

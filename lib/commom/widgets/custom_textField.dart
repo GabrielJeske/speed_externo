@@ -10,8 +10,7 @@ class CustomFormField extends StatelessWidget {
   final bool readOnly;
   final void Function(String)? onChanged;
   final bool isConsulta;
-  final void Function(String)? onFieldSubmitted;
-  final void Function()? onEditingComplete;
+  final void Function()? onTap;
   FocusNode? foco;
   String? prefixText;
 
@@ -26,8 +25,7 @@ class CustomFormField extends StatelessWidget {
     this.onChanged,
     this.isConsulta = false,
     this.mask,
-    this.onFieldSubmitted,
-    this.onEditingComplete,
+    this.onTap,
     this.foco,
     this.prefixText,
   }) : super(key: key);
@@ -53,8 +51,7 @@ class CustomFormField extends StatelessWidget {
       validator: validator,
       readOnly: readOnly,
       onChanged: onChanged,
-      onFieldSubmitted: onFieldSubmitted,
-      onEditingComplete: onEditingComplete,
+      onTap: onTap,
       focusNode: foco,
       style: const TextStyle(
         fontSize: 16

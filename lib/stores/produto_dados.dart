@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
+import 'package:crypto/crypto.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import 'package:http/http.dart' as http;
 import 'package:mobx/mobx.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:speed_externo/commom/objetos/produto.dart';
 import 'package:speed_externo/stores/produto_controller.dart';
 
@@ -29,6 +30,8 @@ abstract class _DadosProdutoStoreBase with Store{
 
   @observable
   Produto prodSele = Produto(); 
+
+  final Box<Produto> produtosBox = Hive.box<Produto>('Produtos');
 
   @action
   void setProduto(Produto prod){
@@ -88,88 +91,56 @@ void selecionarProd(Produto produtoSelecionado) {
 }
 
 
-@action
-  Future obtemProdutos () async{
-    Produto produtoJson = Produto();
-    try{
-      final fProduto = await obtemFileProd();
-      log('Obteve o arquivo de produtos $fProduto');
-      String contJson = await fProduto.readAsString();
-      log('Obteve o conteudo do arquivo de produtos $contJson');    
-      List<Produto> produtos = produtoJson.obtemProdutos(contJson);
-      log('Criou a lista de produtos $produtos');
-      listaProdutos = ObservableList<Produto>.of(produtos);
-      log('Obteve os Produtos $listaProdutos');
-    }catch (e){
-      log('Erro ao obter os Produtos');
-      rethrow;
-    }
-  }
-
-  Future<File> obtemFileProd() async{
+ @action
+  Future<void> obtemProdutos() async {
     try {
-      Directory dir = await getApplicationDocumentsDirectory();              
-        String path =  dir.path;        
-        File f = File('$path/produto10.json');        
-        bool fExiste = await f.exists();        
-        if (fExiste){
-          return f;
-        }else {
-          List<Produto> mapProds = [];
-          final jProdutos = jsonEncode(mapProds);
-          await f.writeAsString(jProdutos);
-          return f;
-        }
+      await atualizaProdutos();
+      final produtos = produtosBox.values.toList();
+      listaProdutos = ObservableList<Produto>.of(produtos);      
     } catch (e) {
-      log('erro ao obter Arquivo de produtos $e');
+      log('Erro ao obter os clientes do Hive: $e');
       rethrow;
-    }      
+    }
   }
 
-  Future<int> obtemCod() async{
-    Produto produtoJson = Produto();
-    try {      
-      File json = await obtemFileProd();
-      String contJson = await json.readAsString();
-      if (contJson != '[]' ){
-        List<Produto> listaDeProds = produtoJson.obtemProdutos(contJson);        
-        int codigo = 0;
-        for (Produto produto in listaDeProds){  
-          int a = int.parse(produto.cod ?? '0');                 
-          if ( a > codigo){
-              codigo = a;
-          }
-        }
-        codigo++;
-        return codigo;
+
+  String geraMd5(String texto) {
+    var bytes = utf8.encode(texto);
+    var digest = md5.convert(bytes);
+    return digest.toString();
+  }
+  
+  Future<void> atualizaProdutos() async {
+      var url = Uri.parse('https://1587bcd2-f1c9-4bd7-b4fa-10940fdf1042.mock.pstmn.io/cliente');
+    try {
+//      listaClientes = ObservableList<Cliente> ();
+      List<Produto> produtosLocais = produtosBox.values.toList();
+      String corpoJson = jsonEncode(produtosLocais.map((produto) => produto.toJson()).toList()); 
+      String md5 = geraMd5(corpoJson);
+
+      //var resposta = await http.post(url, headers: {'Content-Type': 'application/json; charset=UTF-8'}, body: md5);
+      var resposta = await http.get(url);
+
+      if (resposta.statusCode == 200){ 
+        log('json ${resposta.body}');
+        List<dynamic> listaRecebida = jsonDecode(resposta.body);
+
+        List<Produto> produtosAtualizaodos =  listaRecebida.map((json) => Produto.fromJson(json as Map<String, dynamic>)).toList();
+
+        await produtosBox.clear();      
+        await produtosBox.putAll(Map.fromEntries(produtosAtualizaodos.map((produto) => MapEntry(produto.cod, produto))));  
+
+      }else if (resposta.statusCode == 404) {
+        log('Lista já atualizada');
       }else {
-        return 1;
+        log('Falha na requisição: ${resposta.statusCode}');
+        log('Resposta do servidor: ${resposta.body}');
       }
-    }catch (e) {
-      log('Erro ao obter o id $e');
-      rethrow;
-    }
-        
-  }
-
-  salvaProduto() async{    
-    final produtoForm = Get.find<ProdutoFormStore>();
-    try{
-      int cod = await obtemCod();
-      final fProd = await obtemFileProd();
-      String contJson = await fProd.readAsString();           
-      List<Produto> produtos = produtoForm.prod.obtemProdutos(contJson);    
-      produtoForm.prod.cod='$cod';
-      produtos.add(produtoForm.prod);
-      final jProdutos = jsonEncode(produtos);
-      await fProd.writeAsString(jProdutos);  
-      log('Salvou porraa $produtos');
-    }catch (e){
-      log('Erro ao salvar o produto $e');
+    } catch (e) {
+      log('Erro ao obter os produtos do Hive: $e');
       rethrow;
     }
   }
-
 
 }
 

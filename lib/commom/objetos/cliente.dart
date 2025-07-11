@@ -1,15 +1,31 @@
 
+import 'package:hive/hive.dart';
+
+part 'cliente.g.dart';
+
+@HiveType(typeId: 0)
 class Cliente {
+  @HiveField(0)
   String? id;
+  @HiveField(1)
   String? razaosocial;
+  @HiveField(2)
   String? cnpj;
+  @HiveField(3)
   String? fantasia;  
+  @HiveField(4)
   String? ie;
+  @HiveField(5)
   String? endereco;
+  @HiveField(6)
   String? cep;
+  @HiveField(7)
   String? email;
+  @HiveField(8)
   String? contato;
+  @HiveField(9)
   String? numeroContato;
+  @HiveField(10)
   String? contribuinte;
   Cliente({
      this.id,

@@ -8,17 +8,17 @@ part of 'cliente_controller.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$FormStore on _FormStoreBase, Store {
+mixin _$ClienteController on ClienteControllerBase, Store {
   Computed<bool>? _$isFormValidComputed;
 
   @override
   bool get isFormValid =>
       (_$isFormValidComputed ??= Computed<bool>(() => super.isFormValid,
-              name: '_FormStoreBase.isFormValid'))
+              name: 'ClienteControllerBase.isFormValid'))
           .value;
 
   late final _$clienteAtom =
-      Atom(name: '_FormStoreBase.cliente', context: context);
+      Atom(name: 'ClienteControllerBase.cliente', context: context);
 
   @override
   Cliente get cliente {
@@ -33,8 +33,24 @@ mixin _$FormStore on _FormStoreBase, Store {
     });
   }
 
+  late final _$contribuitePadraoAtom =
+      Atom(name: 'ClienteControllerBase.contribuitePadrao', context: context);
+
+  @override
+  String get contribuitePadrao {
+    _$contribuitePadraoAtom.reportRead();
+    return super.contribuitePadrao;
+  }
+
+  @override
+  set contribuitePadrao(String value) {
+    _$contribuitePadraoAtom.reportWrite(value, super.contribuitePadrao, () {
+      super.contribuitePadrao = value;
+    });
+  }
+
   late final _$formErrorsAtom =
-      Atom(name: '_FormStoreBase.formErrors', context: context);
+      Atom(name: 'ClienteControllerBase.formErrors', context: context);
 
   @override
   ObservableMap<String, String?> get formErrors {
@@ -49,39 +65,39 @@ mixin _$FormStore on _FormStoreBase, Store {
     });
   }
 
-  late final _$_FormStoreBaseActionController =
-      ActionController(name: '_FormStoreBase', context: context);
+  late final _$ClienteControllerBaseActionController =
+      ActionController(name: 'ClienteControllerBase', context: context);
 
   @override
   void setField(String chave, String value) {
-    final _$actionInfo = _$_FormStoreBaseActionController.startAction(
-        name: '_FormStoreBase.setField');
+    final _$actionInfo = _$ClienteControllerBaseActionController.startAction(
+        name: 'ClienteControllerBase.setField');
     try {
       return super.setField(chave, value);
     } finally {
-      _$_FormStoreBaseActionController.endAction(_$actionInfo);
+      _$ClienteControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  void validateAllFields(String tipo) {
-    final _$actionInfo = _$_FormStoreBaseActionController.startAction(
-        name: '_FormStoreBase.validateAllFields');
+  void validateAllFields() {
+    final _$actionInfo = _$ClienteControllerBaseActionController.startAction(
+        name: 'ClienteControllerBase.validateAllFields');
     try {
-      return super.validateAllFields(tipo);
+      return super.validateAllFields();
     } finally {
-      _$_FormStoreBaseActionController.endAction(_$actionInfo);
+      _$ClienteControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void resetForm() {
-    final _$actionInfo = _$_FormStoreBaseActionController.startAction(
-        name: '_FormStoreBase.resetForm');
+    final _$actionInfo = _$ClienteControllerBaseActionController.startAction(
+        name: 'ClienteControllerBase.resetForm');
     try {
       return super.resetForm();
     } finally {
-      _$_FormStoreBaseActionController.endAction(_$actionInfo);
+      _$ClienteControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
@@ -89,6 +105,7 @@ mixin _$FormStore on _FormStoreBase, Store {
   String toString() {
     return '''
 cliente: ${cliente},
+contribuitePadrao: ${contribuitePadrao},
 formErrors: ${formErrors},
 isFormValid: ${isFormValid}
     ''';

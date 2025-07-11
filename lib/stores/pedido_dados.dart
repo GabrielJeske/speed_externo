@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import 'package:http/http.dart' as http;
 import 'package:mobx/mobx.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:speed_externo/commom/objetos/pedido.dart';
 import 'package:speed_externo/commom/objetos/produto.dart';
 import 'package:speed_externo/stores/faturamento_controller.dart';
@@ -39,6 +40,8 @@ abstract class _DadosPedidoStoreBase with Store{
 
   @observable
   int _itemCounter = 0;
+
+  final Box<Pedido> pedidosBox = Hive.box<Pedido>('Pedidos');
 
 
   @observable
@@ -185,7 +188,7 @@ void addProd(Produto prod) {
     
   }
 
-    @action
+  @action
   void removerProd(Produto produto) {
     
     final controllerQtd = controllersQtd[produto.nProd];
@@ -203,102 +206,89 @@ void addProd(Produto prod) {
     calculaTotalPedido();
   }
 
- 
-
-
-  Future<File> obtemFilePedido() async{
-    try {
-      Directory dir = await getApplicationDocumentsDirectory();              
-        String path =  dir.path;        
-        File f = File('$path/pedidos01.json');        
-        bool fExiste = await f.exists();        
-        if (fExiste){
-          return f;
-        }else {
-          List<Pedido> mapPedidos = [];
-          final jClientes = jsonEncode(mapPedidos);
-          await f.writeAsString(jClientes);
-          return f;
-        }
-    } catch (e) {
-      log('erro ao obter Arquivo de pedidos $e');
-      rethrow;
-    }      
-  }
-
-  Future<int> obtemCodPedido() async{
-    Pedido pedidoJson = Pedido(listProd: []);
-    try {      
-      File json = await obtemFilePedido();
-      String contJson = await json.readAsString();
-      if (contJson != '[]' ){
-        List<Pedido> listaDePedidos = pedidoJson.obtemPedidos(contJson);
-        int id = 0;        
-        for (Pedido pedido in listaDePedidos){          
-          int a = int.parse(pedido.cod ?? '0' );
-            if (a > id){
-              id = a;          
-            }            
-        }        
-        id++;
-        return id;
-      }else {
-        return 1;
-      }
-    }catch (e) {
-      log('Erro ao obter o id $e');
-      rethrow;
-    }        
-  }
-
-  salvaPedido() async{
-    Pedido pedido = Pedido(listProd: []);
-    final fatur = Get.find<FaturamentoController>();
-    final pedidoController = Get.find<PedidoStore>();
-    try{      
-      String date = "${DateTime.now().day.toString().padLeft(2, '0')}/"
-                    "${DateTime.now().month.toString().padLeft(2, '0')}/"
-                    "${DateTime.now().year}";                
-      int id = await obtemCodPedido();
-      
-      final fPedidos = await obtemFilePedido();
-      
-      String contJson = await fPedidos.readAsString();
-   
-      List<Pedido> pedidos = pedido.obtemPedidos(contJson);
-    
-      pedido = pedido.copyWith(
-        faturamento: fatur.faturamento,
-        listProd: listaProdutos,
-        cod: id.toString(),
-        data: date,
-        tipo: pedidoController.pedido.tipo,
-        codClie: pedidoController.pedido.codClie,
-        status: 'pendente',
-      );
-      
-      pedidos.add(pedido);
-      final jPedido = jsonEncode(pedidos);
-      await fPedidos.writeAsString(jPedido);  
-      log('Salvou porraa $jPedido');
-    }catch (e){
-      throw 'Erro ao salvar o pedido $e';
-    }
-  }
-
- 
-  @action
+   @action
     Future obtemPedidos () async{
-      Pedido pedido = Pedido(listProd: []);
       try{
-        final fPedido = await obtemFilePedido();    
-        String contJson = await fPedido.readAsString();
-        List<Pedido> pedidos = pedido.obtemPedidos(contJson);
+        await atualizaPedidos();
+        final pedidos = pedidosBox.values.toList();
         listaDePedidos = ObservableList<Pedido>.of(pedidos);
       }catch (e){
         log('Erro ao obter os Produtos');
         rethrow;
       }
   }  
+
+  salvaPedido() async{
+    Pedido pedido = Pedido(listProd: []);
+    final fatur = Get.find<FaturamentoController>();
+    final pedidoController = Get.find<PedidoStore>();
+    var url = Uri.parse('https://1587bcd2-f1c9-4bd7-b4fa-10940fdf1042.mock.pstmn.io/clientes');
+    try{      
+      String date = "${DateTime.now().day.toString().padLeft(2, '0')}/"
+                    "${DateTime.now().month.toString().padLeft(2, '0')}/"
+                    "${DateTime.now().year}";                
+    
+      pedido = pedido.copyWith(
+        faturamento: fatur.faturamento,
+        listProd: listaProdutos,
+        data: date,
+        tipo: pedidoController.pedido.tipo,
+        codClie: pedidoController.pedido.codClie,
+        status: 'pendente',
+      );
+
+      String ped = jsonEncode(pedido.toJson());
+
+      //var resposta = await http.post(url, body: ped);
+      var resposta = await http.post(url);
+      log('code ${resposta.statusCode}');
+
+      if (resposta.statusCode == 404){
+        log('Pedido enviado');
+      }else {
+        log('Pedido nao enviado');
+      }
+
+    }catch (e){
+      throw 'Erro ao salvar o pedido $e';
+    }
+  }
+
+  String geraMd5(String texto) {
+    var bytes = utf8.encode(texto);
+    var digest = md5.convert(bytes);
+    return digest.toString();
+  }
+  
+  Future<void> atualizaPedidos() async {
+      var url = Uri.parse('https://1587bcd2-f1c9-4bd7-b4fa-10940fdf1042.mock.pstmn.io/pedidos');
+    try {
+//      listaClientes = ObservableList<Cliente> ();
+      List<Pedido> clientesLocais = pedidosBox.values.toList();
+      String corpoJson = jsonEncode(clientesLocais.map((cliente) => cliente.toJson()).toList()); 
+      String md5 = geraMd5(corpoJson);
+
+      //var resposta = await http.post(url, headers: {'Content-Type': 'application/json; charset=UTF-8'}, body: md5);
+      var resposta = await http.get(url);
+
+      if (resposta.statusCode == 200){
+        List<dynamic> listaRecebida = jsonDecode(resposta.body);
+
+        List<Pedido> pedidosAtualizados = listaRecebida.map((json) => Pedido.fromJson(json as Map<String, dynamic>)).toList();
+
+        await pedidosBox.clear();      
+        await pedidosBox.putAll(Map.fromEntries(pedidosAtualizados.map((pedido) => MapEntry(pedido.cod, pedido))));  
+
+      }else if (resposta.statusCode == 404) {
+        log('Lista já atualizada');
+      }else {
+        log('Falha na requisição: ${resposta.statusCode}');
+        log('Resposta do servidor: ${resposta.body}');
+      }
+    } catch (e) {
+      log('Erro ao obter os pedidos do Hive: $e');
+      rethrow;
+    }
+  }
   
 }

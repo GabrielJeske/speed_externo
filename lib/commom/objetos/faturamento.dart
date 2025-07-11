@@ -1,8 +1,13 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:hive/hive.dart';
 import 'package:speed_externo/commom/objetos/conta.dart';
 
+part 'faturamento.g.dart';
+
+@HiveType(typeId: 3)
 class Faturamento {
+  @HiveField(0)
   int? parcelas;
+  @HiveField(2)
   List<Conta> contas;
 
   Faturamento({

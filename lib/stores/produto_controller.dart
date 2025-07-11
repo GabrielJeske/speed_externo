@@ -5,7 +5,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:mobx/mobx.dart';
 import 'package:speed_externo/commom/constantes/chaves.dart';
 import 'package:speed_externo/commom/objetos/produto.dart';
-import 'package:speed_externo/stores/validate_store.dart';
+import 'package:speed_externo/funcoes/validate.dart';
 
 part 'produto_controller.g.dart';
 
@@ -84,13 +84,13 @@ abstract class _ProdutoFormStoreBase with Store{
       prod = prod.copyWith(total: value) ;
 
     }
-    Get.find<ValidateStore>().validateField(chave, value);
+    Get.find<Validate>().validateField(chave, value);
   }
 
     @action
   void validateAllFields(String tipo) {
     log('Chamou ValidadeAll');
-    Get.find<ValidateStore>().validateAllFields(tipo);
+    Get.find<Validate>().validateAllFields();
   }
 
   @action

@@ -1,15 +1,25 @@
 import 'dart:convert';
 import 'package:speed_externo/commom/objetos/faturamento.dart';
 import 'package:speed_externo/commom/objetos/produto.dart';
+import 'package:hive/hive.dart';
 
+part 'pedido.g.dart';
 
+@HiveType(typeId: 2)
 class Pedido {
+  @HiveField(0)
   String? cod;
+  @HiveField(1)
   String? codClie;
+  @HiveField(2)
   List<Produto>? listProd;
+  @HiveField(3)
   String? data;
+  @HiveField(4)
   String? tipo;
+  @HiveField(5)
   Faturamento? faturamento;
+  @HiveField(6)
   String? status;
   
   Pedido({

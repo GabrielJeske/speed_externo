@@ -1,8 +1,16 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:hive/hive.dart';
+
+part 'conta.g.dart';
+
+@HiveType(typeId: 4)
 class Conta {
+  @HiveField(0)
   String? id;
+  @HiveField(1)
   double? valor;
+  @HiveField(2)
   DateTime? vencimento;
+  @HiveField(3)
   String? formaPagamento;
 
   Conta({

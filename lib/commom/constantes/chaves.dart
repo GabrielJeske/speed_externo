@@ -3,13 +3,19 @@ const String id = 'id';
 const  String razaosocial = 'razaosocial';
 const String fantasia = 'fantasia';
 const  String cnpj = 'cnpj';
+const  String cpf = 'cpf';
 const  String ie = 'ie';
 const String endereco = 'endereco';
+const String bairro = 'bairro';
 const  String cep = 'cep';
 const  String email = 'email';
 const  String contato = 'contato';
 const  String numeroContato = 'numeroContato';
 const  String contribuinte = 'contribuinte';
+const String contribuinte1 = '1-Contribuinte';
+const String contribuinte2 = '2-Isento';
+const String contribuinte9 = '9-Não Contribuinte';
+
 
 
 const String cod = 'cod';

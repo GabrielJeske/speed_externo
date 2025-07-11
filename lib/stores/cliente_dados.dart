@@ -1,20 +1,22 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:mobx/mobx.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:speed_externo/commom/constantes/chaves.dart';
 import 'package:speed_externo/commom/objetos/cliente.dart';
-import 'package:speed_externo/stores/cliente_controller.dart';
-import 'package:http/http.dart' as http; 
+import 'package:http/http.dart' as http;
+import 'package:speed_externo/stores/cliente_controller.dart'; 
+import 'package:crypto/crypto.dart';
 part 'cliente_dados.g.dart';  
 
 
-class DadosStore =_DadosStoreBase with _$DadosStore;
+class ClienteDados = ClienteDadosBase with _$ClienteDados;
 
-abstract class _DadosStoreBase with Store{
+abstract class ClienteDadosBase with Store{
 
-  
+  @observable
+  bool exibeListaCliente = false;
 
   @observable
   ObservableList<Cliente> listaClientes = ObservableList<Cliente> ();
@@ -25,20 +27,11 @@ abstract class _DadosStoreBase with Store{
   @observable
   Cliente clienSele = Cliente(); 
 
+  final Box<Cliente> clientesBox = Hive.box<Cliente>('Clientes');
 
   @action
-  Future obtemClientes () async{
-    try{
-      String jsonResp = await obtemJsonClientes();
-
-       List<Cliente> clientes = obtemCliente(jsonResp); // Passe a string JSON original ou a lista decodificada, dependendo da sua implementação de Cliente.obtemClientes
-
-        listaClientes = ObservableList<Cliente>.of(clientes);
-
-    }catch (e){
-      log('Erro ao obter os clientes');       
-      rethrow;
-    }
+  void setListaCliente(bool value) {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+    exibeListaCliente = value;
   }
 
   @action
@@ -52,152 +45,110 @@ abstract class _DadosStoreBase with Store{
   }
 
   @computed
-List<Cliente> get listaFiltrada {
-  if (filtro.isEmpty) {
-    // Se não há filtro, retorna todos os clientes.
-    // Retornar listaClientes.toList() cria uma nova lista, o que é seguro.
-    return listaClientes.toList();
-  } else {
-
-    return listaClientes.where((cliente) {
-  
-      final String razaoSocialCliente = cliente.razaosocial?.toString().toLowerCase() ?? '';
-
-      // Obtém e normaliza o nome fantasia (para PJ)
-      final String fantasiaCliente = cliente.fantasia?.toString().toLowerCase() ?? '';
-
-      // Verifica se o filtroLower está contido em qualquer um dos campos
-      bool filtrado = razaoSocialCliente.contains(filtro.toLowerCase()) ||
-                      fantasiaCliente.contains(filtro.toLowerCase());
-
+  List<Cliente> get listaFiltrada {
+    if (filtro.isEmpty) {
+      return listaClientes.toList();
+    } else {
+      return listaClientes.where((cliente) {
+      String razaoSocialCliente = cliente.razaosocial?.toString().toLowerCase() ?? '';
+      String fantasiaCliente = cliente.fantasia?.toString().toLowerCase() ?? '';
+      bool filtrado = razaoSocialCliente.contains(filtro.toLowerCase()) || fantasiaCliente.contains(filtro.toLowerCase());
       return filtrado;
     }).toList();
   }
 }
 
-  @observable
-bool exibeListaCliente = false;
+  void selecionarCliente(Cliente clienteSelecionado) {    
+    final formStore = Get.find<ClienteController>();
 
-@action
-void setListaCliente(bool value) {
-  exibeListaCliente = value;
-}
-
-@action
-void selecionarCliente(Cliente clienteSelecionado, String tipo) {
-  
-  final formStore = Get.find<FormStore>();
-
-  clienSele = clienteSelecionado;
-  log('Cliente Selecionado $clienSele e $clienteSelecionado');
-
-  formStore.resetForm();
+    clienSele = clienteSelecionado;
+    formStore.resetForm();
 
     formStore.controllerRazao.text = clienteSelecionado.razaosocial.toString();
     formStore.controllerFantasia.text = clienteSelecionado.fantasia.toString();
     formStore.controllerCnpj.text = clienteSelecionado.cnpj.toString();
-  formStore.controllerIe.text = clienteSelecionado.ie.toString();
-  formStore.controllerEndereco.text = clienteSelecionado.endereco.toString();
-  formStore.controllerCep.text = clienteSelecionado.cep.toString();
-  formStore.controllerEmail.text = clienteSelecionado.email.toString();
-  formStore.controllerContato.text = clienteSelecionado.contato.toString();
-} 
+    formStore.controllerIe.text = clienteSelecionado.ie.toString();
+    formStore.controllerEndereco.text = clienteSelecionado.endereco.toString();
+    formStore.controllerCep.text = clienteSelecionado.cep.toString();
+    formStore.controllerEmail.text = clienteSelecionado.email.toString();
+    formStore.controllerContato.text = clienteSelecionado.contato.toString();
+    if (clienteSelecionado.contribuinte == '1'){
+      formStore.contribuitePadrao = contribuinte1; 
+    }else if (clienteSelecionado.contribuinte == '2'){
+      formStore.contribuitePadrao = contribuinte2; 
+    }else if (clienteSelecionado.contribuinte == '9'){
+      formStore.contribuitePadrao = contribuinte9; 
+    }  
+  } 
 
-  List<Cliente> obtemCliente(String jsonString){    
-    List<dynamic> listaGenerica= jsonDecode(jsonString);
-    List<Cliente> clientes = [];
-    for (Map<String, dynamic> a in listaGenerica) {   
-      Cliente cliente = Cliente.fromJson(a);
-      clientes.add(cliente);
-    }
-     return clientes; 
-    }
-    
-   Future<String> obtemJsonClientes() async{
-
-    Uri urlClientes = Uri.parse("https://1587bcd2-f1c9-4bd7-b4fa-10940fdf1042.mock.pstmn.io/name");
-
+  @action
+  Future<void> obtemClientes() async {
     try {
-      log('Obtendo pedidos de $urlClientes ${DateTime.now().toIso8601String()}');
-      http.Response  resp = await http.get(urlClientes);
-      log('Resposta obtida ${DateTime.now().toIso8601String()}');
-      if (resp.statusCode == 200) {
-        return resp.body;
-      } else {
-        throw Exception('Falha ao obter pedidos');
-      }
+      await atualizaClientes();
+      final clientes = clientesBox.values.toList();
+      listaClientes = ObservableList<Cliente>.of(clientes);
+      log('Clientes carregados do Hive: ${listaClientes.first.id}');
     } catch (e) {
-      log('erro ao obter Arquivo de pedidos $e');
+      log('Erro ao obter os clientes do Hive: $e');
       rethrow;
-    }      
+    }
   }
 
-  Future<File> obtemFileClie() async{
+  Future<void> salvaCliente() async {
+    final dadosCliente = Get.find<ClienteController>();
+     var url = Uri.parse('https://1587bcd2-f1c9-4bd7-b4fa-10940fdf1042.mock.pstmn.io/cliente');
     try {
-      Directory dir = await getApplicationDocumentsDirectory();              
-        String path =  dir.path;        
-        File f = File('$path/clientes.json');        
-        bool fExiste = await f.exists();        
-        if (fExiste){
-          return f;
-        }else {
-          List<Cliente> mapClientes = [];
-          final jClientes = jsonEncode(mapClientes);
-          await f.writeAsString(jClientes);
-          return f;
-        }
-    } catch (e) {
-      log('erro ao obter Arquivo de clientes $e');
-      rethrow;
-    }      
-  }
+      String cliente = jsonEncode(dadosCliente.cliente.toJson());
+      
+      var resposta = await http.post(url, body: 'a');
 
-  Future<int> obtemId() async{
-    try {      
-      File json = await obtemFileClie();
-      String contJson = await json.readAsString();
-      if (contJson != '[]' ){
-        List<Cliente> listaDeClientes = obtemCliente(contJson);
-        int id = 0;        
-        for (Cliente cliente in listaDeClientes){          
-          int a = int.parse(cliente.id ?? '0' );
-            if (a > id){
-              id = a;          
-            }            
-        }        
-        id++;
-        return id;
+      if (resposta.statusCode == 200){
+        log('Cliente enviado');
       }else {
-        return 1;
+        log('cliente nao enviado');
       }
-    }catch (e) {
-      log('Erro ao obter o id $e');
+    } catch (e) {
+      log('Erro ao salvar o cliente no : $e');
       rethrow;
-    }        
-  }
-
-  salvaCliente() async{
-    final formStore = Get.find<FormStore>();
-    try{
-      int id = await obtemId();
-      log('Obteve o id $id');
-      final fCliente = await obtemFileClie();
-      log('Obteve o arquivo de clientes $fCliente');
-      String contJson = await fCliente.readAsString();           
-      log('Obsete o conteudo do arquiv $contJson');
-      List<Cliente> clientes = obtemCliente(contJson);
-      log('Criou a lista de cliente $clientes');
-      formStore.cliente.id=id.toString();
-      log('Atribui o id ');
-      clientes.add(formStore.cliente);
-      final jClientes = jsonEncode(clientes);
-      await fCliente.writeAsString(jClientes);  
-      log('Salvou porraa $clientes');
-    }catch (e){
-      throw 'Erro ao salvar o cliente $e';
     }
   }
 
+  String geraMd5(String texto) {
+    var bytes = utf8.encode(texto);
+    var digest = md5.convert(bytes);
+    return digest.toString();
+  }
+  
+  Future<void> atualizaClientes() async {
+      var url = Uri.parse('https://1587bcd2-f1c9-4bd7-b4fa-10940fdf1042.mock.pstmn.io/name');
+    try {
+//      listaClientes = ObservableList<Cliente> ();
+      List<Cliente> clientesLocais = clientesBox.values.toList();
+      String corpoJson = jsonEncode(clientesLocais.map((cliente) => cliente.toJson()).toList()); 
+      String md5 = geraMd5(corpoJson);
+
+      //var resposta = await http.post(url, headers: {'Content-Type': 'application/json; charset=UTF-8'}, body: md5);
+      var resposta = await http.get(url);
+
+      if (resposta.statusCode == 200){
+        List<dynamic> listaRecebida = jsonDecode(resposta.body);
+
+        List<Cliente> clientesAtualizados = listaRecebida.map((json) => Cliente.fromJson(json as Map<String, dynamic>)).toList();
+
+        await clientesBox.clear();      
+        await clientesBox.putAll(Map.fromEntries(clientesAtualizados.map((cliente) => MapEntry(cliente.id, cliente))));  
+
+      }else if (resposta.statusCode == 404) {
+        log('Lista já atualizada');
+      }else {
+        log('Falha na requisição: ${resposta.statusCode}');
+        log('Resposta do servidor: ${resposta.body}');
+      }
+    } catch (e) {
+      log('Erro ao obter os clientes do Hive: $e');
+      rethrow;
+    }
+  }
 
 
 }
