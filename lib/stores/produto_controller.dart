@@ -89,7 +89,6 @@ abstract class _ProdutoFormStoreBase with Store{
 
     @action
   void validateAllFields(String tipo) {
-    log('Chamou ValidadeAll');
     Get.find<Validate>().validateAllFields();
   }
 

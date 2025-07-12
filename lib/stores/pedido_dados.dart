@@ -113,27 +113,19 @@ void addProd(Produto prod) {
 }
 
   void calculaDescPorcent(String value) {
-    log( 'Calculando desconto porcentagem com valor: $value');
     String descRealLimpo = value.replaceAll(',', '.').trim();
-    log('Desc Real Limpo: $descRealLimpo');
     descReal = double.tryParse(descRealLimpo) ?? 0.0;
-    log('Desc Porcent Inicial: $descPorcent');
     descPorcent = (descReal / totalProd) * 100;
     desconto = descReal;
-    log('Desc Porcent: $descPorcent');
     controllerDescPorcent.text = descPorcent.toStringAsFixed(2).replaceAll('.', ',');  
     calculaTotalPedido();
   }
 
   void calculaDescReal( String value) {
-    log('Calculando desconto real com valor: $value');
     String descPorcentLimpo = value.replaceAll(',', '.').trim();
-    log('Desc Porcent Limpo: $descPorcentLimpo');
     descReal = double.tryParse(descPorcentLimpo) ?? 0.0;
-    log('Desc Real Inicial: $descReal');
     descReal = (totalProd * descReal) / 100;
     desconto = descReal;
-    log('Desc Real: $descReal = ($totalProd * $descReal) / 100');
     controllerDescReal.text = descReal.toStringAsFixed(2).replaceAll('.', ',');
     calculaTotalPedido();
   }
@@ -163,8 +155,6 @@ void addProd(Produto prod) {
     controllerTotalProd.text = ' ${valorProdutos.toStringAsFixed(2).replaceAll('.', ',')}';
     totalPedido = valorTotalPedido;
     totalProd = valorProdutos;
-    log('Valor Total dos Produtos: $valorProdutos');
-    log('Total do Pedido: $totalPedido');
   }
 
   void calculaTotal (Produto produto){
@@ -213,7 +203,6 @@ void addProd(Produto prod) {
         final pedidos = pedidosBox.values.toList();
         listaDePedidos = ObservableList<Pedido>.of(pedidos);
       }catch (e){
-        log('Erro ao obter os Produtos');
         rethrow;
       }
   }  
@@ -241,12 +230,9 @@ void addProd(Produto prod) {
 
       //var resposta = await http.post(url, body: ped);
       var resposta = await http.post(url);
-      log('code ${resposta.statusCode}');
 
       if (resposta.statusCode == 404){
-        log('Pedido enviado');
       }else {
-        log('Pedido nao enviado');
       }
 
     }catch (e){
@@ -280,13 +266,9 @@ void addProd(Produto prod) {
         await pedidosBox.putAll(Map.fromEntries(pedidosAtualizados.map((pedido) => MapEntry(pedido.cod, pedido))));  
 
       }else if (resposta.statusCode == 404) {
-        log('Lista já atualizada');
       }else {
-        log('Falha na requisição: ${resposta.statusCode}');
-        log('Resposta do servidor: ${resposta.body}');
       }
     } catch (e) {
-      log('Erro ao obter os pedidos do Hive: $e');
       rethrow;
     }
   }

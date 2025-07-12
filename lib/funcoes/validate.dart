@@ -20,7 +20,6 @@ import 'package:speed_externo/stores/cliente_controller.dart';
     }else if (chave == ie){   
       if (dadosCliente.cliente.contribuinte == '1'){
         dadosCliente.formErrors[chave] = validateIe(value);
-        log('tentou validar ${dadosCliente.cliente.contribuinte}');
       }
     }else{
       dadosCliente.formErrors[chave] = value.isEmpty ? 'Campo obrigatório' : null;
@@ -30,9 +29,7 @@ import 'package:speed_externo/stores/cliente_controller.dart';
    
    String? validateDocumento(String doc){
     if (doc.isEmpty) return 'Campo obrigatorio';
-    log(' a $doc');
     doc = doc.replaceAll(RegExp(r'[^\d]'), '');
-    log('b $doc');
     if (doc.length == 11) {
        if (RegExp(r'^(\d)\1*$').hasMatch(doc)) {
         return 'CPF inválido';
@@ -132,7 +129,6 @@ import 'package:speed_externo/stores/cliente_controller.dart';
     validateField(endereco, clienteController.cliente.endereco ?? '');
     validateField(cep, clienteController.cliente.cep ?? '');
     validateField(ie, clienteController.cliente.cep ?? '');
-    log('valor de ${clienteController.formErrors[contribuinte]}');
     validateField(contribuinte, clienteController.cliente.contribuinte ?? '');
 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      

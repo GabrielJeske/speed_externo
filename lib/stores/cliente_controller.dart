@@ -81,7 +81,6 @@ abstract class ClienteControllerBase with Store{
 
     @action
   void validateAllFields() {
-    log('Chamou ValidadeAll');
     Get.find<Validate>().validateAllFields();
   }
 

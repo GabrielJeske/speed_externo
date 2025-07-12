@@ -38,9 +38,12 @@ class _ClientePjFormState extends State<ClientePjForm> {
           dadosCliente.setListaCliente(foco.hasFocus);                     
         });  
      });
+    }else if (!widget.isConsulta){
+        clienteController.resetForm();
     }
+
      WidgetsBinding.instance.addPostFrameCallback((_) {
-       clienteController.resetForm();
+     
        dadosCliente.setFiltro('');
      });
   }
@@ -79,8 +82,7 @@ class _ClientePjFormState extends State<ClientePjForm> {
              onTap: () {
                   clienteController.resetForm();
                 },
-            onChanged: (value) {
-              log('Vai setar o filtro');
+            onChanged: (value) {            
               dadosCliente.setFiltro(value);
               dadosCliente.setListaCliente(foco.hasFocus);                      
             },
@@ -122,13 +124,8 @@ class _ClientePjFormState extends State<ClientePjForm> {
                         ),
                         ],
                       ),
-                      onTap: () {                        
-                        log('Vai selecionar o cliente $cliente');
-                        dadosCliente.selecionarCliente(cliente);
-                        log('achou ${cliente.contribuinte}');
-                        if (dadosCliente.clienSele.cnpj == null || dadosCliente.clienSele.cnpj == '') {
-                        Get.toNamed('/cliente/cadastro_pj');
-                        }
+                      onTap: () {                                                                                      
+                        dadosCliente.selecionarCliente(cliente); // <--- Isso já atualiza o cliente no store
                         dadosCliente.setListaCliente(false);
                         foco.unfocus();
                       },
@@ -173,7 +170,7 @@ class _ClientePjFormState extends State<ClientePjForm> {
                   Row(
         children: [
           Expanded(
-            flex: 6,
+            flex: 5,
             child: CustomFormField(
               controller: clienteController.controllerCnpj,
               mask: [maskCnpj],
@@ -188,7 +185,7 @@ class _ClientePjFormState extends State<ClientePjForm> {
             width: 10),
           Observer(builder: (_) => 
              Expanded(
-              flex: 7,
+              flex: 4,
             child: DropdownButtonFormField<String>(
               decoration: InputDecoration(
                 labelText: 'Contribuinte',
@@ -208,7 +205,7 @@ class _ClientePjFormState extends State<ClientePjForm> {
                   clienteController.setField(contribuinte, newValue.substring(0, 1));
                 }
               },
-              style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
+              style: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurface),
             )
                     ),
           ),
@@ -325,13 +322,11 @@ class _ClientePjFormState extends State<ClientePjForm> {
           CustomButtom(
             onPressed: () async {
               clienteController.validateAllFields();
-              if (clienteController.isFormValid) {
-                log("validou");
+              if (clienteController.isFormValid) {             
                 await dadosCliente.salvaCliente();
                 Get.snackbar("Sucesso", "Cliente salvo com sucesso!");   
                 clienteController.resetForm();                                  
               } else {                                                  
-                log("nao salvou nem validou");
                 Get.snackbar("Erro", "Por favor, corrija os erros no formulário.");
               }
             },

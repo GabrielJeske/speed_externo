@@ -87,9 +87,7 @@ abstract class ClienteDadosBase with Store{
       await atualizaClientes();
       final clientes = clientesBox.values.toList();
       listaClientes = ObservableList<Cliente>.of(clientes);
-      log('Clientes carregados do Hive: ${listaClientes.first.id}');
     } catch (e) {
-      log('Erro ao obter os clientes do Hive: $e');
       rethrow;
     }
   }
@@ -103,12 +101,9 @@ abstract class ClienteDadosBase with Store{
       var resposta = await http.post(url, body: 'a');
 
       if (resposta.statusCode == 200){
-        log('Cliente enviado');
       }else {
-        log('cliente nao enviado');
       }
     } catch (e) {
-      log('Erro ao salvar o cliente no : $e');
       rethrow;
     }
   }
@@ -139,13 +134,9 @@ abstract class ClienteDadosBase with Store{
         await clientesBox.putAll(Map.fromEntries(clientesAtualizados.map((cliente) => MapEntry(cliente.id, cliente))));  
 
       }else if (resposta.statusCode == 404) {
-        log('Lista já atualizada');
       }else {
-        log('Falha na requisição: ${resposta.statusCode}');
-        log('Resposta do servidor: ${resposta.body}');
       }
     } catch (e) {
-      log('Erro ao obter os clientes do Hive: $e');
       rethrow;
     }
   }

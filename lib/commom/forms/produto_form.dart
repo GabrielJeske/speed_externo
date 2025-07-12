@@ -97,8 +97,7 @@ class _ProdutoFormState extends State<ProdutoForm> {
                       onTap: () {
                         produtoStore .resetForm();
                       },
-                      onChanged: (value) {
-                        log('Vai setar o filtro');
+                      onChanged: (value) {                     
                         dadosProdutoStore.setFiltroProd(value);
                         dadosProdutoStore.setListaProd(foco.hasFocus);                 
                       },
@@ -351,13 +350,11 @@ class _ProdutoFormState extends State<ProdutoForm> {
                     CustomButtom(
                       onPressed: () async {
                         produtoStore.validateAllFields('pf');
-                        if (produtoStore.isFormValid) {
-                          log("validou");
+                        if (produtoStore.isFormValid) {                          
                           //await dadosProdutoStore.salvaProduto();
                           Get.snackbar("Sucesso", "Produto salvo com sucesso!");   
                           produtoStore.resetForm();                                  
-                        } else {                                                  
-                          log("nao salvou nem validou");
+                        } else {                                                                         
                           Get.snackbar("Erro", "Por favor, corrija os erros no formulário.");
                         }
                       },                      

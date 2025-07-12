@@ -443,8 +443,7 @@ class _PedidoFormState extends State<PedidoForm> {
                          content: const Text('Tem certeza que deseja finalizar o pedido?'),
                          actions: <Widget>[
                            CustomButtom(
-                             onPressed: () {
-                               log('Pedido cancelado');
+                             onPressed: () {              
                                Navigator.of(context).pop();
                              },
                              label: const Text('Cancelar'),
@@ -519,8 +518,7 @@ class _PedidoFormState extends State<PedidoForm> {
                                               ),
                                               ],
                                             ),
-                                            onTap: () {                                                                      
-                                              log('chegou aqui 1 ');
+                                            onTap: () {                                                                                            
                                               dadosCliente.selecionarCliente(cliente);                              
                                               dadosCliente.setListaCliente(false);  
                                               pedidoStore.setField('cliente', cliente.toString());  

@@ -66,7 +66,6 @@ void selecionarProd(Produto produtoSelecionado) {
   final produtoForm = Get.find<ProdutoFormStore>();
 
   prodSele = produtoSelecionado;
-  log('Produto Selecionado $prodSele e $produtoSelecionado');
 
   produtoForm.resetForm();
 
@@ -98,7 +97,6 @@ void selecionarProd(Produto produtoSelecionado) {
       final produtos = produtosBox.values.toList();
       listaProdutos = ObservableList<Produto>.of(produtos);      
     } catch (e) {
-      log('Erro ao obter os clientes do Hive: $e');
       rethrow;
     }
   }
@@ -122,7 +120,6 @@ void selecionarProd(Produto produtoSelecionado) {
       var resposta = await http.get(url);
 
       if (resposta.statusCode == 200){ 
-        log('json ${resposta.body}');
         List<dynamic> listaRecebida = jsonDecode(resposta.body);
 
         List<Produto> produtosAtualizaodos =  listaRecebida.map((json) => Produto.fromJson(json as Map<String, dynamic>)).toList();
@@ -131,13 +128,9 @@ void selecionarProd(Produto produtoSelecionado) {
         await produtosBox.putAll(Map.fromEntries(produtosAtualizaodos.map((produto) => MapEntry(produto.cod, produto))));  
 
       }else if (resposta.statusCode == 404) {
-        log('Lista já atualizada');
       }else {
-        log('Falha na requisição: ${resposta.statusCode}');
-        log('Resposta do servidor: ${resposta.body}');
       }
     } catch (e) {
-      log('Erro ao obter os produtos do Hive: $e');
       rethrow;
     }
   }

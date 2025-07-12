@@ -4,6 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:speed_externo/commom/constantes/chaves.dart';
+import 'package:speed_externo/commom/forms/cliente_pj_form.dart';
 import 'package:speed_externo/commom/widgets/custom_buttom.dart';
 import 'package:speed_externo/commom/widgets/custom_textField.dart';
 import 'package:speed_externo/stores/cliente_dados.dart';
@@ -44,9 +45,10 @@ class _ClientePfFormState extends State<ClientePfForm> {
           dadosCliente.setListaCliente(foco.hasFocus);                     
         });  
      });
+    }else if (!widget.isConsulta){
+        clienteController.resetForm();
     }
      WidgetsBinding.instance.addPostFrameCallback((_) {
-       clienteController.resetForm();
        dadosCliente.setFiltro('');
      });
   }
@@ -121,16 +123,10 @@ class _ClientePfFormState extends State<ClientePfForm> {
                         ),
                         ],
                       ),
-                      onTap: () {                        
-                        log('Vai selecionar o cliente $cliente');
-                        dadosCliente.selecionarCliente(cliente);  
-                        log('toma ${cliente.cnpj}');                      
-                        dadosCliente.setListaCliente(false);
-                        if (cliente.cnpj == null) {
-                         Get.toNamed('/cliente/cadastro_pj');
-                         log('salve');
-                        }
-                        foco.unfocus();
+                      onTap: () {                                                
+                        dadosCliente.selecionarCliente(cliente); // <--- Isso já atualiza o cliente no store
+                        dadosCliente.setListaCliente(false); // Esconde a lista de sugestões
+                        foco.unfocus(); // Remove o foco do campo
                       },
                       );
                     },
@@ -158,7 +154,7 @@ class _ClientePfFormState extends State<ClientePfForm> {
               Row(
                 children: [
                   Expanded(
-                    flex: 6,
+                    flex: 5,
                     child: CustomFormField(
                       controller: clienteController.controllerCnpj,
                       mask: [maskCpf],
@@ -171,7 +167,7 @@ class _ClientePfFormState extends State<ClientePfForm> {
                   ),
                   SizedBox(width: 10),
                    Expanded(
-                    flex: 4,
+                    flex: 5,
                     child: DropdownButtonFormField<String>(
                       decoration: InputDecoration(
                         labelText: 'Contribuinte',
@@ -190,7 +186,7 @@ class _ClientePfFormState extends State<ClientePfForm> {
                           clienteController.setField(contribuinte, newValue.substring(0, 1));                      
                         }
                       },
-                      style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
+                      style: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurface),
                     ),
                   ),
                 ],
@@ -308,13 +304,11 @@ class _ClientePfFormState extends State<ClientePfForm> {
                     CustomButtom(
                       onPressed: () async {
                         clienteController.validateAllFields();
-                        if (clienteController.isFormValid) {
-                          log("validou");
+                        if (clienteController.isFormValid) {                        
                          await dadosCliente.salvaCliente();
                           Get.snackbar("Sucesso", "Cliente salvo com sucesso!");   
                           clienteController.resetForm();                                  
-                        } else {                                                  
-                          log("nao salvou nem validou");
+                        } else {                                                                        
                           Get.snackbar("Erro", "Por favor, corrija os erros no formulário.");
                         }
                       },                  
