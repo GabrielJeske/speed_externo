@@ -1,18 +1,18 @@
-import 'dart:convert';
 import 'package:hive/hive.dart';
+import 'package:speed_externo/commom/constantes/chaves.dart';
 
 part 'produto.g.dart';
 
 @HiveType(typeId: 1)
 class Produto {
   @HiveField(0)
-  String? nProd;
+  int? nProd;
   @HiveField(1)
-  String? cod;
+  int? cod;
   @HiveField(2)
   String? nome;
   @HiveField(3)
-  String? ncm;
+  int? ncm;
   @HiveField(4)
   String? unidade;
   @HiveField(5)
@@ -20,29 +20,29 @@ class Produto {
   @HiveField(6)
   String? apresentacao;
   @HiveField(7)
-  String? grupo1;
+  int? grupo1;
   @HiveField(8)
-  String? grupo2;
+  int? grupo2;
   @HiveField(9)
-  String? grupo3;
+  int? grupo3;
   @HiveField(10)
-  String? cst;
+  int? cst;
   @HiveField(11)
-  String? custo;
+  double? custo;
   @HiveField(12)
-  String? fabrica;
+  double? fabrica;
   @HiveField(13)
-  String? venda;
+  double? venda;
   @HiveField(14)
-  String? estoqueatual;
+  int? estoqueatual;
   @HiveField(15)
-  String? estoqueparcial;
+  int? estoqueparcial;
   @HiveField(16)
-  String? quantidade;
+  int? quantidade;
   @HiveField(17)
-  String? unitario;
+  double? unitario;
   @HiveField(18)
-  String? total;
+  double? total;
   
    Produto({
     this.nProd,
@@ -65,92 +65,80 @@ class Produto {
     this.unitario,
     this.total,
   });
-  
+ 
   factory Produto.fromJson(Map json){
     return Produto(
-      nProd: json['nProd'],
-      cod: json['cod'],
-      nome: json['nome'],
-      ncm: json['ncm'],
-      unidade: json['unidade'],
-      marca: json['marca'],
-      apresentacao: json['apresentacao'],
-      grupo1: json['grupo1'],
-      grupo2: json['grupo2'],
-      grupo3: json['grupo3'],
-      cst: json['cst'],
-      fabrica: json['fabrica'],
-      custo: json['custo'],    
-      venda: json['venda'],
-      estoqueatual: json['estoqueatual'],
-      estoqueparcial: json['estoqueparcial'],          
-      quantidade: json['quantidade'],          
-      unitario: json['unitario'],          
-      total: json['total'],          
-
+      nProd: int.tryParse(json[numProd].toString()), // Converte para int
+      cod: int.tryParse(json[codProd].toString()),   // Converte para int
+      nome: json[nomeProd] as String?, // Se você sabe que sempre será String
+      ncm: int.tryParse(json[ncmProd].toString()),   // Converte para int
+      unidade: json[unidadeProd] as String?,
+      marca: json[marcaProd] as String?,
+      apresentacao: json[apresentProd] as String?,
+      grupo1: int.tryParse(json[grupo1Prod].toString()),
+      grupo2: int.tryParse(json[grupo2Prod].toString()),
+      grupo3: int.tryParse(json[grupo3Prod].toString()),
+      cst: int.tryParse(json[cstProd].toString()),
+      // Para doubles, cuidado com vírgulas
+      fabrica: double.tryParse(json[fabricaProd].toString().replaceAll(',', '.')),
+      custo: double.tryParse(json[custoProd].toString().replaceAll(',', '.')),
+      venda: double.tryParse(json[vendaProd].toString().replaceAll(',', '.')),
+      estoqueatual: int.tryParse(json[estqatualProd].toString()),
+      estoqueparcial: int.tryParse(json[estqparcialProd].toString()),
+      quantidade: int.tryParse(json[qtdProd].toString()),
+      unitario: double.tryParse(json[unitarioProd].toString().replaceAll(',', '.')),
+      total: double.tryParse(json[totalProd].toString().replaceAll(',', '.')),
     );
   }
 
  Map<String, dynamic> toJson() {
     return{
-      'nProd': nProd,
-      'cod': cod,
-      'nome': nome,
-      'ncm': ncm,
-      'unidade': unidade,
-      'marca': marca,
-      'apresentacao': apresentacao,  
-      'grupo1': grupo1,  
-      'grupo2': grupo2,  
-      'grupo3': grupo3,  
-      'cst': cst,
-      'fabrica':fabrica,
-      'custo': custo,
-      'venda': venda,
-      'estoqueatual':estoqueatual,
-      'estoqueparcial':estoqueparcial,
-      'quantidade':quantidade,
-      'unitario':unitario,
-      'total':total, 
+      numProd : nProd,
+      codProd: cod,
+      nomeProd: nome,
+      ncmProd: ncm,
+      unidadeProd: unidade,
+      marcaProd: marca,
+      apresentProd: apresentacao,  
+      grupo1Prod: grupo1,  
+      grupo2Prod: grupo2,  
+      grupo3Prod: grupo3,  
+      cstProd: cst,
+      fabricaProd:fabrica,
+      custoProd: custo,
+      vendaProd: venda,
+      estqatualProd:estoqueatual,
+      estqparcialProd:estoqueparcial,
+      qtdProd:quantidade,
+      unitarioProd:unitario,
+      totalProd:total, 
     };
   }
-  
-  List<Produto> obtemProdutos(String jsonString){    
-    List<dynamic> listaGenerica= jsonDecode(jsonString);
-    List<Produto> produtos = [];
-    for (Map<String, dynamic> a in listaGenerica) {   
-      Produto produto = Produto.fromJson(a);
-      produtos.add(produto);
-    }
-     return produtos; 
-    }
     
-   
-
   Produto copyWith({
-    String? nProd,
-    String? cod,
+    int? nProd,
+    int? cod,
     String? nome,
-    String? ncm,
+    int? ncm,
     String? unidade,
     String? marca,
     String? apresentacao,
-    String? grupo1,
-    String? grupo2,
-    String? grupo3,
-    String? cst,
-    String? custo,
-    String? fabrica,
-    String? venda,
-    String? estoqueatual,
-    String? estoqueparcial,
-    String? quantidade,
-    String? unitario,
-    String? total,
+    int? grupo1,
+    int? grupo2,
+    int? grupo3,
+    int? cst,
+    double? custo,
+    double? fabrica,
+    double? venda,
+    int? estoqueatual,
+    int? estoqueparcial,
+    int? quantidade,
+    double? unitario,
+    double? total,
   }) {
     return Produto(
       nProd: nProd ?? this.nProd,
-      cod: cod ?? this.cod,
+      cod: cod ,
       nome: nome ?? this.nome,
       ncm: ncm ?? this.ncm,
       unidade: unidade ?? this.unidade,
@@ -170,4 +158,15 @@ class Produto {
       total: total ?? this.total,
     );
   }
+
+    // List<Produto> obtemProdutos(String jsonString){    
+    // List<dynamic> listaGenerica= jsonDecode(jsonString);
+    // List<Produto> produtos = [];
+    // for (Map<String, dynamic> a in listaGenerica) {   
+    //   Produto produto = Produto.fromJson(a);
+    //   produtos.add(produto);
+    // }
+    //  return produtos; 
+    // }
+
 }

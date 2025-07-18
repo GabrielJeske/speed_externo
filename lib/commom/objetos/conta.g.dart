@@ -17,7 +17,7 @@ class ContaAdapter extends TypeAdapter<Conta> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Conta(
-      id: fields[0] as String?,
+      id: fields[0] as int?,
       valor: fields[1] as double?,
       vencimento: fields[2] as DateTime?,
       formaPagamento: fields[3] as String?,

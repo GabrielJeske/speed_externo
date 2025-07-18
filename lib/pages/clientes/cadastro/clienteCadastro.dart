@@ -23,7 +23,7 @@ class clienteCadastro extends StatelessWidget {
           ),
         ),
         body: TabBarView(
-          children: [        
+          children: [
             CadastroPF(),
             CadastroPJ(),
           ],

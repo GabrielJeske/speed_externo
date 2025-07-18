@@ -9,6 +9,22 @@ part of 'faturamento_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$FaturamentoController on _FaturamentoController, Store {
+  late final _$faturamentoAtom =
+      Atom(name: '_FaturamentoController.faturamento', context: context);
+
+  @override
+  Faturamento get faturamento {
+    _$faturamentoAtom.reportRead();
+    return super.faturamento;
+  }
+
+  @override
+  set faturamento(Faturamento value) {
+    _$faturamentoAtom.reportWrite(value, super.faturamento, () {
+      super.faturamento = value;
+    });
+  }
+
   late final _$totalAtom =
       Atom(name: '_FaturamentoController.total', context: context);
 
@@ -73,22 +89,6 @@ mixin _$FaturamentoController on _FaturamentoController, Store {
     });
   }
 
-  late final _$contasAtom =
-      Atom(name: '_FaturamentoController.contas', context: context);
-
-  @override
-  ObservableList<Conta> get contas {
-    _$contasAtom.reportRead();
-    return super.contas;
-  }
-
-  @override
-  set contas(ObservableList<Conta> value) {
-    _$contasAtom.reportWrite(value, super.contas, () {
-      super.contas = value;
-    });
-  }
-
   late final _$_FaturamentoControllerActionController =
       ActionController(name: '_FaturamentoController', context: context);
 
@@ -115,13 +115,35 @@ mixin _$FaturamentoController on _FaturamentoController, Store {
   }
 
   @override
+  void salvarFaturamento() {
+    final _$actionInfo = _$_FaturamentoControllerActionController.startAction(
+        name: '_FaturamentoController.salvarFaturamento');
+    try {
+      return super.salvarFaturamento();
+    } finally {
+      _$_FaturamentoControllerActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void resetFaturamento() {
+    final _$actionInfo = _$_FaturamentoControllerActionController.startAction(
+        name: '_FaturamentoController.resetFaturamento');
+    try {
+      return super.resetFaturamento();
+    } finally {
+      _$_FaturamentoControllerActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
+faturamento: ${faturamento},
 total: ${total},
 entrada: ${entrada},
 parcelas: ${parcelas},
-formaPagamento: ${formaPagamento},
-contas: ${contas}
+formaPagamento: ${formaPagamento}
     ''';
   }
 }

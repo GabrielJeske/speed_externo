@@ -69,7 +69,7 @@ mixin _$ClienteController on ClienteControllerBase, Store {
       ActionController(name: 'ClienteControllerBase', context: context);
 
   @override
-  void setField(String chave, String value) {
+  void setField(String chave, dynamic value) {
     final _$actionInfo = _$ClienteControllerBaseActionController.startAction(
         name: 'ClienteControllerBase.setField');
     try {

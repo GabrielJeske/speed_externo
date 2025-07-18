@@ -53,7 +53,7 @@ mixin _$ProdutoFormStore on _ProdutoFormStoreBase, Store {
       ActionController(name: '_ProdutoFormStoreBase', context: context);
 
   @override
-  void setField(String chave, String value) {
+  void setField(String chave, dynamic value) {
     final _$actionInfo = _$_ProdutoFormStoreBaseActionController.startAction(
         name: '_ProdutoFormStoreBase.setField');
     try {

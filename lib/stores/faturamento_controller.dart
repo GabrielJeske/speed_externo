@@ -12,6 +12,7 @@ class FaturamentoController = _FaturamentoController with _$FaturamentoControlle
 
 abstract class _FaturamentoController with Store {
 
+  @observable
   Faturamento faturamento = Faturamento(contas: []);
 
   @observable
@@ -35,8 +36,7 @@ abstract class _FaturamentoController with Store {
   @observable
   String formaPagamento = '';
   
-  @observable
-  ObservableList<Conta> contas = ObservableList<Conta>();
+ 
 
   TextEditingController entradaController = TextEditingController();
   TextEditingController parcelasController = TextEditingController();
@@ -63,23 +63,23 @@ abstract class _FaturamentoController with Store {
 
   @action
   void geraContas() {
-    contas.clear();
+    faturamento.contas.clear();
      final pedido = Get.find<DadosPedidoStore>();
      final pedidoController = Get.find<PedidoStore>();
      total = pedido.totalPedido - entrada;
      if (pedidoController.pedido.tipo == 'A Prazo') {
        if (entrada > 0.0) {
-     contas.add(Conta(
-        id: 'entrada',
+     faturamento.contas.add(Conta(
+        id: 1,
         valor: entrada,
         vencimento: DateTime.now(),
         formaPagamento: formaPagamento,
       ));
      }     
     if (faturamento.parcelas != null && faturamento.parcelas! > 0) {
-      for (int i = 0; i < faturamento.parcelas!; i++) {      
-        contas.add(Conta(
-        id: '${i +1}',
+      for (int i = 1; i < faturamento.parcelas!; i++) {      
+        faturamento.contas.add(Conta(
+        id: i +1,
         valor: total / faturamento.parcelas!,
         vencimento: DateTime.now().add(Duration(days: 30 * i)),
         formaPagamento: formaPagamento,
@@ -87,21 +87,31 @@ abstract class _FaturamentoController with Store {
     }
       } 
      } else {
-        contas.add(Conta(
-        id: '1',
+        faturamento.contas.add(Conta(
+        id: 1,
         valor: total,
         vencimento: DateTime.now(),
         formaPagamento: formaPagamento,
       ));
      }
+      faturamento = faturamento.copyWith(contas: faturamento.contas); 
     
   }
-
+   @action
   void salvarFaturamento() {
     faturamento = faturamento.copyWith(    
       parcelas: parcelas, 
-      contas: contas.toList(),
+      contas: faturamento.contas.toList(),
     );
+  }
+  @action
+  void resetFaturamento(){
+    formaPagamento = '';  
+    entrada = 0;
+    entradaController.text = '';
+    parcelasController.text = '';
+    tipoController.text = '';
+    faturamento = Faturamento(contas: []);
   }
 
 }

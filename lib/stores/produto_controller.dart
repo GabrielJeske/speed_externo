@@ -1,7 +1,5 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:mobx/mobx.dart';
 import 'package:speed_externo/commom/constantes/chaves.dart';
 import 'package:speed_externo/commom/objetos/produto.dart';
@@ -44,43 +42,43 @@ abstract class _ProdutoFormStoreBase with Store{
   bool get isFormValid => prodErrors.values.every((error) => error == null);
 
   @action
-  void setField(String chave, String value){
+  void setField(String chave, dynamic value){
     switch (chave) {
-      case cod:
+      case codProd:
       prod = prod.copyWith(cod: value) ;
-      case nome:
+      case nomeProd:
       prod = prod.copyWith(nome: value) ;
-      case ncm:
+      case ncmProd:
       prod = prod.copyWith(ncm: value) ;
-      case unidade:
+      case unidadeProd:
       prod = prod.copyWith(unidade: value) ;
-      case marca:
+      case marcaProd:
       prod = prod.copyWith(marca: value) ;
-      case apresentacao:
+      case apresentProd:
       prod = prod.copyWith(apresentacao: value) ;
-      case grupo1:
+      case grupo1Prod:
       prod = prod.copyWith(grupo1: value) ;
-      case grupo2:
+      case grupo2Prod:
       prod = prod.copyWith(grupo2: value) ;
-      case grupo3:
+      case grupo3Prod:
       prod = prod.copyWith(grupo3: value) ;
-      case cst:
+      case cstProd:
       prod = prod.copyWith(cst: value) ;
-      case custo:
+      case custoProd:
       prod = prod.copyWith(custo: value) ;
-      case fabrica:
+      case fabricaProd:
       prod = prod.copyWith(fabrica: value) ;
-      case venda:
+      case vendaProd:
       prod = prod.copyWith(venda: value) ;
-      case estoqueatual:
+      case estqatualProd:
       prod = prod.copyWith(estoqueatual: value) ;
-      case estoqueparcial:
+      case estqparcialProd:
       prod = prod.copyWith(estoqueparcial: value) ;
-      case quantidade:
+      case qtdProd:
       prod = prod.copyWith(quantidade: value) ;
-      case unitario:
+      case unitarioProd:
       prod = prod.copyWith(unitario: value) ;
-      case total:
+      case totalProd:
       prod = prod.copyWith(total: value) ;
 
     }

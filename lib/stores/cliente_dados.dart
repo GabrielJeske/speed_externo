@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:mobx/mobx.dart';
@@ -72,11 +71,11 @@ abstract class ClienteDadosBase with Store{
     formStore.controllerCep.text = clienteSelecionado.cep.toString();
     formStore.controllerEmail.text = clienteSelecionado.email.toString();
     formStore.controllerContato.text = clienteSelecionado.contato.toString();
-    if (clienteSelecionado.contribuinte == '1'){
+    if (clienteSelecionado.contribuinte == 1){
       formStore.contribuitePadrao = contribuinte1; 
-    }else if (clienteSelecionado.contribuinte == '2'){
+    }else if (clienteSelecionado.contribuinte == 2){
       formStore.contribuitePadrao = contribuinte2; 
-    }else if (clienteSelecionado.contribuinte == '9'){
+    }else if (clienteSelecionado.contribuinte == 9){
       formStore.contribuitePadrao = contribuinte9; 
     }  
   } 
@@ -88,7 +87,7 @@ abstract class ClienteDadosBase with Store{
       final clientes = clientesBox.values.toList();
       listaClientes = ObservableList<Cliente>.of(clientes);
     } catch (e) {
-      rethrow;
+      throw Exception('Erro ao obter clientes: $e');
     }
   }
 
@@ -104,7 +103,7 @@ abstract class ClienteDadosBase with Store{
       }else {
       }
     } catch (e) {
-      rethrow;
+      throw Exception('Erro ao salvar cliente: $e');
     }
   }
 
@@ -137,7 +136,7 @@ abstract class ClienteDadosBase with Store{
       }else {
       }
     } catch (e) {
-      rethrow;
+      throw Exception('Erro ao atualizar clientes: $e');
     }
   }
 

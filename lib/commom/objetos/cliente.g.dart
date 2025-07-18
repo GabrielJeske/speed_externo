@@ -17,7 +17,7 @@ class ClienteAdapter extends TypeAdapter<Cliente> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Cliente(
-      id: fields[0] as String?,
+      id: fields[0] as int?,
       razaosocial: fields[1] as String?,
       cnpj: fields[2] as String?,
       fantasia: fields[3] as String?,
@@ -27,7 +27,7 @@ class ClienteAdapter extends TypeAdapter<Cliente> {
       email: fields[7] as String?,
       contato: fields[8] as String?,
       numeroContato: fields[9] as String?,
-      contribuinte: fields[10] as String?,
+      contribuinte: fields[10] as int?,
     );
   }
 

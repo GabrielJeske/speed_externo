@@ -1,18 +1,20 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:speed_externo/commom/forms/PedidoSelec.dart';
+import 'package:speed_externo/commom/widgets/custom_buttom.dart';
 import 'package:speed_externo/commom/widgets/custom_textField.dart';
 import 'package:speed_externo/stores/pedido_dados.dart';
 
-class PedidoConsultaForm extends StatefulWidget {
-  const PedidoConsultaForm({super.key});
+class ListaPedidos extends StatefulWidget {
+  const ListaPedidos({super.key});
 
   @override
-  State<PedidoConsultaForm> createState() => _PedidoConsultaFormState();
+  State<ListaPedidos> createState() => _ListaPedidosState();
 }
 
-class _PedidoConsultaFormState extends State<PedidoConsultaForm> {
+class _ListaPedidosState extends State<ListaPedidos> {
 
   final pedidosDados = Get.find<DadosPedidoStore>();
   
@@ -51,7 +53,7 @@ class _PedidoConsultaFormState extends State<PedidoConsultaForm> {
                                                 itemBuilder: (contextList, index) { 
                                                   final pedido = pedidosDados.listaDePedidos[index];
                                                   return Card(                                                                                                         
-                                                    child: ListTile(                                
+                                                    child: ListTile(                                                                                                        
                                                         title: Column(
                                                           children: [
                                                             Row(
@@ -60,7 +62,7 @@ class _PedidoConsultaFormState extends State<PedidoConsultaForm> {
                                                                   flex: 1,
                                                                   child: CustomFormField( 
                                                                               labelText:  'Cod',
-                                                                              controller:TextEditingController(text: pedido.cod),
+                                                                              controller:TextEditingController(text: '${pedido.cod}'),
                                                                               readOnly: true,
                                                                   )
                                                                 ),
@@ -69,7 +71,7 @@ class _PedidoConsultaFormState extends State<PedidoConsultaForm> {
                                                                   flex: 6,
                                                                   child: CustomFormField( 
                                                                               labelText:  'Cliente  ',
-                                                                              controller:TextEditingController(text: pedido.codClie),
+                                                                              controller:TextEditingController(text: '${pedido.codClie}'),
                                                                               readOnly: true,
                                                                   )
                                                                   ),                                                                                               
@@ -107,8 +109,15 @@ class _PedidoConsultaFormState extends State<PedidoConsultaForm> {
                                                               ],
                                                             )
                                                           ],
-                                                        ),                                                                                       
-                                                    ),
+                                                        ),            
+                                                        trailing: CustomButtom(
+                                onPressed: () {
+                                  log('vai consultar');
+                                  Get.to(() => Pedidoselec(pedido: pedido));
+                                },
+                                label: Icon(Icons.visibility),
+                              ),                                                                                                                                                                              
+                                                    ),                                                    
                                                   );
                                                 },
                         )                                          

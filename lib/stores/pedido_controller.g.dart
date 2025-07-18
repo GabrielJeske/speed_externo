@@ -16,13 +16,6 @@ mixin _$PedidoStore on _PedidoStoreBase, Store {
       (_$isAPrazoComputed ??= Computed<bool>(() => super.isAPrazo,
               name: '_PedidoStoreBase.isAPrazo'))
           .value;
-  Computed<bool>? _$isFormValidComputed;
-
-  @override
-  bool get isFormValid =>
-      (_$isFormValidComputed ??= Computed<bool>(() => super.isFormValid,
-              name: '_PedidoStoreBase.isFormValid'))
-          .value;
 
   late final _$pedidoAtom =
       Atom(name: '_PedidoStoreBase.pedido', context: context);
@@ -87,7 +80,7 @@ mixin _$PedidoStore on _PedidoStoreBase, Store {
   }
 
   @override
-  void setField(String chave, String value) {
+  void setField(String chave, dynamic value) {
     final _$actionInfo = _$_PedidoStoreBaseActionController.startAction(
         name: '_PedidoStoreBase.setField');
     try {
@@ -103,6 +96,17 @@ mixin _$PedidoStore on _PedidoStoreBase, Store {
         name: '_PedidoStoreBase.validateAllFields');
     try {
       return super.validateAllFields();
+    } finally {
+      _$_PedidoStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void resetClie() {
+    final _$actionInfo = _$_PedidoStoreBaseActionController.startAction(
+        name: '_PedidoStoreBase.resetClie');
+    try {
+      return super.resetClie();
     } finally {
       _$_PedidoStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -125,8 +129,7 @@ mixin _$PedidoStore on _PedidoStoreBase, Store {
 pedido: ${pedido},
 tipoSelecionado: ${tipoSelecionado},
 formErrors: ${formErrors},
-isAPrazo: ${isAPrazo},
-isFormValid: ${isFormValid}
+isAPrazo: ${isAPrazo}
     ''';
   }
 }

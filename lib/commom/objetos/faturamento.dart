@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:speed_externo/commom/constantes/chaves.dart';
 import 'package:speed_externo/commom/objetos/conta.dart';
 
 part 'faturamento.g.dart';
@@ -24,21 +25,22 @@ class Faturamento {
       contas: contas ?? this.contas,
     );
   }
+
   factory Faturamento.fromJson(Map<String, dynamic> json) {
-    var listFromJson = json['contas'] as List?;
+    var listFromJson = json[contasFatur] as List?;
     List<Conta> contasList = listFromJson != null
         ? listFromJson.map((c) => Conta.fromJson(c)).toList()
         : [];
 
     return Faturamento(
-      parcelas: json['parcelas'],
+      parcelas: json[parcelasFatur],
       contas: contasList,
     );
   }
   
    Map<String, dynamic> toJson() => {
-    'parcelas': parcelas,
-    'contas': contas.map((c) => c.toJson()).toList(),
+    parcelasFatur: parcelas,
+    contasFatur: contas.map((c) => c.toJson()).toList(),
   };
   
 }

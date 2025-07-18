@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:crypto/crypto.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
@@ -111,10 +110,10 @@ void selecionarProd(Produto produtoSelecionado) {
   Future<void> atualizaProdutos() async {
       var url = Uri.parse('https://1587bcd2-f1c9-4bd7-b4fa-10940fdf1042.mock.pstmn.io/cliente');
     try {
-//      listaClientes = ObservableList<Cliente> ();
-      List<Produto> produtosLocais = produtosBox.values.toList();
-      String corpoJson = jsonEncode(produtosLocais.map((produto) => produto.toJson()).toList()); 
-      String md5 = geraMd5(corpoJson);
+
+      //List<Produto> produtosLocais = produtosBox.values.toList();
+      //String corpoJson = jsonEncode(produtosLocais.map((produto) => produto.toJson()).toList()); 
+      //String md5 = geraMd5(corpoJson);
 
       //var resposta = await http.post(url, headers: {'Content-Type': 'application/json; charset=UTF-8'}, body: md5);
       var resposta = await http.get(url);

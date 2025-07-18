@@ -9,19 +9,15 @@ import 'package:speed_externo/stores/cliente_dados.dart';
 import 'package:speed_externo/stores/cliente_controller.dart';
 
 
-class ClientePfForm extends StatefulWidget {
-  final bool isConsulta;
-
-  ClientePfForm({
-    Key? key,
-    this.isConsulta = false,
-  }) : super(key: key);
+class Clientepfcadastro extends StatefulWidget {
+  
+  const Clientepfcadastro({super.key});
 
   @override
-  State<ClientePfForm> createState() => _ClientePfFormState();
+  State<Clientepfcadastro> createState() => _ClientepfcadastroState();
 }
 
-class _ClientePfFormState extends State<ClientePfForm> {
+class _ClientepfcadastroState extends State<Clientepfcadastro> {
   final clienteController = Get.find<ClienteController>();
   final dadosCliente = Get.find<ClienteDados>();
   
@@ -29,41 +25,19 @@ class _ClientePfFormState extends State<ClientePfForm> {
   var maskCep = MaskTextInputFormatter(mask: '#####-###', filter: {"#": RegExp(r'[0-9]')});
   var maskNumero = MaskTextInputFormatter(mask: '(##) #####-####', filter: {"#": RegExp(r'[0-9]')});
 
-  final FocusNode foco = FocusNode();
-  
-  
-
   @override
   void initState() {
     super.initState();
-    if (widget.isConsulta){  
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        dadosCliente.obtemClientes();
-      foco.addListener(() {           
-        Future.delayed(Duration(milliseconds: 300 ), () {
-          dadosCliente.setListaCliente(foco.hasFocus);                     
-        });  
-     });         
-      });
-        
-    }else if (!widget.isConsulta){
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-       clienteController.resetForm();
-      });
-        
-    }
-     
+    clienteController.resetForm();
   }
   
   @override
   void dispose() {    
     super.dispose();
-    foco.dispose();   
   }
 
   void resetForm() {
     clienteController.resetForm();
-    foco.dispose();    
   }
 
   @override
@@ -74,79 +48,14 @@ class _ClientePfFormState extends State<ClientePfForm> {
         child: Observer(
           builder: (_) => Column(
             children: [
-              SizedBox(height: 5),
-              if (widget.isConsulta)
-              CustomFormField(
-                controller:  clienteController.controllerRazao,
-                labelText: 'Nome',
-                foco: foco,
-                onTap: () {
-                  clienteController.resetForm();
-                },
-                onChanged: (value) {             
-                  dadosCliente.setFiltro(value);
-                  dadosCliente.setListaCliente(foco.hasFocus);               
-                },
-              ),
-                Observer(
-                builder: (__) {
-                  if (dadosCliente.exibeListaCliente) {
-                  return Container(
-                    constraints: BoxConstraints(maxHeight: 200),
-                    child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: dadosCliente.listaFiltrada.length,
-                    itemBuilder: (contextList, index) {
-                      final cliente = dadosCliente.listaFiltrada[index];
-                      return ListTile(
-                        contentPadding: EdgeInsets.all(0),
-                      title: Row(
-                        children: [
-                        SizedBox(width: 10),
-                        Expanded(
-                          flex: 2,
-                          child: Text(cliente.razaosocial ?? '', style: TextStyle(fontSize: 12),),
-                        ),                                             
-                        SizedBox(width: 10),
-                        SizedBox(
-                          height: 25,
-                          child: VerticalDivider(
-                            color: Theme.of(context).colorScheme.outline,
-                            thickness: 2,        // Espessura da linha
-                            indent: 0,           // Remove  espaçamento em cima
-                            endIndent: 0,        // Remove  espaçamento em baixo
-                            width: 10,           // Largura que o divisor ocupa na Row
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          flex: 2,
-                          child: Text(cliente.fantasia ?? '', style: TextStyle(fontSize: 12),),
-                        ),
-                        ],
-                      ),
-                      onTap: () {                                                
-                        dadosCliente.selecionarCliente(cliente); // <--- Isso já atualiza o cliente no store
-                        dadosCliente.setListaCliente(false); // Esconde a lista de sugestões
-                        foco.unfocus(); // Remove o foco do campo
-                      },
-                      );
-                    },
-                    ),
-                  );
-                  } else {
-                  return SizedBox.shrink();
-                  }
-                },
-                ),
-              if (!widget.isConsulta)
+              SizedBox(height: 5),                        
               Row(
                 children: [                
                   Flexible(             
                     child: CustomFormField(
                       controller: clienteController.controllerFantasia,
                       errorText: clienteController.formErrors[razaosocial],
-                      labelText: 'Nome',                                       
+                      labelText: 'Teste',                                       
                       onChanged: (value) => clienteController.setField(razaosocial, value),                      
                     ),
                   )
@@ -163,7 +72,6 @@ class _ClientePfFormState extends State<ClientePfForm> {
                       keyboardType: TextInputType.numberWithOptions(),
                       errorText: clienteController.formErrors[cnpj],
                       labelText: 'CPF',
-                       readOnly: widget.isConsulta,
                       onChanged: (value) => clienteController.setField(cnpj, value),                     
                     ),
                   ),
@@ -182,7 +90,7 @@ class _ClientePfFormState extends State<ClientePfForm> {
                           child: Text(value),
                         );
                       }).toList(),
-                      onChanged: widget.isConsulta ? null : (String? newValue) {
+                      onChanged: (String? newValue) {
                         if (newValue != null) {
                           clienteController.formErrors[ie]=null;                                        
                           clienteController.setField(contribuinte, newValue.substring(0, 1));                      
@@ -202,7 +110,6 @@ class _ClientePfFormState extends State<ClientePfForm> {
                       controller: clienteController.controllerIe,
                       keyboardType: TextInputType.number,
                       labelText: 'IE',
-                      readOnly: widget.isConsulta,                   
                       errorText: clienteController.formErrors[ie],                                          
                       onChanged: (value) => clienteController.setField(ie, value),                      
                     ),
@@ -215,7 +122,6 @@ class _ClientePfFormState extends State<ClientePfForm> {
                       mask: [maskCep],
                       keyboardType: TextInputType.numberWithOptions(),
                       labelText: 'Cep',
-                      readOnly: widget.isConsulta,
                       errorText: clienteController.formErrors[cep],
                       onChanged: (value) => clienteController.setField(cep, value),                     
                     ),
@@ -230,7 +136,6 @@ class _ClientePfFormState extends State<ClientePfForm> {
                     child: CustomFormField(
                       controller: clienteController.controllerEndereco,
                       labelText: 'Endereco',
-                       readOnly: widget.isConsulta,
                       errorText: clienteController.formErrors[endereco],
                       onChanged: (value) => clienteController.setField(endereco, value),                    
                     ),
@@ -241,7 +146,6 @@ class _ClientePfFormState extends State<ClientePfForm> {
                     child: CustomFormField(
                       controller: clienteController.controllerBairro,
                       labelText: 'Bairro',
-                      readOnly: widget.isConsulta,
                       errorText: clienteController.formErrors[bairro],
                       onChanged: (value) => clienteController.setField(bairro, value),                     
                     ),
@@ -256,7 +160,6 @@ class _ClientePfFormState extends State<ClientePfForm> {
                     child: CustomFormField(
                       controller: clienteController.controllerEmail,
                       labelText: 'E-mail',
-                      readOnly: widget.isConsulta,
                       errorText: clienteController.formErrors[email],
                       onChanged: (value) => clienteController.setField(email, value),                     
                     ),
@@ -273,7 +176,6 @@ class _ClientePfFormState extends State<ClientePfForm> {
                     child: CustomFormField(
                       controller: clienteController.controllerContato,
                       labelText: 'contato',
-                      readOnly: widget.isConsulta,
                       errorText: clienteController.formErrors[contato],
                       onChanged: (value) => clienteController.setField(contato, value),                      
                     ),
@@ -286,7 +188,6 @@ class _ClientePfFormState extends State<ClientePfForm> {
                       mask: [maskNumero],
                       keyboardType: TextInputType.numberWithOptions(),
                       labelText: 'Numero',
-                      readOnly: widget.isConsulta,
                       errorText: clienteController.formErrors[numeroContato],
                       onChanged: (value) => clienteController.setField(numeroContato, value),                     
                     ),
@@ -294,7 +195,6 @@ class _ClientePfFormState extends State<ClientePfForm> {
                 ],
               ),
               SizedBox(height: 30),
-              if (!widget.isConsulta)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

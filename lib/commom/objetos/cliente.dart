@@ -6,7 +6,7 @@ part 'cliente.g.dart';
 @HiveType(typeId: 0)
 class Cliente {
   @HiveField(0)
-  String? id;
+  int? id;
   @HiveField(1)
   String? razaosocial;
   @HiveField(2)
@@ -26,7 +26,7 @@ class Cliente {
   @HiveField(9)
   String? numeroContato;
   @HiveField(10)
-  String? contribuinte;
+  int? contribuinte;
   Cliente({
      this.id,
      this.razaosocial,
@@ -41,19 +41,19 @@ class Cliente {
     this.contribuinte,
   });
 
-   factory Cliente.fromJson(Map<String, dynamic> json){
+  factory Cliente.fromJson(Map<String, dynamic> json){
     return Cliente(
-      id: json['id'].toString(),
-      razaosocial: json['razaosocial'].toString(),
-      fantasia: json['fantasia'].toString(),
-      cnpj: json['cnpj'].toString(),
-      contribuinte: json['contribuinte'].toString(),
-      ie: json['ie'].toString(),
-      endereco: json['endereco'].toString(),
-      cep: json['cep'].toString(),
-      email: json['email'].toString(),
-      contato: json['contato'].toString(),
-      numeroContato: json['numeroContato'].toString(),
+      id: json['id'],
+      razaosocial: json['razaosocial'],
+      fantasia: json['fantasia'],
+      cnpj: json['cnpj'],
+      contribuinte: json['contribuinte'],
+      ie: json['ie'],
+      endereco: json['endereco'],
+      cep: json['cep'],
+      email: json['email'],
+      contato: json['contato'],
+      numeroContato: json['numeroContato'],
     );
   }
 
@@ -76,7 +76,7 @@ class Cliente {
   }
 
   Cliente copyWith({
-    String? id,
+    int? id,
     String? nome,
     String? cpf,
     String? razaosocial,
@@ -90,7 +90,7 @@ class Cliente {
     String? email,
     String? contato,
     String? numeroContato,
-    String? contribuinte,
+    int? contribuinte,
     String? logadouro,
   }) {
     return Cliente(

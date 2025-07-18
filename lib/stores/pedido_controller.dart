@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
+import 'package:speed_externo/commom/constantes/chaves.dart';
 import 'package:speed_externo/commom/objetos/pedido.dart';
+import 'package:speed_externo/funcoes/date.dart';
 import 'package:speed_externo/funcoes/validate.dart';
+import 'package:speed_externo/stores/faturamento_controller.dart';
 
 part 'pedido_controller.g.dart';
 
@@ -14,17 +16,17 @@ abstract class _PedidoStoreBase with Store{
 
                       
   TextEditingController controllerCliente = TextEditingController();
-  TextEditingController controllerData = TextEditingController( text: DateFormat('yyyy-MM-dd').format(DateTime.now()));
+  TextEditingController controllerData = TextEditingController( text: Data.getData);
   TextEditingController controllerTipo = TextEditingController();
   
   @observable
-  Pedido pedido = Pedido(listProd: [], tipo: 'A Vista');
+  Pedido pedido = Pedido(listProd: []);
 
   @observable
-  String tipoSelecionado = 'A Vista';
+  String tipoSelecionado = '1 - A Vista';
 
   @computed
-  bool get isAPrazo => tipoSelecionado == 'A Prazo';
+  bool get isAPrazo => tipoSelecionado == '2 - A Prazo';
 
 
   @observable
@@ -33,23 +35,24 @@ abstract class _PedidoStoreBase with Store{
 
   @action
   void setTipo(String novoValor) {
+     final faturamento = Get.find<FaturamentoController>();
+
+    faturamento.resetFaturamento();
     tipoSelecionado = novoValor;
   }
-  @computed
-  bool get isFormValid => formErrors.values.every((error) => error == null);
-   
+ 
  
 
  @action
-  void setField(String chave, String value){
+  void setField(String chave, dynamic value){
     switch (chave) {      
-      case 'tipo':    
+      case tipoPed:    
       setTipo(value);   
-      pedido = pedido.copyWith(tipo: value) ;
+      pedido = pedido.copyWith(tipo: int.tryParse(value)) ;
       case 'nome':
       controllerCliente.text = value;   
-      case 'codClie':
-      pedido = pedido.copyWith(codClie: value) ;   
+      case codClientePed:
+      pedido = pedido.copyWith(codClie: int.tryParse(value)) ;   
     }
     Get.find<Validate>().validateField(chave, value); 
   }
@@ -69,10 +72,9 @@ abstract class _PedidoStoreBase with Store{
   void resetForm() {
     controllerCliente.text = '';
     controllerTipo.text = '';
-    controllerData.text = '';  
+    controllerData = TextEditingController( text: Data.getData);
     pedido = Pedido(listProd: []);
-    formErrors.clear();
-     setTipo('A Vista');
+    setTipo('1 - A Vista');
   }
 
 }

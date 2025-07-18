@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:speed_externo/commom/objetos/cliente.dart';
@@ -10,8 +9,6 @@ import 'package:speed_externo/commom/objetos/faturamento.dart';
 import 'package:speed_externo/commom/objetos/pedido.dart';
 import 'package:speed_externo/commom/objetos/produto.dart';
 import 'commom/styles/theme.dart';
-import 'package:speed_externo/pages/home_page.dart';
-import 'package:speed_externo/pages/login.dart';
 import 'package:speed_externo/routes.dart';
 import 'package:speed_externo/funcoes/autentica.dart';
 import 'package:speed_externo/stores/faturamento_controller.dart';

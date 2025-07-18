@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobx/mobx.dart';
@@ -26,7 +25,7 @@ abstract class ClienteControllerBase with Store{
   TextEditingController controllerNumeroContato = TextEditingController();
 
   @observable
-  Cliente cliente = Cliente(contribuinte: '9');
+  Cliente cliente = Cliente(contribuinte: 9);
 
   @observable
   String contribuitePadrao = contribuinte9;
@@ -39,7 +38,7 @@ abstract class ClienteControllerBase with Store{
   bool get isFormValid => formErrors.values.every((error) => error == null);
 
  @action
-  void setField(String chave, String value){
+  void setField(String chave, dynamic value){
     switch (chave) {
       case razaosocial:
       cliente = cliente.copyWith(razaosocial: value) ;
@@ -48,9 +47,6 @@ abstract class ClienteControllerBase with Store{
       cliente = cliente.copyWith(fantasia: value) ;
       break;
       case cnpj:
-      cliente = cliente.copyWith(cnpj: value) ;
-      break;
-      case cpf:
       cliente = cliente.copyWith(cnpj: value) ;
       break;
       case ie:
@@ -72,7 +68,7 @@ abstract class ClienteControllerBase with Store{
       cliente = cliente.copyWith(numeroContato: value) ;
       break;
       case contribuinte:
-      cliente = cliente.copyWith(contribuinte: value) ;
+      cliente = cliente.copyWith(contribuinte: int.tryParse(value)) ;
       Get.find<Validate>().validateField(ie, cliente.ie ?? '');
       break;
     }

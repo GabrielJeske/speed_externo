@@ -1,7 +1,4 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:speed_externo/commom/constantes/chaves.dart';
 import 'package:speed_externo/stores/cliente_controller.dart';
 
@@ -9,7 +6,7 @@ import 'package:speed_externo/stores/cliente_controller.dart';
 
 
    
-   void validateField(String chave, String value) {
+   void validateField(String chave, dynamic value) {
     
     final dadosCliente = Get.find<ClienteController>();
 
@@ -18,11 +15,15 @@ import 'package:speed_externo/stores/cliente_controller.dart';
     }else if (chave == cnpj){
       dadosCliente.formErrors[chave] = validateDocumento(value);
     }else if (chave == ie){   
-      if (dadosCliente.cliente.contribuinte == '1'){
+      if (dadosCliente.cliente.contribuinte == 1){
         dadosCliente.formErrors[chave] = validateIe(value);
       }
     }else{
-      dadosCliente.formErrors[chave] = value.isEmpty ? 'Campo obrigatório' : null;
+      if (value is int){
+         dadosCliente.formErrors[chave] = value.toString().isEmpty ? 'Campo obrigatório' : null;
+      }else{
+         dadosCliente.formErrors[chave] = value.isEmpty ? 'Campo obrigatório' : null;
+      }
     }
 
    }
@@ -121,16 +122,13 @@ import 'package:speed_externo/stores/cliente_controller.dart';
   void validateAllFields() {
 
     final clienteController = Get.find<ClienteController>();
-
-
   
-    validateField(razaosocial, clienteController.cliente.razaosocial ?? '');
-    validateField(cnpj, clienteController.cliente.cnpj ?? '');
-    validateField(endereco, clienteController.cliente.endereco ?? '');
-    validateField(cep, clienteController.cliente.cep ?? '');
-    validateField(ie, clienteController.cliente.cep ?? '');
-    validateField(contribuinte, clienteController.cliente.contribuinte ?? '');
-
+    validateField(razaosocial, clienteController.cliente.razaosocial);
+    validateField(cnpj, clienteController.cliente.cnpj);
+    validateField(endereco, clienteController.cliente.endereco);
+    validateField(cep, clienteController.cliente.cep);
+    validateField(ie, clienteController.cliente.cep);
+    validateField(contribuinte, clienteController.cliente.contribuinte);
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
   }
 

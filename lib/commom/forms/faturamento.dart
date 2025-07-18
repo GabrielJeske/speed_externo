@@ -100,11 +100,11 @@ class Faturamento extends StatelessWidget {
                           height: screenSize.height * 0.30,                          
                             child: ListView.builder(
                                                     shrinkWrap: true,                      
-                                                    itemCount: faturamento.contas.length,
+                                                    itemCount: faturamento.faturamento.contas.length,
                                                     itemBuilder: (contextList, index) { 
-                                                      final conta = faturamento.contas[index];
+                                                      final conta = faturamento.faturamento.contas[index];
                                                       return Card(
-                                                       color: (int.tryParse(conta.id ?? '0') ?? 0) % 2 == 0? Theme.of(context).colorScheme.surface : Theme.of(context).colorScheme.surfaceContainerLowest, 
+                                                       color: conta.id!  % 2 == 0? Theme.of(context).colorScheme.surface : Theme.of(context).colorScheme.surfaceContainerLowest, 
                                                         child: ListTile(                                
                                                             title: Column(
                                                               children: [
@@ -114,7 +114,7 @@ class Faturamento extends StatelessWidget {
                                                                       flex: 4,
                                                                       child: CustomFormField( 
                                                                         labelText:  'Parcela',
-                                                                        controller:TextEditingController(text: conta.id),
+                                                                        controller:TextEditingController(text: '${conta.id}'),
                                                                         readOnly: true,
                                                                       )
                                                                     ),

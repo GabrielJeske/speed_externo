@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
@@ -139,19 +138,18 @@ class _PedidoFormState extends State<PedidoForm> {
                                       labelText: 'Tipo',
                                       border: OutlineInputBorder(),
                                       errorText: pedidoStore.formErrors['tipo'],
-                                    ),
-                                    // Usando a nova variável de estado
+                                    ),                              
                                     value: pedidoStore.tipoSelecionado,
-                                    items: ['A Vista', 'A Prazo'].map((String value) {
+                                    items: ['1 - A Vista','2 - A Prazo'].map((String value) {
                                       return DropdownMenuItem<String>(
                                         value: value,
                                         child: Text(value),
                                       );
                                     }).toList(),
                                     onChanged: (String? newValue) {
-                                      if (newValue != null) {
-                                        // Apenas chama a ação 'setField' que já faz todo o trabalho
-                                        pedidoStore.setField('tipo', newValue);                                       
+                                      if (newValue != null) {                                      
+                                        pedidoStore.setField('tipo', newValue.substring(0, 1));   
+                                        pedidoStore.setTipo(newValue);
                                       }
                                     },
                                     style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
@@ -193,7 +191,7 @@ class _PedidoFormState extends State<PedidoForm> {
                                                       dadosStore.removerProd(produto);
                                                     },        
                                                     child: Card(                                                     
-                                                      color: (int.tryParse(produto.nProd ?? '0') ?? 0) % 2 == 0? Theme.of(context).colorScheme.surface : Theme.of(context).colorScheme.surfaceContainerHigh, 
+                                                      color: produto.nProd! % 2 == 0? Theme.of(context).colorScheme.surface : Theme.of(context).colorScheme.surfaceContainerHigh, 
                                                       child: ListTile(                                
                                                           title: Column(
                                                             children: [
@@ -203,7 +201,7 @@ class _PedidoFormState extends State<PedidoForm> {
                                                                     flex: 1,
                                                                     child: CustomFormField( 
                                                                                 labelText:  'Cod',
-                                                                                controller:TextEditingController(text: produto.cod),
+                                                                                controller:TextEditingController(text: '${produto.cod}'),
                                                                                 readOnly: true,
                                                                     )
                                                                   ),
@@ -235,7 +233,7 @@ class _PedidoFormState extends State<PedidoForm> {
                                                                     flex: 2,
                                                                   child: CustomFormField( 
                                                                                 labelText:  'Venda',                                        
-                                                                                controller:TextEditingController(text: produto.venda),
+                                                                                controller:TextEditingController(text: '${produto.venda}'),
                                                                                 readOnly: true,
                                                                     )
                                                                     ),
@@ -379,9 +377,7 @@ class _PedidoFormState extends State<PedidoForm> {
                     ),   
                     SizedBox(height: 10),                                                                                     
                     Observer(builder: (context) {
-    // Usando o valor computado, que é mais seguro
     if (dadosStore.listaProdutos.isNotEmpty) {
-      // Lógica para 'A Vista' (dois botões)
       return Row(
       children: [                                                      
         Expanded(
@@ -430,8 +426,9 @@ class _PedidoFormState extends State<PedidoForm> {
           ),
         ),
         SizedBox(width: 10),
+        if (!pedidoStore.isAPrazo || faturamento.faturamento.contas.isNotEmpty)
         Expanded(
-          flex: 4,
+          flex: 4,        
           child: CustomButtom(
             onPressed: () {
              showDialog<String>(

@@ -105,19 +105,19 @@ mixin _$DadosPedidoStore on _DadosPedidoStoreBase, Store {
     });
   }
 
-  late final _$_itemCounterAtom =
-      Atom(name: '_DadosPedidoStoreBase._itemCounter', context: context);
+  late final _$itemCountAtom =
+      Atom(name: '_DadosPedidoStoreBase.itemCount', context: context);
 
   @override
-  int get _itemCounter {
-    _$_itemCounterAtom.reportRead();
-    return super._itemCounter;
+  int get itemCount {
+    _$itemCountAtom.reportRead();
+    return super.itemCount;
   }
 
   @override
-  set _itemCounter(int value) {
-    _$_itemCounterAtom.reportWrite(value, super._itemCounter, () {
-      super._itemCounter = value;
+  set itemCount(int value) {
+    _$itemCountAtom.reportWrite(value, super.itemCount, () {
+      super.itemCount = value;
     });
   }
 
@@ -150,6 +150,22 @@ mixin _$DadosPedidoStore on _DadosPedidoStoreBase, Store {
   set listaProdutos(ObservableList<Produto> value) {
     _$listaProdutosAtom.reportWrite(value, super.listaProdutos, () {
       super.listaProdutos = value;
+    });
+  }
+
+  late final _$prodRemovidoAtom =
+      Atom(name: '_DadosPedidoStoreBase.prodRemovido', context: context);
+
+  @override
+  Produto? get prodRemovido {
+    _$prodRemovidoAtom.reportRead();
+    return super.prodRemovido;
+  }
+
+  @override
+  set prodRemovido(Produto? value) {
+    _$prodRemovidoAtom.reportWrite(value, super.prodRemovido, () {
+      super.prodRemovido = value;
     });
   }
 
@@ -198,6 +214,28 @@ mixin _$DadosPedidoStore on _DadosPedidoStoreBase, Store {
   }
 
   @override
+  void desfazerRemocao() {
+    final _$actionInfo = _$_DadosPedidoStoreBaseActionController.startAction(
+        name: '_DadosPedidoStoreBase.desfazerRemocao');
+    try {
+      return super.desfazerRemocao();
+    } finally {
+      _$_DadosPedidoStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void resetPedido() {
+    final _$actionInfo = _$_DadosPedidoStoreBaseActionController.startAction(
+        name: '_DadosPedidoStoreBase.resetPedido');
+    try {
+      return super.resetPedido();
+    } finally {
+      _$_DadosPedidoStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 listaDePedidos: ${listaDePedidos},
@@ -206,8 +244,10 @@ descReal: ${descReal},
 desconto: ${desconto},
 totalPedido: ${totalPedido},
 totalProd: ${totalProd},
+itemCount: ${itemCount},
 edit: ${edit},
-listaProdutos: ${listaProdutos}
+listaProdutos: ${listaProdutos},
+prodRemovido: ${prodRemovido}
     ''';
   }
 }

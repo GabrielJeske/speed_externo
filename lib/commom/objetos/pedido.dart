@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'package:speed_externo/commom/constantes/chaves.dart';
 import 'package:speed_externo/commom/objetos/faturamento.dart';
 import 'package:speed_externo/commom/objetos/produto.dart';
 import 'package:hive/hive.dart';
@@ -8,38 +8,54 @@ part 'pedido.g.dart';
 @HiveType(typeId: 2)
 class Pedido {
   @HiveField(0)
-  String? cod;
+  int? cod;
   @HiveField(1)
-  String? codClie;
+  int? codClie;
   @HiveField(2)
   List<Produto>? listProd;
   @HiveField(3)
   String? data;
   @HiveField(4)
-  String? tipo;
+  int? tipo;
   @HiveField(5)
   Faturamento? faturamento;
   @HiveField(6)
   String? status;
+  @HiveField(7)
+  double? total;
+  @HiveField(8)
+  double? subTotal;
+  @HiveField(9)
+  double? descontoReal;
+  @HiveField(10)
+  int? descontoPorcent;
   
   Pedido({
     this.cod,
     this.codClie,
-    required this.listProd,
+    this.listProd,
     this.data,
     this.tipo,
     this.faturamento,
     this.status,
+    this.total,
+    this.subTotal,
+    this.descontoReal,
+    this.descontoPorcent,
   });
 
   Pedido copyWith({
-    String? cod,
-    String? codClie,
+    int? cod,
+    int? codClie,
     List<Produto>? listProd,
     String? data,
-    String? tipo,
+    int? tipo,
     Faturamento? faturamento,
     String? status,
+    double? total,
+    double? subTotal,
+    double? descontoReal,
+    int? descontoPorcent,
   }) {
     return Pedido(
       cod: cod ?? this.cod,
@@ -49,54 +65,59 @@ class Pedido {
       faturamento: faturamento ?? this.faturamento,
       listProd: listProd ?? this.listProd,
       status: status ?? this.status,
+      total: total ?? this.total,
+      subTotal: subTotal ?? this.subTotal,
+      descontoPorcent: descontoPorcent ?? this.descontoPorcent,
+      descontoReal: descontoReal ?? this.descontoReal
     );
   }
  factory Pedido.fromJson(Map<String, dynamic> json) {
 
-    // 1. Pega a lista "crua" (List<dynamic>) do JSON.
-    var listFromJson = json['listProd'] as List?;
-
-    // 2. Transforma a lista crua em uma List<Produto>.
-    // Se a lista do json for nula, cria uma lista vazia.
-    List<Produto> productList = listFromJson != null
+    List listFromJson = json['listProd'];
+    List<Produto> productList = listFromJson.isNotEmpty
         ? listFromJson.map((p) => Produto.fromJson(p)).toList()
         : [];
 
     return Pedido(
-      cod: json['cod'],
-      data: json['data'],
-      tipo: json['tipo'],
-      codClie: json['codClie'],
-      faturamento: json['faturamento'] != null
-          ? Faturamento.fromJson(json['faturamento'])
+      cod: json[codPed],
+      data: json[dataPed],
+      tipo: json[tipoPed],
+      codClie: json[codClientePed],
+      faturamento: json[faturamentoPed] != null
+          ? Faturamento.fromJson(json[faturamentoPed])
           : null,
-      
-      // 3. Atribui a lista devidamente convertida.
       listProd: productList,
-      status: json['status'],
+      status: json[statusPed],
+      total: json[totalPed],
+      subTotal: json[subTotalPed],
+      descontoPorcent: json[descPorcentPed],
+      descontoReal: json[descRealPed],
     );
   }
- Map<String, dynamic> toJson() => {
-    'cod': cod,
-    'data': data,
-    'tipo': tipo,
-    'codClie': codClie,
-    'status': status,
-    // Usa o '?' para o caso de faturamento ser nulo
-    'faturamento': faturamento?.toJson(),
-    // Usa o '?' para o caso de a lista ser nula (conforme discutimos)
-    'listProd': listProd?.map((p) => p.toJson()).toList(),
+
+  Map<String, dynamic> toJson() => {
+    codPed : cod,
+    dataPed : data,
+    tipoPed : tipo,
+    codClientePed : codClie,
+    statusPed : status,    
+    faturamentoPed : faturamento?.toJson(),    
+    listProdPed : listProd?.map((p) => p.toJson()).toList(),
+    totalPed : total,
+    subTotalPed : subTotal,
+    descPorcentPed : descontoPorcent,
+    descRealPed : descontoReal
   };
 
-  List<Pedido> obtemPedidos(String jsonString) {
-    List<dynamic> listaGenerica = jsonDecode(jsonString);
-    List<Pedido> pedidos = [];
-    for (Map<String, dynamic> a in listaGenerica) {
-      Pedido pedido = Pedido.fromJson(a);
-      pedidos.add(pedido);
-    }
-    return pedidos;
-  }
+  // List<Pedido> obtemPedidos(String jsonString) {
+  //   List<dynamic> listaGenerica = jsonDecode(jsonString);
+  //   List<Pedido> pedidos = [];
+  //   for (Map<String, dynamic> a in listaGenerica) {
+  //     Pedido pedido = Pedido.fromJson(a);
+  //     pedidos.add(pedido);
+  //   }
+  //   return pedidos;
+  // }
   
 
 }
